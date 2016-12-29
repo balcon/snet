@@ -8,4 +8,6 @@ public interface UserDao {
     User create(String firstName, String lastName, String username, String passHash);
 
     List<User> getList();
+
+    User getById(Long id);
 }
