@@ -1,6 +1,5 @@
-package com.epam.study.snet.dao.MySqlH2;
+package com.epam.study.snet.dao.mysql;
 
-import com.epam.study.snet.Static;
 import com.epam.study.snet.dao.DaoException;
 import com.epam.study.snet.dao.MessageDao;
 import com.epam.study.snet.model.Message;
@@ -12,10 +11,10 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MySqlH2MessageDao implements MessageDao {
+public class MySqlMessageDao implements MessageDao {
     private final DataSource dataSource;
 
-    public MySqlH2MessageDao(DataSource dataSource) {
+    public MySqlMessageDao(DataSource dataSource) {
         this.dataSource = dataSource;
     }
 
@@ -95,21 +94,22 @@ public class MySqlH2MessageDao implements MessageDao {
     }
 
     private Message getMessageFromResultSet(ResultSet resultSet) throws SQLException {
+        //TODO: think! How make better
         long senderId = resultSet.getLong("senderId");
-        User sender = Static.daoFactory.getUserDao().getById(senderId);
-//TODO: do something H2Dao MySqlDao
-        long recieverId = resultSet.getLong("receiverId");
-        User reciever = Static.daoFactory.getUserDao().getById(recieverId);
+        User sender = new MySqlDaoFactory(dataSource).getUserDao().getById(senderId);
+        //TODO: this to
+        long receiverId = resultSet.getLong("receiverId");
+        User reciever = new MySqlDaoFactory(dataSource).getUserDao().getById(receiverId);
 
-        Date sendingDate=resultSet.getDate("sendingTime");
-        Time sendingTime=resultSet.getTime("sendingTime");
+        Date sendingDate = resultSet.getDate("sendingTime");
+        Time sendingTime = resultSet.getTime("sendingTime");
 
         Message message = Message.builder()
                 .id(resultSet.getLong("messageId"))
                 .sender(sender)
                 .receiver(reciever)
                 .body(resultSet.getString("messageBody"))
-                .sendingTime(LocalDateTime.of(sendingDate.toLocalDate(),sendingTime.toLocalTime()))
+                .sendingTime(LocalDateTime.of(sendingDate.toLocalDate(), sendingTime.toLocalTime()))
                 .build();
         return message;
     }

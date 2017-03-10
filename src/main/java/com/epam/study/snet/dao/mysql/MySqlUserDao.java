@@ -1,4 +1,4 @@
-package com.epam.study.snet.dao.MySqlH2;
+package com.epam.study.snet.dao.mysql;
 
 import com.epam.study.snet.dao.DaoException;
 import com.epam.study.snet.dao.UserDao;
@@ -12,10 +12,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MySqlH2UserDao implements UserDao {
+public class MySqlUserDao implements UserDao {
     private final DataSource dataSource;
 
-    public MySqlH2UserDao(DataSource dataSource) {
+    public MySqlUserDao(DataSource dataSource) {
         this.dataSource = dataSource;
     }
 

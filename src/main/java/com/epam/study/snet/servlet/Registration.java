@@ -1,6 +1,6 @@
 package com.epam.study.snet.servlet;
 
-import com.epam.study.snet.Static;
+import com.epam.study.snet.dao.mysql.MySqlConfig;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import javax.servlet.ServletException;
@@ -24,7 +24,7 @@ public class Registration extends HttpServlet {
             req.setAttribute("fncorrect", false);
             req.getRequestDispatcher("registration").forward(req, resp);
         } else {
-            Static.daoFactory.getUserDao()
+            MySqlConfig.daoFactory.getUserDao()
                     .create(req.getParameter("firstName"),
                             req.getParameter("lastName"),
                             req.getParameter("username"),

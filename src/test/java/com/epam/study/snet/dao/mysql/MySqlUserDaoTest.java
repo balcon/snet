@@ -1,4 +1,4 @@
-package com.epam.study.snet.dao.MySqlH2;
+package com.epam.study.snet.dao.mysql;
 
 import com.epam.study.snet.model.User;
 import org.junit.Test;
@@ -7,7 +7,7 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-public class MySqlH2UserDaoTest extends H2DaoTests {
+public class MySqlUserDaoTest extends MySqlDaoTests {
     @Test
     public void createUser() throws Exception {
         User user= userDao.create("Piter", "Johnson", "pit", "123");

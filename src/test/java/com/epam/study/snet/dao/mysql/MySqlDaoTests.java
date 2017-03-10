@@ -1,4 +1,4 @@
-package com.epam.study.snet.dao.MySqlH2;
+package com.epam.study.snet.dao.mysql;
 
 import com.epam.study.snet.dao.DaoFactory;
 import com.epam.study.snet.dao.MessageDao;
@@ -13,7 +13,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Scanner;
 
-public abstract class H2DaoTests {
+public abstract class MySqlDaoTests {
 
     static JdbcDataSource dataSource;
     static UserDao userDao;
@@ -21,25 +21,24 @@ public abstract class H2DaoTests {
 
     @BeforeClass
     public static void createH2Schema() throws Exception {
-        String createScriptPath = "src\\main\\resources\\db\\h2MySql\\createSchema.sql";
+        String createScriptPath = "src\\main\\resources\\db\\mysql\\createSchema.sql";
         String testDataScriptPath = "src\\test\\resources\\db\\h2\\testData.sql";
 
         dataSource = new JdbcDataSource();
         dataSource.setUrl("jdbc:h2:mem:test;MODE=MYSQL;DB_CLOSE_DELAY=-1");
 
-
         try (Connection connection = dataSource.getConnection()) {
             executeScript(connection, createScriptPath);
             executeScript(connection, testDataScriptPath);
         }
-        DaoFactory daoFactory = new H2DaoFactory();
+        DaoFactory daoFactory = new MySqlDaoFactory(dataSource);
         userDao = daoFactory.getUserDao();
         messageDao=daoFactory.getMessageDao();
     }
 
     @AfterClass
     public static void dropH2Schema() throws Exception {
-        String dropScriptPath = "src\\main\\resources\\db\\h2MySql\\dropSchema.sql";
+        String dropScriptPath = "src\\main\\resources\\db\\mysql\\dropSchema.sql";
         try (Connection connection = dataSource.getConnection()) {
             executeScript(connection, dropScriptPath);
         }

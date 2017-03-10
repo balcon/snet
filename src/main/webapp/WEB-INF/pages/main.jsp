@@ -4,5 +4,6 @@
 
 <tags:mainPage>
 <h2>Main Page</h2>
+<h2>Русский текст</h2>
 
 </tags:mainPage>
