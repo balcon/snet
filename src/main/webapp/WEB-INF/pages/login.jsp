@@ -1,12 +1,13 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
-<head>
-    <title>Login</title>
-</head>
-<body>
-<form action="login" method="post">
-    <input type="text" placeholder="Login" name="username">
-    <input type="submit" value="Sing In">
-</form>
-</body>
-</html>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
+
+<tags:mainPage>
+<hr>
+    <form action="login" method="post">
+        <input type="text" name="username" placeholder="Username"><br>
+        <input type="password" name="password" placeholder="Password"><br>
+        <input type="submit" value="Login">
+    </form>
+    <hr>
+</tags:mainPage>

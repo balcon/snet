@@ -1,4 +1,4 @@
-package com.epam.study.snetwork.dao;
+package com.epam.study.snet.dao;
 
 public class DaoException extends RuntimeException {
     public DaoException() {

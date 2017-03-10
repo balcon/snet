@@ -1,8 +1,8 @@
-package com.epam.study.snetwork.dao.h2;
+package com.epam.study.snet.dao.MySqlH2;
 
-import com.epam.study.snetwork.dao.DaoException;
-import com.epam.study.snetwork.dao.UserDao;
-import com.epam.study.snetwork.model.User;
+import com.epam.study.snet.dao.DaoException;
+import com.epam.study.snet.dao.UserDao;
+import com.epam.study.snet.model.User;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -12,10 +12,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class H2UserDao implements UserDao {
+public class MySqlH2UserDao implements UserDao {
     private final DataSource dataSource;
 
-    public H2UserDao(DataSource dataSource) {
+    public MySqlH2UserDao(DataSource dataSource) {
         this.dataSource = dataSource;
     }
 
@@ -49,15 +49,15 @@ public class H2UserDao implements UserDao {
     @Override
     public List<User> getList() {
         List<User> users = new ArrayList<>();
-        try(Connection connection=dataSource.getConnection()) {
+        try (Connection connection = dataSource.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(
                     "SELECT userId, firstName,lastName, username, passHash FROM snet.users");
             ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()){
+            while (resultSet.next()) {
                 users.add(getUserFromResultSet(resultSet));
             }
         } catch (SQLException e) {
-            throw new DaoException("Can't get userlist",e);
+            throw new DaoException("Can't get userlist", e);
         }
         return users;
     }
@@ -79,9 +79,25 @@ public class H2UserDao implements UserDao {
         return user;
     }
 
+    @Override
+    public User getByUsername(String username) {
+        User user = null;
+        try (Connection connection = dataSource.getConnection()) {
+            PreparedStatement statement = connection.prepareStatement(
+                    "SELECT userId, firstName,lastName, username, passHash FROM snet.users WHERE username=?");
+            statement.setString(1, username);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                user = getUserFromResultSet(resultSet);
+            }
+        } catch (SQLException e) {
+            throw new DaoException("Can't get user", e);
+        }
+        return user;
+    }
+
     private User getUserFromResultSet(ResultSet resultSet) throws SQLException {
-        User user;
-        user = User.builder()
+        User user = User.builder()
                 .id(resultSet.getLong("userId"))
                 .firstName(resultSet.getString("firstName"))
                 .lastName(resultSet.getString("lastName"))

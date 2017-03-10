@@ -1,15 +1,13 @@
-package com.epam.study.snetwork.filter;
+package com.epam.study.snet.filter;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
 
-//@WebFilter(urlPatterns = "/logged/*")
-public class RedirectToLoginFilter implements Filter {
+@WebFilter(urlPatterns = "/main/*")
+public class RedirectToLogin implements Filter {
     public void init(FilterConfig filterConfig) throws ServletException {
 
     }
@@ -17,7 +15,13 @@ public class RedirectToLoginFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse resp = (HttpServletResponse) response;
-        chain.doFilter(request, response);
+        //todo: do something
+        if (req.getSession().getAttribute("user") == null) {
+            String contextPath = req.getContextPath();
+            resp.sendRedirect(contextPath+"/login");
+            return;
+        }else
+            chain.doFilter(request, response);
     }
 
     public void destroy() {

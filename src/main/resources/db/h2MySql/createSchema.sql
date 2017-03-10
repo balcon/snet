@@ -1,0 +1,18 @@
+CREATE SCHEMA snet;
+
+CREATE TABLE snet.users (
+  userId BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  firstName VARCHAR(255) NOT NULL,
+  lastName VARCHAR(255) NOT NULL,
+  username VARCHAR(255) NOT NULL,
+  passHash VARCHAR(255) NOT NULL,
+  deleted DATETIME NULL
+);
+
+CREATE TABLE snet.messages (
+  messageId BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  senderId BIGINT NOT NULL,
+  receiverId BIGINT NOT NULL,
+  sendingTime DATETIME NOT NULL,
+  messageBody VARCHAR(255)
+);

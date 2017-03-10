@@ -3,6 +3,6 @@
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 
 <tags:mainPage>
-<h2>Main Page</h2>
+<h2>Page1</h2>
 
 </tags:mainPage>
