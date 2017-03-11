@@ -34,7 +34,8 @@ public class Login extends HttpServlet {
                 writer.print("Bad password");
             } else
                 req.getSession().setAttribute("user",user);
-                resp.sendRedirect("main");
+            String contextPath = req.getContextPath();
+            resp.sendRedirect(contextPath+"/main");
         }
     }
 }

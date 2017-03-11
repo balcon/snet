@@ -33,7 +33,7 @@
                         <c:if test="${companionId==sessionScope.user.getId()}">
                             <c:set var="companionId" value="${message.getSender().getId()}"/>
                         </c:if>
-                        <a href="${urlToChat}?companionId=${companionId}"/>BeginChat</a>
+                        <a href="${urlToChat}?companionId=${companionId}">BeginChat</a>
                     </td>
                 </tr>
             </c:forEach>
