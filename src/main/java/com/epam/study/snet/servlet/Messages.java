@@ -1,6 +1,6 @@
 package com.epam.study.snet.servlet;
 
-import com.epam.study.snet.dao.mysql.MySqlConfig;
+import com.epam.study.snet.dao.db.DbConfig;
 import com.epam.study.snet.dao.MessageDao;
 import com.epam.study.snet.dao.UserDao;
 import com.epam.study.snet.model.Message;
@@ -16,8 +16,8 @@ import java.util.List;
 
 @WebServlet("/main/messages")
 public class Messages extends HttpServlet {
-    UserDao userDao = MySqlConfig.daoFactory.getUserDao();
-    MessageDao messageDao = MySqlConfig.daoFactory.getMessageDao();
+    private UserDao userDao = DbConfig.daoFactory.getUserDao();
+    private MessageDao messageDao = DbConfig.daoFactory.getMessageDao();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

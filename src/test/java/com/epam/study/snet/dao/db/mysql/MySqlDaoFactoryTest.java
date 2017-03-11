@@ -1,4 +1,4 @@
-package com.epam.study.snet.dao.mysql;
+package com.epam.study.snet.dao.db.mysql;
 
 import com.epam.study.snet.dao.DaoFactory;
 import com.epam.study.snet.dao.MessageDao;

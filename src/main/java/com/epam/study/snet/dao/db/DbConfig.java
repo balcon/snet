@@ -1,15 +1,15 @@
-package com.epam.study.snet.dao.mysql;
+package com.epam.study.snet.dao.db;
 
 import com.epam.study.snet.dao.DaoFactory;
+import com.epam.study.snet.dao.db.mysql.MySqlDaoFactory;
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 
 import javax.sql.DataSource;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
 
-public class MySqlConfig {
+public class DbConfig {
 
     private static DataSource getDataSource() {
         //TODO: config Tomcat's connection pool
@@ -27,10 +27,12 @@ public class MySqlConfig {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        MysqlDataSource dataSource = new MysqlDataSource(); //TODO: make config read
+        MysqlDataSource dataSource = new MysqlDataSource(); //TODO: make config file read
         dataSource.setUrl("jdbc:mysql://localhost:3306");
         dataSource.setUser("root");
         dataSource.setPassword("admin");
+        dataSource.setUseUnicode(true);
+        dataSource.setCharacterEncoding("utf8");
         return dataSource;
     }
 

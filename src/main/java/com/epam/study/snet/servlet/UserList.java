@@ -1,6 +1,6 @@
 package com.epam.study.snet.servlet;
 
-import com.epam.study.snet.dao.mysql.MySqlConfig;
+import com.epam.study.snet.dao.db.DbConfig;
 import com.epam.study.snet.model.User;
 
 import javax.servlet.ServletException;
@@ -15,7 +15,7 @@ import java.util.List;
 public class UserList extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        List<User> users = MySqlConfig.daoFactory.getUserDao().getList();
+        List<User> users = DbConfig.daoFactory.getUserDao().getList();
         req.setAttribute("users", users);
         req.getRequestDispatcher("/WEB-INF/pages/list.jsp").forward(req, resp);
     }

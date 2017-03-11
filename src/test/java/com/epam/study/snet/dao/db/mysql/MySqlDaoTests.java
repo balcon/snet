@@ -1,4 +1,4 @@
-package com.epam.study.snet.dao.mysql;
+package com.epam.study.snet.dao.db.mysql;
 
 import com.epam.study.snet.dao.DaoFactory;
 import com.epam.study.snet.dao.MessageDao;
@@ -15,7 +15,7 @@ import java.util.Scanner;
 
 public abstract class MySqlDaoTests {
 
-    static JdbcDataSource dataSource;
+    private static JdbcDataSource dataSource;
     static UserDao userDao;
     static MessageDao messageDao;
 

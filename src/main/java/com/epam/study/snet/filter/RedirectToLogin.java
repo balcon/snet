@@ -8,6 +8,8 @@ import java.io.IOException;
 
 @WebFilter(urlPatterns = "/main/*")
 public class RedirectToLogin implements Filter {
+
+    @Override
     public void init(FilterConfig filterConfig) throws ServletException {
 
     }
@@ -15,7 +17,6 @@ public class RedirectToLogin implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse resp = (HttpServletResponse) response;
-        //todo: do something
         if (req.getSession().getAttribute("user") == null) {
             String contextPath = req.getContextPath();
             resp.sendRedirect(contextPath+"/login");

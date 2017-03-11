@@ -1,8 +1,8 @@
 package com.epam.study.snet.servlet;
 
-import com.epam.study.snet.dao.mysql.MySqlConfig;
 import com.epam.study.snet.dao.MessageDao;
 import com.epam.study.snet.dao.UserDao;
+import com.epam.study.snet.dao.db.DbConfig;
 import com.epam.study.snet.model.Message;
 import com.epam.study.snet.model.User;
 
@@ -16,8 +16,8 @@ import java.util.List;
 
 @WebServlet("/main/chat")
 public class Chat extends HttpServlet {
-    UserDao userDao = MySqlConfig.daoFactory.getUserDao();
-    MessageDao messageDao = MySqlConfig.daoFactory.getMessageDao();
+    private final UserDao userDao = DbConfig.daoFactory.getUserDao();
+    private final MessageDao messageDao = DbConfig.daoFactory.getMessageDao();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -34,10 +34,9 @@ public class Chat extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         User sender = (User) req.getSession().getAttribute("user");
         User receiver = userDao.getById(Long.valueOf(req.getParameter("companionId")));
+
         String body = req.getParameter("body");
-
         messageDao.createMessage(sender, receiver, body);
-
         String contextPath = req.getContextPath();
         resp.sendRedirect(contextPath + "/main/chat?companionId=" + req.getParameter("companionId"));
     }

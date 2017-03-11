@@ -1,4 +1,4 @@
-package com.epam.study.snet.dao.mysql;
+package com.epam.study.snet.dao.db.mysql;
 
 import com.epam.study.snet.dao.DaoException;
 import com.epam.study.snet.dao.MessageDao;
@@ -19,17 +19,18 @@ public class MySqlMessageDao implements MessageDao {
     }
 
     @Override
-    public Message createMessage(User sender, User reciever, String body) {
+    public Message createMessage(User sender, User receiver, String body) {
         Message message = null;
         try (Connection connection = dataSource.getConnection()) {
             LocalDateTime currentTime = LocalDateTime.now();
             PreparedStatement statement = connection.prepareStatement(
                     "INSERT INTO snet.messages (senderId, receiverId, messageBody,sendingTime) VALUES (?,?,?,?)");
             statement.setLong(1, sender.getId());
-            statement.setLong(2, reciever.getId());
+            statement.setLong(2, receiver.getId());
             statement.setString(3, body);
             statement.setString(4, currentTime.toString());
             statement.execute();
+
             long messageId = 0;
             ResultSet generatedKeys = statement.getGeneratedKeys();
             if (generatedKeys.next())
@@ -37,9 +38,9 @@ public class MySqlMessageDao implements MessageDao {
             message = message.builder()
                     .id(messageId)
                     .sender(sender)
-                    .receiver(reciever)
+                    .receiver(receiver)
                     .body(body)
-                    .sendingTime(LocalDateTime.now())
+                    .sendingTime(currentTime)
                     .build();
         } catch (SQLException e) {
             throw new DaoException("Can't create message", e);

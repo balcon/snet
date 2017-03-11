@@ -1,6 +1,6 @@
 package com.epam.study.snet.servlet;
 
-import com.epam.study.snet.dao.mysql.MySqlConfig;
+import com.epam.study.snet.dao.db.DbConfig;
 import com.epam.study.snet.model.User;
 import org.apache.commons.codec.digest.DigestUtils;
 
@@ -23,7 +23,7 @@ public class Login extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String username = req.getParameter("username");
         String password = req.getParameter("password");
-        User user = MySqlConfig.daoFactory.getUserDao().getByUsername(username);
+        User user = DbConfig.daoFactory.getUserDao().getByUsername(username);
         if (user == null) {
             PrintWriter writer = resp.getWriter();
             writer.print("Bad user");
