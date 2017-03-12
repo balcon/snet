@@ -11,12 +11,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Map;
 
 @WebServlet("/login")
 public class Login extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getRequestDispatcher("/WEB-INF/pages/login.jsp").forward(req,resp);
+        req.getRequestDispatcher("/WEB-INF/pages/login.jsp").forward(req, resp);
     }
 
     @Override
@@ -25,8 +26,7 @@ public class Login extends HttpServlet {
         String password = req.getParameter("password");
         User user = DbConfig.daoFactory.getUserDao().getByUsername(username);
         if (user == null) {
-            PrintWriter writer = resp.getWriter();
-            writer.print("Bad user");
+            req.getRequestDispatcher("/WEB-INF/pages/login.jsp").forward(req,resp);
         } else {
             String passHash = DigestUtils.md5Hex(password);
             if (!user.getPassHash().equals(passHash)) {

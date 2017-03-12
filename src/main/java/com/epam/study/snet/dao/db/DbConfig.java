@@ -29,6 +29,7 @@ public class DbConfig {
         }
         MysqlDataSource dataSource = new MysqlDataSource(); //TODO: make config file read
         dataSource.setUrl("jdbc:mysql://localhost:3306");
+     //   dataSource.setUrl("jdbc:h2:mem:test;MODE=MYSQL;DB_CLOSE_DELAY=-1");
         dataSource.setUser("root");
         dataSource.setPassword("admin");
         dataSource.setUseUnicode(true);

@@ -10,7 +10,7 @@ import static org.junit.Assert.*;
 public class MySqlUserDaoTest extends MySqlDaoTests {
     @Test
     public void createUser() throws Exception {
-        User user= userDao.create("Piter", "Johnson", "pit", "123");
+        User user = userDao.create("pit", "123","Piter", "Johnson");
 
         assertEquals(user.getFirstName(), "Piter");
         assertTrue(user.getId() != 0);
@@ -25,7 +25,7 @@ public class MySqlUserDaoTest extends MySqlDaoTests {
 
     @Test
     public void getUserById() throws Exception {
-        User user1 = userDao.create("Mister", "Twister", "mt", "pass");
+        User user1 = userDao.create("mt", "pass","Mister", "Twister");
         Long userId = user1.getId();
         User user2 = userDao.getById(userId);
 
@@ -34,9 +34,9 @@ public class MySqlUserDaoTest extends MySqlDaoTests {
 
     @Test
     public void getUserByUsername() throws Exception {
-        User user1=userDao.create("userFn","userLn","user1username","pass");
-        User user2=userDao.getByUsername("user1username");
+        User user1 = userDao.create("user1username", "pass","userFn", "userLn");
+        User user2 = userDao.getByUsername("user1username");
 
-        assertEquals(user1,user2);
+        assertEquals(user1, user2);
     }
 }

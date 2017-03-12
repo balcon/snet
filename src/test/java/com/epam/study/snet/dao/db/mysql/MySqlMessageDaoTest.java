@@ -27,7 +27,8 @@ public class MySqlMessageDaoTest extends MySqlDaoTests {
         assertEquals(message.getBody(), "Hi, u2!");
         assertTrue(message.getId() != 0);
     }
-@Ignore
+
+    @Ignore
     @Test
     public void getListWithLastMessages() throws Exception {
         messageDao.createMessage(user1, user2, "m1");
@@ -35,7 +36,7 @@ public class MySqlMessageDaoTest extends MySqlDaoTests {
         messageDao.createMessage(user2, user3, "m3");
         messageDao.createMessage(user1, user3, "m4");
         messageDao.createMessage(user3, user1, "m5");
-//TODO: heisenbag
+        //TODO: heisenbag
         List<Message> messages = messageDao.getListOfLastMessages(user1);
         for (Message message : messages) {
             System.out.println(message.getId()+" "+message.getSender().getUsername()
@@ -44,7 +45,6 @@ public class MySqlMessageDaoTest extends MySqlDaoTests {
         assertEquals(messages.size(), 2);
     }
 
-    @Ignore
     @Test
     public void getListBySenderAndReceiver() throws Exception {
         messageDao.createMessage(user1, user2, "-m1");

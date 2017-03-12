@@ -2,11 +2,10 @@ CREATE SCHEMA snet;
 
 CREATE TABLE snet.users (
   userId BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  firstName VARCHAR(255) NOT NULL,
-  lastName VARCHAR(255) NOT NULL,
   username VARCHAR(255) NOT NULL,
   passHash VARCHAR(255) NOT NULL,
-  deleted DATETIME NULL
+  firstName VARCHAR(255) NOT NULL,
+  lastName VARCHAR(255) NOT NULL,
 );
 
 CREATE TABLE snet.messages (

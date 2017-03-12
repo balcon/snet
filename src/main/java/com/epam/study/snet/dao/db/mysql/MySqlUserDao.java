@@ -19,15 +19,15 @@ public class MySqlUserDao implements UserDao {
         this.dataSource = dataSource;
     }
 
-    public User create(String firstName, String lastName, String username, String passHash) {
+    public User create(String username, String passHash,String firstName, String lastName) {
         User user = null;
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(
-                    "INSERT INTO snet.users (firstName, lastName, username, passHash) VALUES (?,?,?,?)");
-            statement.setString(1, firstName);
-            statement.setString(2, lastName);
-            statement.setString(3, username);
-            statement.setString(4, passHash);
+                    "INSERT INTO snet.users (username, passHash, firstName, lastName) VALUES (?,?,?,?)");
+            statement.setString(1, username);
+            statement.setString(2, passHash);
+            statement.setString(3, firstName);
+            statement.setString(4, lastName);
             statement.execute();
             long userId = 0;
             ResultSet generatedKeys = statement.getGeneratedKeys();

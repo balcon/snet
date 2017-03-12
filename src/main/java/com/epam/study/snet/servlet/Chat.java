@@ -34,7 +34,6 @@ public class Chat extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         User sender = (User) req.getSession().getAttribute("user");
         User receiver = userDao.getById(Long.valueOf(req.getParameter("companionId")));
-
         String body = req.getParameter("body");
         messageDao.createMessage(sender, receiver, body);
         String contextPath = req.getContextPath();
