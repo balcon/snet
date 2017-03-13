@@ -31,7 +31,7 @@ public class Registration extends HttpServlet {
             String contextPath = req.getContextPath();
             resp.sendRedirect(contextPath + "/login");
         } else {
-            req.setAttribute("errors", errors);
+            req.setAttribute("validation", errors);
             req.getRequestDispatcher("/WEB-INF/pages/registration.jsp").forward(req, resp);
         }
     }

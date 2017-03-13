@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 
-<tags:mainPage>
+<tags:mainMenu>
 <hr>
     <form action="login" method="post">
         <input type="text" name="username" placeholder="Username"><br>
@@ -10,4 +10,4 @@
         <input type="submit" value="Login">
     </form>
     <hr>
-</tags:mainPage>
+</tags:mainMenu>
