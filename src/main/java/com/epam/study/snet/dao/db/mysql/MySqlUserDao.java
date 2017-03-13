@@ -35,10 +35,10 @@ public class MySqlUserDao implements UserDao {
                 userId = generatedKeys.getLong(1);
             user = User.builder()
                     .id(userId)
-                    .firstName(firstName)
-                    .lastName(lastName)
                     .username(username)
                     .passHash(passHash)
+                    .firstName(firstName)
+                    .lastName(lastName)
                     .build();
         } catch (SQLException e) {
             throw new DaoException("Can't create user", e);
@@ -99,10 +99,10 @@ public class MySqlUserDao implements UserDao {
     private User getUserFromResultSet(ResultSet resultSet) throws SQLException {
         User user = User.builder()
                 .id(resultSet.getLong("userId"))
-                .firstName(resultSet.getString("firstName"))
-                .lastName(resultSet.getString("lastName"))
                 .username(resultSet.getString("username"))
                 .passHash(resultSet.getString("passHash"))
+                .firstName(resultSet.getString("firstName"))
+                .lastName(resultSet.getString("lastName"))
                 .build();
         return user;
     }

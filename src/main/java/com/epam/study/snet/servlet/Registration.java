@@ -1,5 +1,6 @@
 package com.epam.study.snet.servlet;
 
+import com.epam.study.snet.FormErrors;
 import com.epam.study.snet.dao.db.DbConfig;
 import org.apache.commons.codec.digest.DigestUtils;
 
@@ -25,9 +26,9 @@ public class Registration extends HttpServlet {
         String password = req.getParameter("password");
         String firstName = req.getParameter("firstName");
         String lastName = req.getParameter("lastName");
-        Map<String, String> errors = validate(username, password, firstName, lastName);
+        Map<String, FormErrors> errors = validate(username, password, firstName, lastName);
         if (errors.isEmpty()) {
-            DbConfig.daoFactory.getUserDao().create(firstName, lastName, username, DigestUtils.md5Hex(password));
+            DbConfig.daoFactory.getUserDao().create(username, DigestUtils.md5Hex(password),firstName,lastName);
             String contextPath = req.getContextPath();
             resp.sendRedirect(contextPath + "/login");
         } else {
@@ -36,14 +37,15 @@ public class Registration extends HttpServlet {
         }
     }
 
-    Map<String, String> validate(String username, String password, String firstName, String lastName) {
-        Map<String, String> errors = new HashMap<>();
+    private Map<String, FormErrors> validate(String username, String password, String firstName, String lastName) {
+        Map<String, FormErrors> errors = new HashMap<>();
         if (DbConfig.daoFactory.getUserDao().getByUsername(username) != null)
-            errors.put("username", "username.exist");
-        if (username.length() <= 6) errors.put("username", "username.short");
-        if (password.length() <= 6) errors.put("password", "password.short");
-        if (firstName.isEmpty()) errors.put("firstName", "field.empty");
-        if (lastName.isEmpty()) errors.put("lastName", "field.empty");
+            errors.put("username", FormErrors.username_exists);
+        if(username.isEmpty()) errors.put("username", FormErrors.field_empty);
+        if (password.length() < 6) errors.put("password", FormErrors.password_short6);
+        if(password.isEmpty()) errors.put("password", FormErrors.field_empty);
+        if (firstName.isEmpty()) errors.put("firstName", FormErrors.field_empty);
+        if (lastName.isEmpty()) errors.put("lastName", FormErrors.field_empty);
         return errors;
     }
 }

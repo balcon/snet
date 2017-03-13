@@ -11,7 +11,7 @@ public class MySqlUserDaoTest extends MySqlDaoTests {
     @Test
     public void createUser() throws Exception {
         User user = userDao.create("pit", "123","Piter", "Johnson");
-
+        System.out.println(user);
         assertEquals(user.getFirstName(), "Piter");
         assertTrue(user.getId() != 0);
     }
