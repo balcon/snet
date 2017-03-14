@@ -30,7 +30,7 @@ public class MySqlMessageDaoTest extends MySqlDaoTests {
         user3 = userDao.create(User.builder().username("u3").build());
 
         testMessage=Message.builder().sender(user1).receiver(user2).body("Hi, u2!").build();
-        
+
         messageDao.create(Message.builder().sender(user1).receiver(user2).body("from u1 to u2").build());
         messageDao.create(Message.builder().sender(user1).receiver(user3).body("from u1 to u3").build());
         messageDao.create(Message.builder().sender(user2).receiver(user3).body("from u2 to u3").build());

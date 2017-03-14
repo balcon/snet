@@ -28,8 +28,9 @@ public class Registration extends HttpServlet {
         String password = req.getParameter("password");
         String firstName = req.getParameter("firstName");
         String lastName = req.getParameter("lastName");
+        String gender=req.getParameter("gender");
         try {
-            Map<String, FormErrors> errors = validate(username, password, firstName, lastName);
+            Map<String, FormErrors> errors = validate(username, password, firstName, lastName, gender);
             if (errors.isEmpty()) {
                 User user = User.builder()
                         .username(username)
@@ -50,8 +51,8 @@ public class Registration extends HttpServlet {
         }
     }
 
-    private Map<String, FormErrors> validate(String username, String password, String firstName, String lastName) throws
-            DaoException {
+    private Map<String, FormErrors> validate(String username, String password, String firstName,
+                                             String lastName, String gender) throws DaoException {
         Map<String, FormErrors> errors = new HashMap<>();
         if (DaoConfig.daoFactory.getUserDao().getByUsername(username) != null)
             errors.put("username", FormErrors.username_exists);
@@ -60,6 +61,7 @@ public class Registration extends HttpServlet {
         if (password.isEmpty()) errors.put("password", FormErrors.field_empty);
         if (firstName.isEmpty()) errors.put("firstName", FormErrors.field_empty);
         if (lastName.isEmpty()) errors.put("lastName", FormErrors.field_empty);
+        if (gender.isEmpty()) errors.put("gender", FormErrors.field_empty);
         return errors;
     }
 }
