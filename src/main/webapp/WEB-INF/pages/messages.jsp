@@ -9,28 +9,32 @@
     </c:if>
     <c:if test="${not empty messages}">
 
-            <c:forEach var="message" items="${messages}">
-
-                <div class="panel panel-primary">
-                    <div class="panel-heading">
-                        <c:out value="${message.getSender().getUsername()}"/>
-                        <span class="glyphicon glyphicon-hand-right"></span>
-                        <c:out value="${message.getReceiver().getUsername()}"/></div>
+        <c:url var="urlToChat" value="/main/chat"/>
+        <c:forEach var="message" items="${messages}">
+            <%--LAST MESSAGE--%>
+            <c:set var="companionId" value="${message.getReceiver().getId()}"/>
+            <%-- Current logged user can't be chat-companion to itself --%>
+            <c:if test="${companionId==sessionScope.user.getId()}">
+                <c:set var="companionId" value="${message.getSender().getId()}"/>
+            </c:if>
+            <a href="${urlToChat}?companionId=${companionId}" style="text-decoration: none;">
+                <div class="media panel panel-primary ">
                     <div class="panel-body">
-                        <c:out value="${message.getBody()}"/>
+                        <div class="media-left">
+                            <img src="https://www.w3schools.com/bootstrap/img_avatar1.png" class="media-object"
+                                 style="width:60px">
+                        </div>
+                        <div class="media-body">
+                            <h4 class="media-heading"><c:out value="${message.getSender().getFirstName()}"/>
+                                <small><i>12.13.2014 12:00</i></small>
+                            </h4>
+                            <p><c:out value="${message.getBody()}"/></p>
+                        </div>
                     </div>
                 </div>
+            </a>
+            <%-- END OF LAST MESSAGE --%>
 
-
-                        <%--<c:url var="urlToChat" value="/main/chat"/>--%>
-
-                        <%--<c:set var="companionId" value="${message.getReceiver().getId()}"/>--%>
-                        <%--&lt;%&ndash; Current logged user can't be chat-companion to itself &ndash;%&gt;--%>
-                        <%--<c:if test="${companionId==sessionScope.user.getId()}">--%>
-                            <%--<c:set var="companionId" value="${message.getSender().getId()}"/>--%>
-                        <%--</c:if>--%>
-                        <%--<a href="${urlToChat}?companionId=${companionId}">BeginChat</a>--%>
-
-            </c:forEach>
+        </c:forEach>
     </c:if>
 </tags:mainMenu>

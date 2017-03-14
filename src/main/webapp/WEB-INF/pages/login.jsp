@@ -15,13 +15,14 @@
                 <fmt:message bundle="${errors}" key='${validation.get("loginForm")}'/>
             </div>
         </c:if>
-
+        <%-- USERNAME input --%>
         <div class="form-group input-group-sm<c:if test='${validation.containsKey("username")}'> has-error has-feedback </c:if>">
             <fmt:message var="username" bundle="${view}" key="login.username"/>
             <label class="col-md-3 control-label" for=username>${username}</label>
             <div class="col-md-6">
                 <input id="username" type="text" name="username" class="form-control has-error"
-                       placeholder="${username}" value="<c:out value="${param.username}"/>">
+                       placeholder="${username}" value="user1">
+<%--<c:out value="${param.username}"/>">--%>
                 <c:if test='${validation.containsKey("username")}'>
                     <span class="glyphicon glyphicon-exclamation-sign form-control-feedback"></span>
                     <span class="help-block"><small><fmt:message bundle="${errors}"
@@ -29,13 +30,15 @@
                 </c:if>
             </div>
         </div>
+        <%-- end of USERNAME input--%>
 
+        <%-- PASSWORD input --%>
         <div class="form-group input-group-sm<c:if test='${validation.containsKey("password")}'> has-error has-feedback </c:if>">
             <fmt:message var="password" bundle="${view}" key="login.password"/>
             <label class="col-md-3 control-label" for=password>${password}</label>
             <div class="col-md-6">
-                <input id="password" type="password" name="password" class="form-control has-error"
-                       placeholder="${password}" value="<c:out value="${param.password}"/>">
+                <input id="password" type="password" name="password" value="123456" class="form-control has-error"
+                       placeholder="${password}">
                 <c:if test='${validation.containsKey("password")}'>
                     <span class="glyphicon glyphicon-exclamation-sign form-control-feedback"></span>
                     <span class="help-block"><small><fmt:message bundle="${errors}"
@@ -43,6 +46,7 @@
                 </c:if>
             </div>
         </div>
+        <%-- end if PASSWORD input --%>
         <div class="col-md-offset-4">
         <button type="submit" class="btn btn-primary">
             <fmt:message bundle="${view}" key="login.title"/></button>
