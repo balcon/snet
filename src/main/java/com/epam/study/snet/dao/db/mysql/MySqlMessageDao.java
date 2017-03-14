@@ -19,15 +19,14 @@ public class MySqlMessageDao implements MessageDao {
     }
 
     @Override
-    public Message createMessage(User sender, User receiver, String body) {
-        Message message = null;
+    public Message create(Message message) throws DaoException {
         try (Connection connection = dataSource.getConnection()) {
             LocalDateTime currentTime = LocalDateTime.now();
             PreparedStatement statement = connection.prepareStatement(
                     "INSERT INTO snet.messages (senderId, receiverId, messageBody,sendingTime) VALUES (?,?,?,?)");
-            statement.setLong(1, sender.getId());
-            statement.setLong(2, receiver.getId());
-            statement.setString(3, body);
+            statement.setLong(1, message.getSender().getId());
+            statement.setLong(2, message.getReceiver().getId());
+            statement.setString(3, message.getBody());
             statement.setString(4, currentTime.toString());
             statement.execute();
 
@@ -35,21 +34,17 @@ public class MySqlMessageDao implements MessageDao {
             ResultSet generatedKeys = statement.getGeneratedKeys();
             if (generatedKeys.next())
                 messageId = generatedKeys.getLong(1);
-            message = message.builder()
-                    .id(messageId)
-                    .sender(sender)
-                    .receiver(receiver)
-                    .body(body)
-                    .sendingTime(currentTime)
-                    .build();
+            message.setId(messageId);
+            message.setSendingTime(currentTime);
         } catch (SQLException e) {
             throw new DaoException("Can't create message", e);
         }
         return message;
+        //todo: think about return, when exception happens
     }
 
     @Override
-    public List<Message> getListOfLastMessages(User user) {
+    public List<Message> getListOfLastMessages(User user) throws DaoException {
         List<Message> messages = new ArrayList<>();
         try (Connection connection = dataSource.getConnection()) {
             String query = "SELECT messageId,senderId,receiverId,sendingTime,messageBody FROM snet.messages JOIN " +
@@ -72,11 +67,11 @@ public class MySqlMessageDao implements MessageDao {
     }
 
     @Override
-    public List<Message> getListBySenderAndReceiver(User sender, User receiver) {
+    public List<Message> getListBySenderAndReceiver(User sender, User receiver) throws DaoException {
         List<Message> messages = new ArrayList<>();
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(
-                    "SELECT messageId, senderId, receiverId, messageBody, sendingTime from snet.messages " +
+                    "SELECT messageId, senderId, receiverId, messageBody, sendingTime FROM snet.messages " +
                             "WHERE (senderId=? AND receiverId=?) OR (senderId=? AND receiverId=?) " +
                             "ORDER BY sendingTime DESC");
             statement.setLong(1, sender.getId());
@@ -94,7 +89,7 @@ public class MySqlMessageDao implements MessageDao {
 
     }
 
-    private Message getMessageFromResultSet(ResultSet resultSet) throws SQLException {
+    private Message getMessageFromResultSet(ResultSet resultSet) throws DaoException, SQLException {
         //TODO: think! How make better
         long senderId = resultSet.getLong("senderId");
         User sender = new MySqlDaoFactory(dataSource).getUserDao().getById(senderId);

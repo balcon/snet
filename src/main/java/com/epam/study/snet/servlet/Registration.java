@@ -1,7 +1,9 @@
 package com.epam.study.snet.servlet;
 
 import com.epam.study.snet.FormErrors;
-import com.epam.study.snet.dao.db.DbConfig;
+import com.epam.study.snet.dao.DaoConfig;
+import com.epam.study.snet.dao.DaoException;
+import com.epam.study.snet.model.User;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import javax.servlet.ServletException;
@@ -26,24 +28,36 @@ public class Registration extends HttpServlet {
         String password = req.getParameter("password");
         String firstName = req.getParameter("firstName");
         String lastName = req.getParameter("lastName");
-        Map<String, FormErrors> errors = validate(username, password, firstName, lastName);
-        if (errors.isEmpty()) {
-            DbConfig.daoFactory.getUserDao().create(username, DigestUtils.md5Hex(password),firstName,lastName);
-            String contextPath = req.getContextPath();
-            resp.sendRedirect(contextPath + "/login");
-        } else {
-            req.setAttribute("validation", errors);
-            req.getRequestDispatcher("/WEB-INF/pages/registration.jsp").forward(req, resp);
+        try {
+            Map<String, FormErrors> errors = validate(username, password, firstName, lastName);
+            if (errors.isEmpty()) {
+                User user = User.builder()
+                        .username(username)
+                        .password(DigestUtils.md5Hex(password)) //TODO: horrible piece of shit
+                        .firstName(firstName)
+                        .lastName(lastName).build();
+
+                DaoConfig.daoFactory.getUserDao().create(user);
+                String contextPath = req.getContextPath();
+                resp.sendRedirect(contextPath + "/login");
+            } else {
+                req.setAttribute("validation", errors);
+                req.getRequestDispatcher("/WEB-INF/pages/registration.jsp").forward(req, resp);
+            }
+        } catch (DaoException e) {
+            e.printStackTrace();
+            req.getRequestDispatcher("/WEB-INF/pages/fatalErrorPage.jsp").forward(req, resp);
         }
     }
 
-    private Map<String, FormErrors> validate(String username, String password, String firstName, String lastName) {
+    private Map<String, FormErrors> validate(String username, String password, String firstName, String lastName) throws
+            DaoException {
         Map<String, FormErrors> errors = new HashMap<>();
-        if (DbConfig.daoFactory.getUserDao().getByUsername(username) != null)
+        if (DaoConfig.daoFactory.getUserDao().getByUsername(username) != null)
             errors.put("username", FormErrors.username_exists);
-        if(username.isEmpty()) errors.put("username", FormErrors.field_empty);
+        if (username.isEmpty()) errors.put("username", FormErrors.field_empty);
         if (password.length() < 6) errors.put("password", FormErrors.password_short6);
-        if(password.isEmpty()) errors.put("password", FormErrors.field_empty);
+        if (password.isEmpty()) errors.put("password", FormErrors.field_empty);
         if (firstName.isEmpty()) errors.put("firstName", FormErrors.field_empty);
         if (lastName.isEmpty()) errors.put("lastName", FormErrors.field_empty);
         return errors;

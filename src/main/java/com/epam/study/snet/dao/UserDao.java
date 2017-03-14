@@ -5,11 +5,11 @@ import com.epam.study.snet.model.User;
 import java.util.List;
 
 public interface UserDao {
-    User create( String username, String passHash, String firstName, String lastName);
+    User create(User user) throws DaoException;
 
-    List<User> getList();
+    List<User> getList() throws DaoException;
 
-    User getById(Long id);
+    User getById(Long id) throws DaoException;
 
-    User getByUsername(String username);
+    User getByUsername(String username) throws DaoException;
 }

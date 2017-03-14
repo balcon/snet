@@ -1,6 +1,7 @@
 package com.epam.study.snet.dao.db.mysql;
 
 import com.epam.study.snet.model.User;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.List;
@@ -8,12 +9,28 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 public class MySqlUserDaoTest extends MySqlDaoTests {
+
+    private User testUser = User.builder()
+            .username("pit")
+            .password("123")
+            .firstName("Peter")
+            .lastName("Johnson").build();
+
     @Test
     public void createUser() throws Exception {
-        User user = userDao.create("pit", "123","Piter", "Johnson");
-        System.out.println(user);
-        assertEquals(user.getFirstName(), "Piter");
+        User user = userDao.create(testUser);
+
+        assertEquals(user.getFirstName(), "Peter");
         assertTrue(user.getId() != 0);
+    }
+
+    @Test
+    public void setIdOnceAgain() throws Exception {
+        User user=userDao.create(testUser);
+        long badId=100500;
+        user.setId(badId);
+
+        assertFalse(user.getId()==badId);
     }
 
     @Test
@@ -25,7 +42,7 @@ public class MySqlUserDaoTest extends MySqlDaoTests {
 
     @Test
     public void getUserById() throws Exception {
-        User user1 = userDao.create("mt", "pass","Mister", "Twister");
+        User user1 = userDao.create(testUser);
         Long userId = user1.getId();
         User user2 = userDao.getById(userId);
 
@@ -34,8 +51,13 @@ public class MySqlUserDaoTest extends MySqlDaoTests {
 
     @Test
     public void getUserByUsername() throws Exception {
-        User user1 = userDao.create("user1username", "pass","userFn", "userLn");
-        User user2 = userDao.getByUsername("user1username");
+        User user = User.builder()
+                .username("pit2")
+                .password("123")
+                .firstName("Peter")
+                .lastName("Johnson").build();
+        User user1=userDao.create(user);
+        User user2 = userDao.getByUsername("pit2");
 
         assertEquals(user1, user2);
     }

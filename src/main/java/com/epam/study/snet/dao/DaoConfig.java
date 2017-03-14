@@ -1,4 +1,4 @@
-package com.epam.study.snet.dao.db;
+package com.epam.study.snet.dao;
 
 import com.epam.study.snet.dao.DaoFactory;
 import com.epam.study.snet.dao.db.mysql.MySqlDaoFactory;
@@ -9,7 +9,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
-public class DbConfig {
+public class DaoConfig {
 
     private static DataSource getDataSource() {
         //TODO: config Tomcat's connection pool

@@ -19,27 +19,20 @@ public class MySqlUserDao implements UserDao {
         this.dataSource = dataSource;
     }
 
-    public User create(String username, String passHash,String firstName, String lastName) {
-        User user = null;
+    public User create(User user) throws DaoException {
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(
                     "INSERT INTO snet.users (username, passHash, firstName, lastName) VALUES (?,?,?,?)");
-            statement.setString(1, username);
-            statement.setString(2, passHash);
-            statement.setString(3, firstName);
-            statement.setString(4, lastName);
+            statement.setString(1, user.getUsername());
+            statement.setString(2, user.getPassword());
+            statement.setString(3, user.getFirstName());
+            statement.setString(4, user.getLastName());
             statement.execute();
             long userId = 0;
             ResultSet generatedKeys = statement.getGeneratedKeys();
             if (generatedKeys.next())
                 userId = generatedKeys.getLong(1);
-            user = User.builder()
-                    .id(userId)
-                    .username(username)
-                    .passHash(passHash)
-                    .firstName(firstName)
-                    .lastName(lastName)
-                    .build();
+            user.setId(userId);
         } catch (SQLException e) {
             throw new DaoException("Can't create user", e);
         }
@@ -47,7 +40,7 @@ public class MySqlUserDao implements UserDao {
     }
 
     @Override
-    public List<User> getList() {
+    public List<User> getList() throws DaoException {
         List<User> users = new ArrayList<>();
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(
@@ -63,7 +56,7 @@ public class MySqlUserDao implements UserDao {
     }
 
     @Override
-    public User getById(Long id) {
+    public User getById(Long id) throws DaoException {
         User user = null;
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(
@@ -80,7 +73,7 @@ public class MySqlUserDao implements UserDao {
     }
 
     @Override
-    public User getByUsername(String username) {
+    public User getByUsername(String username) throws DaoException {
         User user = null;
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(
@@ -100,7 +93,7 @@ public class MySqlUserDao implements UserDao {
         User user = User.builder()
                 .id(resultSet.getLong("userId"))
                 .username(resultSet.getString("username"))
-                .passHash(resultSet.getString("passHash"))
+                .password(resultSet.getString("passHash"))
                 .firstName(resultSet.getString("firstName"))
                 .lastName(resultSet.getString("lastName"))
                 .build();

@@ -1,6 +1,7 @@
 package com.epam.study.snet.servlet;
 
-import com.epam.study.snet.dao.db.DbConfig;
+import com.epam.study.snet.dao.DaoConfig;
+import com.epam.study.snet.dao.DaoException;
 import com.epam.study.snet.model.User;
 
 import javax.servlet.ServletException;
@@ -15,8 +16,13 @@ import java.util.List;
 public class UserList extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        List<User> users = DbConfig.daoFactory.getUserDao().getList();
-        req.setAttribute("users", users);
-        req.getRequestDispatcher("/WEB-INF/pages/list.jsp").forward(req, resp);
+        try {
+            List<User> users = DaoConfig.daoFactory.getUserDao().getList();
+            req.setAttribute("users", users);
+            req.getRequestDispatcher("/WEB-INF/pages/list.jsp").forward(req, resp);
+        }catch (DaoException e) {
+            e.printStackTrace();
+            req.getRequestDispatcher("/WEB-INF/pages/fatalErrorPage.jsp").forward(req, resp);
+        }
     }
 }

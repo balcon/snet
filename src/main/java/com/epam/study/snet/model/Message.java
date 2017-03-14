@@ -2,15 +2,29 @@ package com.epam.study.snet.model;
 
 import lombok.Builder;
 import lombok.Value;
+import lombok.experimental.NonFinal;
 
 import java.time.LocalDateTime;
 
 @Value
 @Builder
 public class Message {
-    long id;
+    @NonFinal
+    Long id;
     User sender;
     User receiver;
     String body;
+    @NonFinal
     LocalDateTime sendingTime;
+
+    public void setId(Long id) {
+        if (this.id == null)
+            this.id = id;
+    }
+
+    public void setSendingTime(LocalDateTime sendingTime){
+        if(this.sendingTime==null)
+            this.sendingTime=sendingTime;
+    }
+
 }

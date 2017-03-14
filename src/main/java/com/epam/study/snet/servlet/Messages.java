@@ -1,6 +1,7 @@
 package com.epam.study.snet.servlet;
 
-import com.epam.study.snet.dao.db.DbConfig;
+import com.epam.study.snet.dao.DaoConfig;
+import com.epam.study.snet.dao.DaoException;
 import com.epam.study.snet.dao.MessageDao;
 import com.epam.study.snet.dao.UserDao;
 import com.epam.study.snet.model.Message;
@@ -16,17 +17,22 @@ import java.util.List;
 
 @WebServlet("/main/messages")
 public class Messages extends HttpServlet {
-    private UserDao userDao = DbConfig.daoFactory.getUserDao();
-    private MessageDao messageDao = DbConfig.daoFactory.getMessageDao();
+    private UserDao userDao = DaoConfig.daoFactory.getUserDao();
+    private MessageDao messageDao = DaoConfig.daoFactory.getMessageDao();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        User sender = (User)req.getSession().getAttribute("user");
-        List<Message> messages = messageDao.getListOfLastMessages(sender);
-        List<User> users = userDao.getList();
+        User sender = (User) req.getSession().getAttribute("user");
+        try {
+            List<Message> messages = messageDao.getListOfLastMessages(sender);
+            List<User> users = userDao.getList();
 
-        req.setAttribute("users", users);
-        req.setAttribute("messages", messages);
-        req.getRequestDispatcher("/WEB-INF/pages/messages.jsp").forward(req, resp);
+            req.setAttribute("users", users);
+            req.setAttribute("messages", messages);
+            req.getRequestDispatcher("/WEB-INF/pages/messages.jsp").forward(req, resp);
+        } catch (DaoException e) {
+            e.printStackTrace();
+            req.getRequestDispatcher("/WEB-INF/pages/fatalErrorPage.jsp").forward(req, resp);
+        }
     }
 }
