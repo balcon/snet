@@ -1,4 +1,4 @@
-package com.epam.study.snet;
+package com.epam.study.snet.enums;
 
 public enum FormErrors {
     field_empty,

@@ -1,5 +1,6 @@
 package com.epam.study.snet.model;
 
+import com.epam.study.snet.enums.Gender;
 import lombok.Builder;
 import lombok.Value;
 import lombok.experimental.NonFinal;
@@ -13,6 +14,7 @@ public class User {
     String lastName;
     String username;
     String password;
+    Gender gender;
 
     public void setId(Long id) {
         if (this.id == null)

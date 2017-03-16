@@ -1,6 +1,6 @@
 package com.epam.study.snet.servlet;
 
-import com.epam.study.snet.FormErrors;
+import com.epam.study.snet.enums.FormErrors;
 import com.epam.study.snet.dao.DaoConfig;
 import com.epam.study.snet.dao.DaoException;
 import com.epam.study.snet.model.User;

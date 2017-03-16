@@ -24,7 +24,7 @@
             </div>
         </div>
             <%-- end of USERNAME input --%>
-            <%-- REGISTRATION input --%>
+            <%-- PASSWORD input --%>
         <div class="form-group input-group-sm<c:if test='${validation.containsKey("password")}'> has-error has-feedback </c:if>">
             <fmt:message var="password" bundle="${view}" key="registration.password"/>
             <label class="col-md-3 control-label" for=password>${password}</label>
@@ -38,7 +38,23 @@
                 </c:if>
             </div>
         </div>
-            <%-- end of REGISTRATION input --%>
+            <%-- end of PASSWORD input --%>
+            <%-- CONFIRM PASSWORD input --%>
+        <div class="form-group input-group-sm<c:if test='${validation.containsKey("confirdPassword")}'> has-error has-feedback </c:if>">
+            <fmt:message var="confirdPassword" bundle="${view}" key="registration.confirdPassword"/>
+            <label class="col-md-3 control-label" for=confirdPassword>${confirdPassword}</label>
+            <div class="col-md-6">
+                <input id="confirdPassword" type="confirdPassword" name="confirdPassword" class="form-control"
+                       placeholder="${confirdPassword}" value="<c:out value="${param.confirdPassword}"/>">
+                <c:if test='${validation.containsKey("confirdPassword")}'>
+                    <span class="glyphicon glyphicon-exclamation-sign  form-control-feedback"></span>
+                    <span class="help-block"><small><fmt:message bundle="${errors}"
+                                                                 key='${validation.get("confirdPassword")}'/></small></span>
+                </c:if>
+            </div>
+        </div>
+            <%-- end of CONFIRM PASSWORD input --%>
+
             <%-- FIRSTNAME input --%>
         <div class="form-group input-group-lg<c:if test='${validation.containsKey("firstName")}'> has-error has-feedback </c:if>">
             <fmt:message var="firstName" bundle="${view}" key="registration.firstName"/>
@@ -80,9 +96,11 @@
                 <select class="form-control" id="gender" name="gender" placeholder="koko">
                     <option value="" hidden>${gender}</option>
                     <option value="male"
-                            <c:if test='${param.gender=="male"}'>selected</c:if>><fmt:message bundle="${view}" key="registration.gender.male"/></option>
+                            <c:if test='${param.gender=="male"}'>selected</c:if>><fmt:message bundle="${view}"
+                                                                                              key="registration.gender.male"/></option>
                     <option value="female"
-                            <c:if test='${param.gender=="female"}'>selected</c:if>><fmt:message bundle="${view}" key="registration.gender.female"/></option>
+                            <c:if test='${param.gender=="female"}'>selected</c:if>><fmt:message bundle="${view}"
+                                                                                                key="registration.gender.female"/></option>
                 </select>
                 <c:if test='${validation.containsKey("gender")}'>
                     <span class="glyphicon glyphicon-exclamation-sign form-control-feedback"></span>
