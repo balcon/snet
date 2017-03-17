@@ -38,14 +38,14 @@ public class Registration extends HttpServlet {
         UserDao userDao = DaoConfig.daoFactory.getUserDao();
         try {
             if (validation.isEmpty()) {
-                if (userDao.getByUsername(req.getParameter("username")) != null) {
-                    validation.put("username", FormErrors.username_exists);
-                    req.setAttribute("validation", validation);
-                    req.getRequestDispatcher("/WEB-INF/pages/registration.jsp").forward(req, resp);
-                } else {
+                if (userDao.getByUsername(req.getParameter("username")) == null) {
                     User user = fields.toUser();
                     DaoConfig.daoFactory.getUserDao().create(user);
                     resp.sendRedirect(req.getContextPath() + "/login");
+                } else {
+                    validation.put("username", FormErrors.username_exists);
+                    req.setAttribute("validation", validation);
+                    req.getRequestDispatcher("/WEB-INF/pages/registration.jsp").forward(req, resp);
                 }
             } else {
                 req.setAttribute("validation", validation);
