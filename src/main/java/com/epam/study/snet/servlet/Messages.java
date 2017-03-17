@@ -32,7 +32,7 @@ public class Messages extends HttpServlet {
             req.getRequestDispatcher("/WEB-INF/pages/messages.jsp").forward(req, resp);
         } catch (DaoException e) {
             e.printStackTrace();
-            req.getRequestDispatcher("/WEB-INF/pages/fatalErrorPage.jsp").forward(req, resp);
+            req.getRequestDispatcher("/WEB-INF/pages/errorpage.jsp").forward(req, resp);
         }
     }
 }

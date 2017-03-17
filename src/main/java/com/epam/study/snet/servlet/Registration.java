@@ -1,10 +1,11 @@
 package com.epam.study.snet.servlet;
 
 import com.epam.study.snet.dao.DaoConfig;
+import com.epam.study.snet.dao.DaoException;
+import com.epam.study.snet.dao.UserDao;
 import com.epam.study.snet.enums.FormErrors;
 import com.epam.study.snet.model.RegistrationFields;
 import com.epam.study.snet.model.User;
-import lombok.SneakyThrows;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -22,32 +23,38 @@ public class Registration extends HttpServlet {
         req.getRequestDispatcher("/WEB-INF/pages/registration.jsp").forward(req, resp);
     }
 
-    @SneakyThrows
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        RegistrationFields registrationFields = RegistrationFields.builder()
+        RegistrationFields fields = RegistrationFields.builder()
                 .username(req.getParameter("username"))
                 .password(req.getParameter("password"))
                 .confirmPassword(req.getParameter("confirmPassword"))
                 .firstName(req.getParameter("firstName"))
                 .lastName(req.getParameter("lastName"))
                 .gender(req.getParameter("gender")).build();
-        Map<String, FormErrors> errors = registrationFields.validate();
-        if (errors.isEmpty()) {
-            User user = registrationFields.toUser();
-            DaoConfig.daoFactory.getUserDao().create(user);
-            resp.sendRedirect(req.getContextPath() + "/login");
-        } else {
-            req.setAttribute("validation", errors);
-            req.getRequestDispatcher("/WEB-INF/pages/registration.jsp").forward(req, resp);
 
+
+        Map<String, FormErrors> validation = fields.validate();
+        UserDao userDao = DaoConfig.daoFactory.getUserDao();
+        try {
+            if (validation.isEmpty()) {
+                if (userDao.getByUsername(req.getParameter("username")) != null) {
+                    validation.put("username", FormErrors.username_exists);
+                    req.setAttribute("validation", validation);
+                    req.getRequestDispatcher("/WEB-INF/pages/registration.jsp").forward(req, resp);
+                } else {
+                    User user = fields.toUser();
+                    DaoConfig.daoFactory.getUserDao().create(user);
+                    resp.sendRedirect(req.getContextPath() + "/login");
+                }
+            } else {
+                req.setAttribute("validation", validation);
+                req.getRequestDispatcher("/WEB-INF/pages/registration.jsp").forward(req, resp);
+
+            }
+        } catch (DaoException e) {
+            e.printStackTrace();
+            req.getRequestDispatcher("/WEB-INF/pages/errorpage.jsp").forward(req, resp);
         }
-//        } catch (DaoException e) {
-//            e.printStackTrace();
-//            req.getRequestDispatcher("/WEB-INF/pages/fatalErrorPage.jsp").forward(req, resp);
-//        }
     }
-
- /*   if (DaoConfig.daoFactory.getUserDao().getByUsername(username) != null)
-            errors.put("username", FormErrors.username_exists);*/
 }

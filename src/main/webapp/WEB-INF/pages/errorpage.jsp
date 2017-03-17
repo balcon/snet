@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
-<fmt:setBundle basename="i18n.errors" var="errors"/>
+<fmt:setBundle basename="i18n.view" var="view"/>
 <script type="text/javascript">
     var count = 9;
     var redirect = "<c:url value="/main"/>";
@@ -20,8 +20,8 @@
 <tags:mainMenu active="main">
 
     <div class="alert alert-danger" role="alert">
-        <strong><fmt:message bundle="${errors}" key="fatal_error"/></strong><br>
-        <fmt:message bundle="${errors}" key="fatal_error_coundown"/>
+        <strong><fmt:message bundle="${view}" key="error"/></strong><br>
+        <fmt:message bundle="${view}" key="error.coundown"/>
         <span id="timer"><script type="text/javascript">countDown();</script></span>
     </div>
 

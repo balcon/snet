@@ -32,7 +32,7 @@ public class Chat extends HttpServlet {
             req.getRequestDispatcher("/WEB-INF/pages/chat.jsp").forward(req, resp);
         } catch (DaoException e) {
             e.printStackTrace();
-            req.getRequestDispatcher("/WEB-INF/pages/fatalErrorPage.jsp").forward(req, resp);
+            req.getRequestDispatcher("/WEB-INF/pages/errorpage.jsp").forward(req, resp);
         }
 
 
@@ -53,7 +53,7 @@ public class Chat extends HttpServlet {
             resp.sendRedirect(contextPath + "/main/chat?companionId=" + req.getParameter("companionId"));
         }catch (DaoException e){
             e.printStackTrace();
-            req.getRequestDispatcher("/WEB-INF/pages/fatalErrorPage.jsp").forward(req, resp);
+            req.getRequestDispatcher("/WEB-INF/pages/errorpage.jsp").forward(req, resp);
         }
     }
 }

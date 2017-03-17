@@ -5,4 +5,6 @@ public enum FormErrors {
     password_short6,
     username_exists,
     bad_login_password,
+    username_incorrect,
+    password_not_equals_confirm
 }

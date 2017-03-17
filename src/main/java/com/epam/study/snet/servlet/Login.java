@@ -39,7 +39,7 @@ public class Login extends HttpServlet {
             }
         } catch (DaoException e) {
             e.printStackTrace();
-            req.getRequestDispatcher("/WEB-INF/pages/fatalErrorPage.jsp").forward(req, resp);
+            req.getRequestDispatcher("/WEB-INF/pages/errorpage.jsp").forward(req, resp);
         }
     }
 

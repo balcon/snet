@@ -44,7 +44,7 @@
             <fmt:message var="confirdPassword" bundle="${view}" key="registration.confirdPassword"/>
             <label class="col-md-3 control-label" for=confirdPassword>${confirdPassword}</label>
             <div class="col-md-6">
-                <input id="confirdPassword" type="confirdPassword" name="confirdPassword" class="form-control"
+                <input id="confirdPassword" type="password" name="confirmPassword" class="form-control"
                        placeholder="${confirdPassword}" value="<c:out value="${param.confirdPassword}"/>">
                 <c:if test='${validation.containsKey("confirdPassword")}'>
                     <span class="glyphicon glyphicon-exclamation-sign  form-control-feedback"></span>
