@@ -1,8 +1,16 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
+
+<fmt:setLocale value="${sessionScope.locale}"/>
+<fmt:setBundle basename="i18n.view" var="view"/>
+<fmt:setBundle basename="i18n.errors" var="errors"/>
+
 <tags:mainMenu active="messages">
-    <h2>Messages</h2>
+    <div class="page-header col-md-offset-4">
+        <h2><fmt:message bundle="${view}" key="messages.title"/></h2>
+    </div>
 
     <c:if test="${empty messages}">
         There are no messages

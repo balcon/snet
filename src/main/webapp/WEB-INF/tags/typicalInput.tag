@@ -8,6 +8,7 @@
 <%@ attribute name="validation" required="true" type="java.lang.Boolean" %>
 <%@ attribute name="validationErrorProp" required="true" %>
 
+<fmt:setLocale value="${sessionScope.locale}"/>
 <fmt:setBundle basename="i18n.view" var="view"/>
 <fmt:setBundle basename="i18n.errors" var="errors"/>
 <fmt:message var="label" bundle="${view}" key="${labelProp}"/>
