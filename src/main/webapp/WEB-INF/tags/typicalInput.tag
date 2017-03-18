@@ -7,6 +7,7 @@
 <%@ attribute name="setupValue" required="true" %>
 <%@ attribute name="validation" required="true" type="java.lang.Boolean" %>
 <%@ attribute name="validationErrorProp" required="true" %>
+<%@ attribute name="inline" type="java.lang.Boolean" required="true" %>
 
 <fmt:setLocale value="${sessionScope.locale}"/>
 <fmt:setBundle basename="i18n.view" var="view"/>
@@ -14,9 +15,9 @@
 <fmt:message var="label" bundle="${view}" key="${labelProp}"/>
 
 <div class="form-group<c:if test="${validation}"> has-error has-feedback </c:if>">
-    <label class="col-md-3 control-label" for="${name}">${label}
+    <label class="<c:if test="${inline==true}">col-md-3 </c:if>control-label" for="${name}">${label}
     </label>
-    <div class="col-md-6">
+    <div class="<c:if test="${inline==true}">col-md-6 </c:if>">
         <input id="${name}" type="${type}" name="${name}" class="form-control"
                placeholder="${label}" value="<c:out value="${setupValue}"/>">
         <c:if test='${validation}'>

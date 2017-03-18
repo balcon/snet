@@ -9,7 +9,7 @@
 
 <tags:mainMenu active="messages">
     <div class="page-header col-md-offset-4">
-        <h2><fmt:message bundle="${view}" key="messages.title"/></h2>
+        <h3><fmt:message bundle="${view}" key="messages.title"/></h3>
     </div>
 
     <c:if test="${empty messages}">

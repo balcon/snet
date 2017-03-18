@@ -8,7 +8,7 @@
 <fmt:setBundle basename="i18n.errors" var="errors"/>
 <tags:mainMenu>
     <div class="page-header col-md-offset-4">
-        <h2><fmt:message bundle="${view}" key="login.title"/></h2>
+        <h3><fmt:message bundle="${view}" key="login.title"/></h3>
     </div>
     <form class="form-horizontal <c:if test='${validation.containsKey("loginForm")}'> has-error </c:if>" action="login"
           method="post">
@@ -22,7 +22,7 @@
                            labelProp="login.username"
                            setupValue="user1"
                            validation='${validation.containsKey("username")}'
-                           validationErrorProp='${validation.get("username")}'/>
+                           validationErrorProp='${validation.get("username")}' inline="true"/>
                             <%--setupValue="${param.username}"--%>
 
         <tags:typicalInput type="password"
@@ -30,8 +30,8 @@
                            labelProp="login.password"
                            setupValue="123456"
                            validation='${validation.containsKey("password")}'
-                           validationErrorProp='${validation.get("password")}'/>
-        
+                           validationErrorProp='${validation.get("password")}' inline="true"/>
+
         <div class="col-md-offset-4">
             <button type="submit" class="btn btn-primary">
                 <fmt:message bundle="${view}" key="login.title"/></button>

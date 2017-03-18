@@ -5,8 +5,32 @@
 <fmt:setLocale value="${sessionScope.locale}"/>
 <fmt:setBundle basename="i18n.view" var="view"/>
 <fmt:setBundle basename="i18n.errors" var="errors"/>
-<tags:mainMenu>
+<tags:mainMenu active="profile">
     <div class="page-header col-md-offset-4">
-    <h3><fmt:message bundle="${view}" key="profile.title"/></h3>
+        <h3><fmt:message bundle="${view}" key="profile.title"/></h3>
+    </div>
+    <div class="col-md-3">
+        <img src="https://www.w3schools.com/bootstrap/img_avatar1.png" class="rounded img-thumbnail">
+    </div>
+    <div class="col-md-6">
+        <form>
+            <tags:typicalInput type="text"
+                               name="firstName"
+                               labelProp="profile.firstName"
+                               setupValue="${param.firstName}"
+                               validation='${validation.containsKey("firstName")}'
+                               validationErrorProp='${validation.get("firstName")}'
+                               inline="false"/>
+            <tags:typicalInput type="text"
+                               name="lastName"
+                               labelProp="profile.lastName"
+                               setupValue="${param.lastName}"
+                               validation='${validation.containsKey("lastName")}'
+                               validationErrorProp='${validation.get("lastName")}'
+                               inline="false"/>
+
+
+        </form>
+    </div>
     </div>
 </tags:mainMenu>

@@ -7,7 +7,7 @@
 <fmt:setBundle basename="i18n.errors" var="errors"/>
 <tags:mainMenu>
     <div class="page-header col-md-offset-4">
-        <h2><fmt:message bundle="${view}" key="registration.title"/></h2>
+        <h3><fmt:message bundle="${view}" key="registration.title"/></h3>
     </div>
     <form class="form-horizontal" action="registration" method="post">
         <tags:typicalInput type="text"
@@ -15,35 +15,35 @@
                            labelProp="registration.username"
                            setupValue="${param.username}"
                            validation='${validation.containsKey("username")}'
-                           validationErrorProp='${validation.get("username")}'/>
+                           validationErrorProp='${validation.get("username")}' inline="true"/>
 
         <tags:typicalInput type="password"
                            name="password"
                            labelProp="registration.password"
                            setupValue="${param.password}"
                            validation='${validation.containsKey("password")}'
-                           validationErrorProp='${validation.get("password")}'/>
+                           validationErrorProp='${validation.get("password")}' inline="true"/>
         
         <tags:typicalInput type="password"
                            name="confirmPassword"
                            labelProp="registration.confirmPassword"
                            setupValue="${param.confirmPassword}"
                            validation='${validation.containsKey("confirmPassword")}'
-                           validationErrorProp='${validation.get("confirmPassword")}'/>
+                           validationErrorProp='${validation.get("confirmPassword")}' inline="true"/>
         
         <tags:typicalInput type="text"
                            name="firstName"
                            labelProp="registration.firstName"
                            setupValue="${param.firstName}"
                            validation='${validation.containsKey("firstName")}'
-                           validationErrorProp='${validation.get("firstName")}'/>
+                           validationErrorProp='${validation.get("firstName")}' inline="true"/>
 
         <tags:typicalInput type="text"
                            name="lastName"
                            labelProp="registration.lastName"
                            setupValue="${param.lastName}"
                            validation='${validation.containsKey("lastName")}'
-                           validationErrorProp='${validation.get("lastName")}'/>
+                           validationErrorProp='${validation.get("lastName")}' inline="true"/>
 
             <%-- GENDER INPUT --%>
         <div class="form-group <c:if test='${validation.containsKey("gender")}'> has-error has-feedback </c:if>">
