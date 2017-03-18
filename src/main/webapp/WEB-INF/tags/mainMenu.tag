@@ -82,22 +82,6 @@
                         <fmt:message bundle="${view}" key="menu.profile"/></a></li>
                 <li><a href="<c:url value="/logout"/>"><span class="glyphicon glyphicon-off"></span>
                     <fmt:message bundle="${view}" key="menu.logout"/></a></li>
-                <li>
-                    <c:url var="locale" value="/locale"/>
-                    <form action="${locale}" method="post">
-                        <input type="hidden" name="locale" value="en_US">
-                        <input type="hidden" name="currentPage"
-                               value="${requestScope['javax.servlet.forward.request_uri']}">
-                        <input type="submit" value="EN">
-                    </form>
-
-                    <form action="${locale}" method="post">
-                        <input type="hidden" name="locale" value="ru_RU">
-                        <input type="hidden" name="currentPage"
-                               value="${requestScope['javax.servlet.forward.request_uri']}">
-                        <input type="submit" value="Рус">
-                    </form>
-                </li>
             </ul>
         </div>
         <div class="col-md-9 col-xs-9 well">

@@ -3,11 +3,13 @@ package com.epam.study.snet.model;
 import com.epam.study.snet.enums.FormErrors;
 import com.epam.study.snet.enums.Gender;
 import lombok.Builder;
+import lombok.Value;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@Value
 @Builder
 public class RegistrationFields {
     private String username;

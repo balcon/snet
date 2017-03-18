@@ -38,7 +38,7 @@ public class Registration extends HttpServlet {
         UserDao userDao = DaoConfig.daoFactory.getUserDao();
         try {
             if (validation.isEmpty()) {
-                if (userDao.getByUsername(req.getParameter("username")) == null) {
+                if (userDao.getByUsername(fields.getUsername()) == null) {
                     User user = fields.toUser();
                     DaoConfig.daoFactory.getUserDao().create(user);
                     resp.sendRedirect(req.getContextPath() + "/login");

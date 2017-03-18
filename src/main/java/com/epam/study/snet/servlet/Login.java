@@ -1,8 +1,10 @@
 package com.epam.study.snet.servlet;
 
-import com.epam.study.snet.enums.FormErrors;
 import com.epam.study.snet.dao.DaoConfig;
 import com.epam.study.snet.dao.DaoException;
+import com.epam.study.snet.dao.UserDao;
+import com.epam.study.snet.enums.FormErrors;
+import com.epam.study.snet.model.LoginFields;
 import com.epam.study.snet.model.User;
 import org.apache.commons.codec.digest.DigestUtils;
 
@@ -24,17 +26,28 @@ public class Login extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String username = req.getParameter("username");
-        String password = req.getParameter("password");
+        LoginFields fields = LoginFields.builder()
+                .username(req.getParameter("username"))
+                .password(req.getParameter("password")).build();
+
+        Map<String, FormErrors> validation = fields.validate();
+        UserDao userDao = DaoConfig.daoFactory.getUserDao();
         try {
-            Map<String, FormErrors> errors = validate(username, password);
-            User user = DaoConfig.daoFactory.getUserDao().getByUsername(username);
-            if (errors.isEmpty()) {
-                req.getSession().setAttribute("user", user);
-                String contextPath = req.getContextPath();
-                resp.sendRedirect(contextPath + "/main");
+            if (validation.isEmpty()) {
+                User user = userDao.getByUsername(fields.getUsername());
+                String passHash = DigestUtils.md5Hex(fields.getPassword());
+                if (user != null && user.getPassword().equals(passHash)) {
+                    req.getSession().setAttribute("user", user);
+                    String contextPath = req.getContextPath();
+                    resp.sendRedirect(contextPath + "/main");
+
+                } else {
+                    validation.put("loginForm", FormErrors.bad_login_password);
+                    req.setAttribute("validation", validation);
+                    req.getRequestDispatcher("/WEB-INF/pages/login.jsp").forward(req, resp);
+                }
             } else {
-                req.setAttribute("validation", errors);
+                req.setAttribute("validation", validation);
                 req.getRequestDispatcher("/WEB-INF/pages/login.jsp").forward(req, resp);
             }
         } catch (DaoException e) {
