@@ -45,6 +45,13 @@
                            validation='${validation.containsKey("lastName")}'
                            validationErrorProp='${validation.get("lastName")}' inline="true"/>
 
+        <tags:typicalInput type="date"
+                           name="birthday"
+                           labelProp="registration.birthday"
+                           setupValue="${param.birthday}"
+                           validation='${validation.containsKey("birthday")}'
+                           validationErrorProp='${validation.get("birthday")}' inline="true"/>
+
             <%-- GENDER INPUT --%>
         <div class="form-group <c:if test='${validation.containsKey("gender")}'> has-error has-feedback </c:if>">
             <fmt:message var="gender" bundle="${view}" key="registration.gender"/>
@@ -53,11 +60,11 @@
             <div class="col-md-6">
                 <select class="form-control" id="gender" name="gender" placeholder="koko">
                     <option value="" hidden>${gender}</option>
-                    <option value="male"
-                            <c:if test='${param.gender=="male"}'>selected</c:if>><fmt:message bundle="${view}"
+                    <option value="MALE"
+                            <c:if test='${param.gender=="MALE"}'>selected</c:if>><fmt:message bundle="${view}"
                                                                                               key="registration.gender.male"/></option>
-                    <option value="female"
-                            <c:if test='${param.gender=="female"}'>selected</c:if>><fmt:message bundle="${view}"
+                    <option value="FEMALE"
+                            <c:if test='${param.gender=="FEMALE"}'>selected</c:if>><fmt:message bundle="${view}"
                                                                                                 key="registration.gender.female"/></option>
                 </select>
                 <c:if test='${validation.containsKey("gender")}'>

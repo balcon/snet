@@ -5,16 +5,20 @@ import lombok.Builder;
 import lombok.Value;
 import lombok.experimental.NonFinal;
 
+import java.time.LocalDate;
+
 @Value
 @Builder
 public class User {
     @NonFinal
     Long id;
-    String firstName;
-    String lastName;
     String username;
     String password;
+    String firstName;
+    String lastName;
+    LocalDate birthday;
     Gender gender;
+    Image photo;
 
     public void setId(Long id) {
         if (this.id == null)

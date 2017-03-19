@@ -1,6 +1,7 @@
 package com.epam.study.snet.dao.db.mysql;
 
 import com.epam.study.snet.dao.DaoFactory;
+import com.epam.study.snet.dao.ImageDao;
 import com.epam.study.snet.dao.MessageDao;
 import com.epam.study.snet.dao.UserDao;
 
@@ -13,6 +14,10 @@ public class MySqlDaoFactory implements DaoFactory {
         this.dataSource = dataSource;
     }
 
+    @Override
+    public ImageDao getImageDao() {
+        return new MySqlImageDao(dataSource);
+    }
 
     @Override
     public UserDao getUserDao() {

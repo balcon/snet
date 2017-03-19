@@ -12,4 +12,6 @@ public interface UserDao {
     User getById(Long id) throws DaoException;
 
     User getByUsername(String username) throws DaoException;
+
+    void update(User user) throws DaoException;
 }

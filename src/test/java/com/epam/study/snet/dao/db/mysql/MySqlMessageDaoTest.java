@@ -1,6 +1,7 @@
 package com.epam.study.snet.dao.db.mysql;
 
 import com.epam.study.snet.dao.DaoException;
+import com.epam.study.snet.enums.Gender;
 import com.epam.study.snet.model.Message;
 import com.epam.study.snet.model.User;
 import org.junit.Before;
@@ -25,9 +26,9 @@ public class MySqlMessageDaoTest extends MySqlDaoTests {
 
     @Before
     public void setUp() throws Exception {
-        user1 = userDao.create(User.builder().username("u1").build());
-        user2 = userDao.create(User.builder().username("u2").build());
-        user3 = userDao.create(User.builder().username("u3").build());
+        user1 = userDao.create(User.builder().username("u1").birthday(LocalDate.now()).gender(Gender.FEMALE).build());
+        user2 = userDao.create(User.builder().username("u2").birthday(LocalDate.now()).gender(Gender.FEMALE).build());
+        user3 = userDao.create(User.builder().username("u3").birthday(LocalDate.now()).gender(Gender.FEMALE).build());
 
         testMessage=Message.builder().sender(user1).receiver(user2).body("Hi, u2!").build();
 

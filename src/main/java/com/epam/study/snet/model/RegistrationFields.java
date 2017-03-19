@@ -6,18 +6,20 @@ import lombok.Builder;
 import lombok.Value;
 import org.apache.commons.codec.digest.DigestUtils;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
 @Value
 @Builder
 public class RegistrationFields {
-    private String username;
-    private String password;
-    private String confirmPassword;
-    private String firstName;
-    private String lastName;
-    private String gender;
+    String username;
+    String password;
+    String confirmPassword;
+    String firstName;
+    String lastName;
+    String birthday;
+    String gender;
 
     public Map<String, FormErrors> validate() {
         Map<String, FormErrors> errors = new HashMap<>();
@@ -39,18 +41,20 @@ public class RegistrationFields {
 
         if (firstName == null || firstName.isEmpty()) errors.put("firstName", FormErrors.field_empty);
         if (lastName == null || lastName.isEmpty()) errors.put("lastName", FormErrors.field_empty);
+        if (birthday == null || birthday.isEmpty()) errors.put("birthday", FormErrors.field_empty);
         if (gender == null || gender.isEmpty()) errors.put("gender", FormErrors.field_empty);
 
         return errors;
     }
 
     public User toUser() {
-        Gender gender = this.gender.equals("male") ? Gender.MALE : Gender.FEMALE;
+        Gender gender = this.gender.equals("MALE") ? Gender.MALE : Gender.FEMALE;
         return User.builder()
                 .username(username)
                 .password(DigestUtils.md5Hex(password))
                 .firstName(firstName)
                 .lastName(lastName)
+                .birthday(LocalDate.parse(birthday))
                 .gender(gender).build();
     }
 }

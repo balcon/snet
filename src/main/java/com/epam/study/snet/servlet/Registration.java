@@ -31,6 +31,7 @@ public class Registration extends HttpServlet {
                 .confirmPassword(req.getParameter("confirmPassword"))
                 .firstName(req.getParameter("firstName"))
                 .lastName(req.getParameter("lastName"))
+                .birthday(req.getParameter("birthday"))
                 .gender(req.getParameter("gender")).build();
 
 

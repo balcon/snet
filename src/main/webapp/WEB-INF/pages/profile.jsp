@@ -10,7 +10,11 @@
         <h3><fmt:message bundle="${view}" key="profile.title"/></h3>
     </div>
     <div class="col-md-3">
-        <img src="https://www.w3schools.com/bootstrap/img_avatar1.png" class="rounded img-thumbnail">
+        <img src="<c:url value="/main/image"/>" class="rounded img-thumbnail">
+        <form action="<c:url value="/main/image"/>" method="post" enctype="multipart/form-data">
+            <input type="file" name="imageFile">
+            <input type="submit" value="Upload">
+        </form>
     </div>
     <div class="col-md-6">
         <form>

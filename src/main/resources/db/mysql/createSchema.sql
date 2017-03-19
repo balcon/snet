@@ -6,6 +6,9 @@ CREATE TABLE snet.users (
   passHash VARCHAR(255) NOT NULL,
   firstName VARCHAR(255) NOT NULL,
   lastName VARCHAR(255) NOT NULL,
+  birthday DATE NOT NULL,
+  gender VARCHAR(255) NOT NULL,
+  imageId BIGINT NULL
 );
 
 CREATE TABLE snet.messages (
@@ -14,4 +17,9 @@ CREATE TABLE snet.messages (
   receiverId BIGINT NOT NULL,
   sendingTime DATETIME NOT NULL,
   messageBody VARCHAR(255)
+);
+
+CREATE TABLE snet.images(
+  imageId BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  image BLOB
 );
