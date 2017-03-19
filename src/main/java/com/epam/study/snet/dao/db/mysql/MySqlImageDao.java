@@ -39,7 +39,7 @@ public class MySqlImageDao implements ImageDao {
     }
 
     @Override
-    public byte[] getById(Image image) throws DaoException {
+    public byte[] read(Image image) throws DaoException {
         long imageId=image.getId();
         byte[] imageBytes=null;
         try (Connection connection=dataSource.getConnection()){

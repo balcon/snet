@@ -10,7 +10,8 @@
         <h3><fmt:message bundle="${view}" key="profile.title"/></h3>
     </div>
     <div class="col-md-3">
-        <img src="<c:url value="/main/image"/>" class="rounded img-thumbnail">
+        <c:set var="imageId" value="${sessionScope.user.getPhoto().getId()}"/> <%-- TODO : do somethin with User Session--%>
+        <img src="<c:url value="/main/image?imageId=${imageId}"/>" class="rounded img-thumbnail">
         <form action="<c:url value="/main/image"/>" method="post" enctype="multipart/form-data">
             <input type="file" name="imageFile">
             <input type="submit" value="Upload">

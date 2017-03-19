@@ -16,7 +16,7 @@ import javax.servlet.http.Part;
 import java.io.IOException;
 
 @WebServlet("/main/image")
-@MultipartConfig(fileSizeThreshold = 1024 * 1024 * 2, // 2MB
+@MultipartConfig(fileSizeThreshold = 1024 * 1024 * 2, // 2MB //TODO read about this
         maxFileSize = 1024 * 1024 * 10,      // 10MB
         maxRequestSize = 1024 * 1024 * 50)   // 50MB
 public class ImageServlet extends HttpServlet {
@@ -26,21 +26,22 @@ public class ImageServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         byte[] imageBytes;
-        long imageId=Long.getLong(req.getParameter("imageId"));
-        Image image=Image.builder().id(imageId).build();
-        imageBytes = imageDao.getById(image);
+        long imageId = Long.valueOf(req.getParameter("imageId"));
+        Image image = Image.builder().id(imageId).build();
+        imageBytes = imageDao.read(image);
         resp.setContentType("imageBytes/jpg");
         resp.getOutputStream().write(imageBytes);
+
     }
 
     @SneakyThrows
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Part imagePart = req.getPart("imageFile");
-        User currentUser=(User)req.getSession().getAttribute("user");
-        Image image=null;
+        User currentUser = (User) req.getSession().getAttribute("user");
+        Image image = null;
         image = imageDao.create(imagePart.getInputStream());
-        User user=User.builder().id(currentUser.getId()).photo(image).build();
+        User user = User.builder().id(currentUser.getId()).photo(image).build();
         DaoConfig.daoFactory.getUserDao().update(user);
         String contextPath = req.getContextPath();
         resp.sendRedirect(contextPath + "/main/profile");
