@@ -5,7 +5,7 @@
 <fmt:setLocale value="${sessionScope.locale}"/>
 <fmt:setBundle basename="i18n.view" var="view"/>
 <script type="text/javascript">
-    var count = 9;
+    var count = 7;
     var redirect = "<c:url value="/main"/>";
     function countDown() {
         var timer = document.getElementById("timer");
@@ -21,7 +21,7 @@
 <tags:mainMenu active="main">
 
     <div class="alert alert-danger" role="alert">
-        <strong><fmt:message bundle="${view}" key="error"/></strong><br>
+        <strong><fmt:message bundle="${view}" key="error.fatal"/></strong><br>
         <fmt:message bundle="${view}" key="error.coundown"/>
         <span id="timer"><script type="text/javascript">countDown();</script></span>
     </div>

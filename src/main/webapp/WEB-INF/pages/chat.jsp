@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
-<tags:mainMenu>
+<tags:mainMenu active="messages">
     <h2>Chat with</h2>
 
     <form action="chat" method="post">
@@ -13,26 +13,39 @@
     <c:if test="${empty messages}">
         There are no messages
     </c:if>
-    <c:if test="${not empty messages}">
-        <table border="1">
-            <tr>
-                <td>From</td>
-                <td>To</td>
-                <td>Body</td>
-            </tr>
-            <c:forEach var="message" items="${messages}">
-                <tr>
-                    <td>
-                        <c:out value="${message.getSender().getUsername()}"/>
-                    </td>
-                    <td>
-                        <c:out value="${message.getReceiver().getUsername()}"/>
-                    </td>
-                    <td>
-                        <c:out value="${message.getBody()}"/>
-                    </td>
-                </tr>
+    <c:forEach var="message" items="${messages}">
+
+        <div class="media panel panel-primary <c:if test="${message.isUnread()==true}">
+         unread-message</c:if>" style="margin-bottom: 1px; margin-top: 0px">
+            <div class="panel-body">
+                <div class="media-left">
+                    <c:set var="companionImageId" value="${message.getSender().getPhoto().getId()}"/>
+                    <img src="<c:url value="/main/image?imageId=${companionImageId}"/>" class="media-object"
+                         style="height:70px">
+                </div>
+                <div class="media-body">
+                    <c:set var="senderName"
+                           value="${message.getSender().getFirstName()} ${message.getSender().getLastName()}"/>
+                    <h4 class="media-heading"><c:out value="${senderName}"/>
+                        <small>
+                            <i>
+                                    ${message.getSendingTime()}
+                            </i>
+                                <%--<i><fmt:formatDate value="${messages.getSendingTime()}" type="both"--%>
+                                <%--timeStyle="short"/></i>--%>
+                        </small>
+                    </h4>
+
+                    <p>
+                        <c:out value="${message.getBody()}"/></p>
+                </div>
+            </div>
+        </div>
+    </c:forEach>
+        <ul class="pagination">
+            <c:forEach var="page" begin="1" end="${numberOfPages}">
+                <li><a href="#">${page}</a></li>
             </c:forEach>
-        </table>
-    </c:if>
+        </ul>
+    ${requestScope.trueNumber}
 </tags:mainMenu>

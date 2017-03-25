@@ -22,7 +22,7 @@ public class Login extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String defaultLocale=req.getLocale().getLanguage()+"_"+req.getLocale().getCountry();
-        if(req.getSession().getAttribute("locale")==null) req.getSession().setAttribute("locale",defaultLocale);
+        if(req.getSession().getAttribute("locale")==null) req.getSession().setAttribute("locale","en_US");
         req.getRequestDispatcher("/WEB-INF/pages/login.jsp").forward(req, resp);
     }
 

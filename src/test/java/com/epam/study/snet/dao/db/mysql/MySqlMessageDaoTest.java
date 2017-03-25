@@ -1,6 +1,5 @@
 package com.epam.study.snet.dao.db.mysql;
 
-import com.epam.study.snet.dao.DaoException;
 import com.epam.study.snet.enums.Gender;
 import com.epam.study.snet.model.Message;
 import com.epam.study.snet.model.User;
@@ -11,9 +10,7 @@ import org.junit.Test;
 import java.time.LocalDate;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class MySqlMessageDaoTest extends MySqlDaoTests {
 
@@ -30,7 +27,7 @@ public class MySqlMessageDaoTest extends MySqlDaoTests {
         user2 = userDao.create(User.builder().username("u2").birthday(LocalDate.now()).gender(Gender.FEMALE).build());
         user3 = userDao.create(User.builder().username("u3").birthday(LocalDate.now()).gender(Gender.FEMALE).build());
 
-        testMessage=Message.builder().sender(user1).receiver(user2).body("Hi, u2!").build();
+        testMessage = Message.builder().sender(user1).receiver(user2).body("Hi, u2!").build();
 
         messageDao.create(Message.builder().sender(user1).receiver(user2).body("from u1 to u2").build());
         messageDao.create(Message.builder().sender(user1).receiver(user3).body("from u1 to u3").build());
@@ -50,12 +47,28 @@ public class MySqlMessageDaoTest extends MySqlDaoTests {
     }
 
     @Test
+    public void numberReadMessages() throws Exception {
+        int number = messageDao.getNumberUnreadMessages(user3);
+
+        assertEquals(number, 2);
+    }
+
+    @Test
+    public void makeMessagesRead() throws Exception {
+        int numberBefore=messageDao.getNumberUnreadMessages(user2);
+        messageDao.makeMessagesRead(user1,user2);
+        int numberAfter=messageDao.getNumberUnreadMessages(user2);
+
+        assertTrue(numberAfter<numberBefore);
+    }
+
+    @Test
     public void setIdOnceAgain() throws Exception {
-        Message message=messageDao.create(testMessage);
-        long badId=100500;
+        Message message = messageDao.create(testMessage);
+        long badId = 100500;
         message.setId(badId);
 
-        assertFalse(message.getId()==badId);
+        assertFalse(message.getId() == badId);
     }
 
     @Ignore
@@ -70,7 +83,7 @@ public class MySqlMessageDaoTest extends MySqlDaoTests {
     @Test
     public void getListBySenderAndReceiver() throws Exception {
         List<Message> messages = messageDao.getListBySenderAndReceiver(user1, user2);
-
+        assertTrue(messages.get(0).isUnread());
         assertEquals(messages.size(), 3);
     }
 }

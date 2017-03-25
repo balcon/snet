@@ -27,6 +27,11 @@
             border-color: lightgray;
         }
 
+        div.media.unread-message {
+            font-weight: 700;
+            border-width: 3px;
+        }
+
     </style>
     <title>SNetwork</title>
 </head>
@@ -39,11 +44,13 @@
         </div>
         <c:url var="locale" value="/locale"/>
         <c:set var="currentPage" value="${requestScope['javax.servlet.forward.request_uri']}"/>
+        <c:set var="queryString" value="${requestScope['javax.servlet.forward.query_string']}"/>
         <ul class="nav navbar-nav navbar-right ">
             <li>
                 <form action="${locale}" method="post" class="navbar-form  navbar-right ">
                     <input type="hidden" name="locale" value="en_US">
                     <input type="hidden" name="currentPage" value="${currentPage}">
+                    <input type="hidden" name="queryString" value="${queryString}">
                     <button class="btn locale-btn
             <c:if test='${sessionScope.locale=="en_US"}'> locale-btn-active </c:if>
             flag-icon flag-icon-us" type="submit"></button>
@@ -53,6 +60,7 @@
                 <form action="${locale}" method="post" class="navbar-form  navbar-right ">
                     <input type="hidden" name="locale" value="ru_RU">
                     <input type="hidden" name="currentPage" value="${currentPage}">
+                    <input type="hidden" name="queryString" value="${queryString}">
                     <button class="btn locale-btn
             <c:if test='${sessionScope.locale=="ru_RU"}'> locale-btn-active </c:if>flag-icon flag-icon-ru"
                             type="submit"></button>
@@ -67,19 +75,22 @@
             <ul class="nav nav-pills nav-stacked">
                 <li <c:if test='${active=="main"}'>class="active"</c:if>>
                     <a href="<c:url value="/main"/>"><span class="glyphicon glyphicon-home"></span>
-                        <fmt:message bundle="${view}" key="menu.main"/></a></li>
+                        <fmt:message bundle="${view}" key="titles.main"/></a></li>
                 <li <c:if test='${active=="messages"}'>class="active"</c:if>>
                     <a href="<c:url value="/main/messages"/>"><span class="glyphicon glyphicon-envelope"></span>
-                        <fmt:message bundle="${view}" key="menu.messages"/></a></li>
+                        <fmt:message bundle="${view}" key="titles.messages"/>
+                        <c:if test="${sessionScope.unreadMessages > 0}">
+                            <span class="badge">${sessionScope.unreadMessages}</span></c:if>
+                    </a></li>
                 <li <c:if test='${active=="people"}'>class="active"</c:if>>
                     <a href="<c:url value="/main/people"/>"><span class="glyphicon glyphicon-user"></span>
-                        <fmt:message bundle="${view}" key="menu.people"/></a></li>
+                        <fmt:message bundle="${view}" key="titles.users"/></a></li>
                 <li <c:if test='${active=="calendar"}'>class="active"</c:if>>
                     <a href="<c:url value="/main/calendar"/>"><span class="glyphicon glyphicon-th"></span>
-                        <fmt:message bundle="${view}" key="menu.calendar"/></a></li>
+                        <fmt:message bundle="${view}" key="titles.calendar"/></a></li>
                 <li <c:if test='${active=="profile"}'>class="active"</c:if>>
                     <a href="<c:url value="/main/profile"/>"><span class="glyphicon glyphicon-cog"></span>
-                        <fmt:message bundle="${view}" key="menu.profile"/></a></li>
+                        <fmt:message bundle="${view}" key="titles.profile"/></a></li>
                 <li><a href="<c:url value="/logout"/>"><span class="glyphicon glyphicon-off"></span>
                     <fmt:message bundle="${view}" key="menu.logout"/></a></li>
             </ul>

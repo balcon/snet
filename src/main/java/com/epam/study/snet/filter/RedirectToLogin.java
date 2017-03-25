@@ -19,10 +19,10 @@ public class RedirectToLogin implements Filter {
         HttpServletResponse resp = (HttpServletResponse) response;
         if (req.getSession().getAttribute("user") == null) {
             String contextPath = req.getContextPath();
-            resp.sendRedirect(contextPath+"/login");
-            return;
-        }else
+            resp.sendRedirect(contextPath + "/login");
+        } else
             chain.doFilter(request, response);
+
     }
 
     public void destroy() {

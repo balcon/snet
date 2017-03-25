@@ -8,7 +8,7 @@
 <fmt:setBundle basename="i18n.errors" var="errors"/>
 <tags:mainMenu>
     <div class="page-header col-md-offset-4">
-        <h3><fmt:message bundle="${view}" key="login.title"/></h3>
+        <h3><fmt:message bundle="${view}" key="titles.login"/></h3>
     </div>
     <form class="form-horizontal <c:if test='${validation.containsKey("loginForm")}'> has-error </c:if>" action="login"
           method="post">
@@ -19,7 +19,7 @@
         </c:if>
         <tags:typicalInput type="text"
                            name="username"
-                           labelProp="login.username"
+                           labelProp="user.username"
                            setupValue="user1"
                            validation='${validation.containsKey("username")}'
                            validationErrorProp='${validation.get("username")}' inline="true"/>
@@ -27,16 +27,16 @@
 
         <tags:typicalInput type="password"
                            name="password"
-                           labelProp="login.password"
+                           labelProp="user.password"
                            setupValue="123456"
                            validation='${validation.containsKey("password")}'
                            validationErrorProp='${validation.get("password")}' inline="true"/>
 
         <div class="col-md-offset-4">
             <button type="submit" class="btn btn-primary">
-                <fmt:message bundle="${view}" key="login.title"/></button>
+                <fmt:message bundle="${view}" key="titles.login"/></button>
             <a href="<c:url value="/registration"/>" class="btn btn-link">
-                <fmt:message bundle="${view}" key="registration.title"/></a>
+                <fmt:message bundle="${view}" key="titles.registration"/></a>
         </div>
     </form>
 </tags:mainMenu>

@@ -47,7 +47,7 @@ public class MySqlMessageDao implements MessageDao {
     public List<Message> getListOfLastMessages(User user) throws DaoException {
         List<Message> messages = new ArrayList<>();
         try (Connection connection = dataSource.getConnection()) {
-            String query = "SELECT messageId,senderId,receiverId,sendingTime,messageBody FROM snet.messages JOIN " +
+            String query = "SELECT * FROM snet.messages JOIN " +
                     "(SELECT LEAST(senderId,receiverId) u1, GREATEST (senderId,receiverId) u2, MAX(sendingTime) maxTime " +
                     "FROM snet.messages WHERE senderId=? OR receiverId=? GROUP BY u1,u2) lastMessage " +
                     "ON sendingTime=maxTime AND LEAST(senderId,receiverId)=u1 AND GREATEST (senderId,receiverId)=u2 " +
@@ -71,7 +71,7 @@ public class MySqlMessageDao implements MessageDao {
         List<Message> messages = new ArrayList<>();
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(
-                    "SELECT messageId, senderId, receiverId, messageBody, sendingTime FROM snet.messages " +
+                    "SELECT * FROM snet.messages " +
                             "WHERE (senderId=? AND receiverId=?) OR (senderId=? AND receiverId=?) " +
                             "ORDER BY sendingTime DESC");
             statement.setLong(1, sender.getId());
@@ -87,6 +87,64 @@ public class MySqlMessageDao implements MessageDao {
         }
         return messages;
 
+    }
+
+    @Override
+    public List<Message> getListBySenderAndReceiver(User sender, User receiver, int skip, int limit) throws DaoException {
+            List<Message> messages = new ArrayList<>();
+            try (Connection connection = dataSource.getConnection()) {
+                PreparedStatement statement = connection.prepareStatement(
+                        "SELECT * FROM snet.messages " +
+                                "WHERE (senderId=? AND receiverId=?) OR (senderId=? AND receiverId=?) " +
+                                "ORDER BY sendingTime DESC LIMIT ?,?");
+                statement.setLong(1, sender.getId());
+                statement.setLong(2, receiver.getId());
+                statement.setLong(3, receiver.getId());
+                statement.setLong(4, sender.getId());
+                statement.setInt(5, skip);
+                statement.setInt(6, limit);
+
+                ResultSet resultSet = statement.executeQuery();
+                while (resultSet.next()) {
+                    messages.add(getMessageFromResultSet(resultSet));
+                }
+            } catch (SQLException e) {
+                throw new DaoException("Can't get limited messages list", e);
+            }
+            return messages;
+
+        }
+
+    @Override
+    public int getNumberUnreadMessages(User reciever) throws DaoException {
+        int numberUnreadMessages=0;
+        try (Connection connection = dataSource.getConnection()) {
+            PreparedStatement statement = connection.prepareStatement(
+                    "SELECT COUNT(*) FROM snet.messages " +
+                            "WHERE receiverId=? AND unread=TRUE");
+            statement.setLong(1, reciever.getId());
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+               numberUnreadMessages=resultSet.getInt(1);
+            }
+        } catch (SQLException e) {
+            throw new DaoException("Can't get number of messages", e);
+        }
+        return numberUnreadMessages;
+    }
+
+    @Override
+    public void makeMessagesRead(User sender, User receiver) throws DaoException {
+        try (Connection connection = dataSource.getConnection()) {
+            PreparedStatement statement = connection.prepareStatement(
+                    "UPDATE snet.messages SET unread=FALSE " +
+                            "WHERE (senderId=? AND receiverId=?)");
+            statement.setLong(1, sender.getId());
+            statement.setLong(2, receiver.getId());
+            statement.execute();
+        } catch (SQLException e) {
+            throw new DaoException("Can't get messages list", e);
+        }
     }
 
     private Message getMessageFromResultSet(ResultSet resultSet) throws DaoException, SQLException {
@@ -106,6 +164,7 @@ public class MySqlMessageDao implements MessageDao {
                 .receiver(reciever)
                 .body(resultSet.getString("messageBody"))
                 .sendingTime(LocalDateTime.of(sendingDate.toLocalDate(), sendingTime.toLocalTime()))
+                .unread(resultSet.getBoolean("unread"))
                 .build();
         return message;
     }

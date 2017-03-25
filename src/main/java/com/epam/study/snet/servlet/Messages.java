@@ -4,6 +4,7 @@ import com.epam.study.snet.dao.DaoConfig;
 import com.epam.study.snet.dao.DaoException;
 import com.epam.study.snet.dao.MessageDao;
 import com.epam.study.snet.dao.UserDao;
+import com.epam.study.snet.model.LastMessage;
 import com.epam.study.snet.model.Message;
 import com.epam.study.snet.model.User;
 
@@ -13,6 +14,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @WebServlet("/main/messages")
@@ -22,13 +27,31 @@ public class Messages extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        User sender = (User) req.getSession().getAttribute("user");
+        User loggedUser = (User) req.getSession().getAttribute("user");
         try {
-            List<Message> messages = messageDao.getListOfLastMessages(sender);
-            List<User> users = userDao.getList();
+            List<Message> messages = messageDao.getListOfLastMessages(loggedUser);
+            List<LastMessage> lastMessages = new ArrayList<>();
+            for (Message message : messages) {
+                User companion;
+                Boolean response;
+                if (message.getSender().equals(loggedUser)) {
+                    companion = message.getReceiver();
+                    response = true;
+                } else {
+                    companion = message.getSender();
+                    response = false;
+                }
+                Instant instant = message.getSendingTime().atZone(ZoneId.systemDefault()).toInstant();
+                lastMessages.add(LastMessage.builder()
+                        .loggedUser(loggedUser)
+                        .companion(companion)
+                        .body(message.getBody())
+                        .response(response)
+                        .lastMessageTime(Date.from(instant)).build());
+            }
 
-            req.setAttribute("users", users);
-            req.setAttribute("messages", messages);
+            req.setAttribute("messages", messages);//TODO remove
+            req.setAttribute("lastMessages", lastMessages);
             req.getRequestDispatcher("/WEB-INF/pages/messages.jsp").forward(req, resp);
         } catch (DaoException e) {
             e.printStackTrace();

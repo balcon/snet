@@ -18,13 +18,4 @@
         <url-pattern>/main</url-pattern>
     </servlet-mapping>
 
-    <servlet>
-        <servlet-name>page1</servlet-name>
-        <jsp-file>/WEB-INF/pages/page1.jsp</jsp-file>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>page1</servlet-name>
-        <url-pattern>/main/page1</url-pattern>
-    </servlet-mapping>
-
 </web-app>

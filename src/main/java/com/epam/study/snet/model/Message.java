@@ -14,6 +14,7 @@ public class Message {
     User sender;
     User receiver;
     String body;
+    boolean unread;
     @NonFinal
     LocalDateTime sendingTime;
 

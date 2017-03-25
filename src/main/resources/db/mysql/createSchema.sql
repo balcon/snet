@@ -16,7 +16,8 @@ CREATE TABLE snet.messages (
   senderId BIGINT NOT NULL,
   receiverId BIGINT NOT NULL,
   sendingTime DATETIME NOT NULL,
-  messageBody VARCHAR(255)
+  messageBody VARCHAR(255),
+  unread BOOL DEFAULT TRUE
 );
 
 CREATE TABLE snet.images(

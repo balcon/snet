@@ -1,9 +1,9 @@
 package com.epam.study.snet.servlet;
 
+import com.epam.study.snet.dao.DaoConfig;
 import com.epam.study.snet.dao.DaoException;
 import com.epam.study.snet.dao.MessageDao;
 import com.epam.study.snet.dao.UserDao;
-import com.epam.study.snet.dao.DaoConfig;
 import com.epam.study.snet.model.Message;
 import com.epam.study.snet.model.User;
 
@@ -23,16 +23,26 @@ public class Chat extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         User currentUser = (User) req.getSession().getAttribute("user");
-        User companion = null;
         try {
-            companion = userDao.getById(Long.valueOf(req.getParameter("companionId")));
-            List<Message> messages = messageDao.getListBySenderAndReceiver(currentUser, companion);
+            User companion = userDao.getById(Long.valueOf(req.getParameter("companionId")));
+            int skip=0;
+            int limit=10;
+
+            String skipString = req.getParameter("skip");
+            if (skipString!=null&&!skipString.isEmpty()) skip = Integer.valueOf(skipString);
+int trueNumber=messageDao.getListBySenderAndReceiver(currentUser,companion).size();
+            List<Message> messages = messageDao.getListBySenderAndReceiver(currentUser, companion,skip,limit);
+            int numberOfPages=(trueNumber/limit)+1;
+            messageDao.makeMessagesRead(companion, currentUser);
+            req.setAttribute("numberOfPages",numberOfPages);
+            req.setAttribute("trueNumber",trueNumber);
             req.setAttribute("messages", messages);
             req.setAttribute("companionId", req.getParameter("companionId"));
             req.getRequestDispatcher("/WEB-INF/pages/chat.jsp").forward(req, resp);
-        } catch (DaoException e) {
+        } catch (DaoException | NumberFormatException e) {
             e.printStackTrace();
-            req.getRequestDispatcher("/WEB-INF/pages/errorpage.jsp").forward(req, resp);
+            throw new RuntimeException(e);
+          //  req.getRequestDispatcher("/WEB-INF/pages/errorpage.jsp").forward(req, resp);
         }
 
 
@@ -49,9 +59,11 @@ public class Chat extends HttpServlet {
                     .receiver(receiver)
                     .body(body).build();
             messageDao.create(message);
+            int unreadMessages = DaoConfig.daoFactory.getMessageDao().getNumberUnreadMessages(sender);
+            req.getSession().setAttribute("unreadMessages", unreadMessages);
             String contextPath = req.getContextPath();
             resp.sendRedirect(contextPath + "/main/chat?companionId=" + req.getParameter("companionId"));
-        }catch (DaoException e){
+        } catch (DaoException e) {
             e.printStackTrace();
             req.getRequestDispatcher("/WEB-INF/pages/errorpage.jsp").forward(req, resp);
         }

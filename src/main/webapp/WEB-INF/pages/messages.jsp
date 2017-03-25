@@ -7,42 +7,46 @@
 <fmt:setBundle basename="i18n.view" var="view"/>
 <fmt:setBundle basename="i18n.errors" var="errors"/>
 
-<tags:mainMenu active="messages">
-    <div class="page-header col-md-offset-4">
-        <h3><fmt:message bundle="${view}" key="messages.title"/></h3>
-    </div>
 
+<tags:mainMenu active="messages">
+    <%--<div class="page-header col-md-offset-4">--%>
+    <%--<h3><fmt:message bundle="${view}" key="titles.messages"/></h3>--%>
+    <%--</div>--%>
+    <h3>Messages</h3>
     <c:if test="${empty messages}">
         There are no messages
     </c:if>
-    <c:if test="${not empty messages}">
-
         <c:url var="urlToChat" value="/main/chat"/>
-        <c:forEach var="message" items="${messages}">
-            <%--LAST MESSAGE--%>
-            <c:set var="companionId" value="${message.getReceiver().getId()}"/>
-            <%-- Current logged user can't be chat-companion to itself --%>
-            <c:if test="${companionId==sessionScope.user.getId()}">
-                <c:set var="companionId" value="${message.getSender().getId()}"/>
-            </c:if>
-            <a href="${urlToChat}?companionId=${companionId}" style="text-decoration: none;">
-                <div class="media panel panel-primary ">
+
+        <c:forEach var="lastMessage" items="${lastMessages}">
+            <a href="${urlToChat}?companionId=${lastMessage.getCompanion().getId()}" style="text-decoration: none;">
+              <div class="media panel panel-primary" style="margin-bottom: 5px">
                     <div class="panel-body">
-                        <div class="media-left">
-                            <img src="https://www.w3schools.com/bootstrap/img_avatar1.png" class="media-object"
-                                 style="width:60px">
+                        <div class="media-left media-top">
+                            <c:set var="companionImageId" value="${lastMessage.getCompanion().getPhoto().getId()}"/>
+                            <img src="<c:url value="/main/image?imageId=${companionImageId}"/>" class="media-object"
+                                 style="height:70px">
                         </div>
                         <div class="media-body">
-                            <h4 class="media-heading"><c:out value="${message.getSender().getFirstName()}"/>
-                                <small><i>12.13.2014 12:00</i></small>
+                            <c:set var="companionName"
+                                   value="${lastMessage.getCompanion().getFirstName()} ${lastMessage.getCompanion().getLastName()}"/>
+                            <h4 class="media-heading"><c:out value="${companionName}"/>
+                                <small>
+                                    <i><fmt:formatDate value="${lastMessage.getLastMessageTime()}" type="both"
+                                                       timeStyle="short"/></i>
+                                </small>
+                                <span class="badge">4</span>
                             </h4>
-                            <p><c:out value="${message.getBody()}"/></p>
+
+                            <p><c:if test="${lastMessage.isResponse()}">
+                                <c:set var="currentUserImageId"
+                                       value="${lastMessage.getLoggedUser().getPhoto().getId()}"/>
+                                <img src="<c:url value="/main/image?imageId=${currentUserImageId}"/>"
+                                     style="height:30px"></c:if>
+                                <c:out value=" ${lastMessage.getBody()}"/></p>
                         </div>
                     </div>
-                </div>
+              </div>
             </a>
-            <%-- END OF LAST MESSAGE --%>
-
         </c:forEach>
-    </c:if>
 </tags:mainMenu>

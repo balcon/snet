@@ -15,8 +15,8 @@ public class RegistrationFieldsTest {
     public void correctInputs() throws Exception {
         RegistrationFields fields = RegistrationFields.builder()
                 .username("juser")
-                .password("password")
-                .confirmPassword("password")
+                .password("user.password")
+                .confirmPassword("user.password")
                 .firstName("John")
                 .lastName("Smith")
                 .gender("male")
@@ -31,8 +31,8 @@ public class RegistrationFieldsTest {
     public void someFieldsIsEmpty() throws Exception {
         RegistrationFields fields = RegistrationFields.builder()
                 .username("")
-                .password("password")
-                .confirmPassword("password")
+                .password("user.password")
+                .confirmPassword("user.password")
                 .firstName("John")
                 .lastName("Smith").build();
         //without setGender
@@ -60,7 +60,7 @@ public class RegistrationFieldsTest {
     public void passNotEqualsWithConfirm() throws Exception {
         RegistrationFields fields = RegistrationFields.builder()
                 .username("juser")
-                .password("password")
+                .password("user.password")
                 .confirmPassword("anotherPassword")
                 .firstName("John")
                 .lastName("Smith")
