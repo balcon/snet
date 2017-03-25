@@ -25,24 +25,25 @@ public class Chat extends HttpServlet {
         User currentUser = (User) req.getSession().getAttribute("user");
         try {
             User companion = userDao.getById(Long.valueOf(req.getParameter("companionId")));
-            int skip=0;
-            int limit=10;
+            int skip = 0;
+            int limit = 10;
 
-            String skipString = req.getParameter("skip");
-            if (skipString!=null&&!skipString.isEmpty()) skip = Integer.valueOf(skipString);
-int trueNumber=messageDao.getListBySenderAndReceiver(currentUser,companion).size();
-            List<Message> messages = messageDao.getListBySenderAndReceiver(currentUser, companion,skip,limit);
-            int numberOfPages=(trueNumber/limit)+1;
+            String pageString = req.getParameter("page");
+         //   if (skipString != null && !skipString.isEmpty()) skip = Integer.valueOf(skipString);
+
+            int trueNumber = messageDao.getListBySenderAndReceiver(currentUser, companion).size();
+            List<Message> messages = messageDao.getListBySenderAndReceiver(currentUser, companion, skip, limit);
+            int numberOfPages = (trueNumber / limit) + 1;
             messageDao.makeMessagesRead(companion, currentUser);
-            req.setAttribute("numberOfPages",numberOfPages);
-            req.setAttribute("trueNumber",trueNumber);
+            req.setAttribute("numberOfPages", numberOfPages);
+            req.setAttribute("trueNumber", trueNumber);
             req.setAttribute("messages", messages);
             req.setAttribute("companionId", req.getParameter("companionId"));
             req.getRequestDispatcher("/WEB-INF/pages/chat.jsp").forward(req, resp);
         } catch (DaoException | NumberFormatException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
-          //  req.getRequestDispatcher("/WEB-INF/pages/errorpage.jsp").forward(req, resp);
+            //  req.getRequestDispatcher("/WEB-INF/pages/errorpage.jsp").forward(req, resp);
         }
 
 

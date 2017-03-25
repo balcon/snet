@@ -3,7 +3,7 @@
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 <tags:mainMenu active="messages">
     <h2>Chat with</h2>
-
+<%--TODO: make correct action form with c:url--%>
     <form action="chat" method="post">
         <input type="hidden" name="companionId" value="${companionId}">
         <input type="text" name="body" placeholder="Input text here">
@@ -41,10 +41,11 @@
                 </div>
             </div>
         </div>
+        <c:url var="urlToChat" value="/main/chat"/>
     </c:forEach>
         <ul class="pagination">
             <c:forEach var="page" begin="1" end="${numberOfPages}">
-                <li><a href="#">${page}</a></li>
+                <li><a href="${urlToChat}?companionId=${companionId}&page=${page}">${page}</a></li>
             </c:forEach>
         </ul>
     ${requestScope.trueNumber}
