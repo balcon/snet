@@ -21,7 +21,7 @@ import java.io.IOException;
         maxRequestSize = 1024 * 1024 * 50)   // 50MB
 public class ImageServlet extends HttpServlet {
     private ImageDao imageDao = DaoConfig.daoFactory.getImageDao();
-
+//TODO make rewrite image. Not add new
     @SneakyThrows
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

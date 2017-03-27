@@ -6,20 +6,32 @@
 
 <fmt:setLocale value="${sessionScope.locale}"/>
 <fmt:setBundle basename="i18n.view" var="view"/>
-<fmt:setBundle basename="i18n.errors" var="errors"/>
 
 <tags:mainMenu active="messages">
 
-    <h2>Chat with</h2>
-    <%--TODO: make correct action form with c:url--%>
-    <form action="chat" method="post">
+    <div class="col-md-offset-4">
+        <h3>${companionName}</h3>
+    </div>
+    <c:url var="chat" value="/main/chat"/>
+    <form action="${chat}" method="post">
         <input type="hidden" name="companionId" value="${companionId}">
-        <input type="text" name="body" placeholder="Input text here">
-        <input type="submit" value="Send">
+        <div class="form-group" style="margin-bottom: 10px">
+            <div class="input-group">
+            <textarea style="resize: vertical;" name="body" class="form-control  col-xs-12" rows="2"
+                      placeholder="<fmt:message bundle="${view}" key="chat.invitiation"/>"></textarea>
+                <div class="input-group-btn">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <span class="glyphicon glyphicon-send"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
     </form>
-
     <c:if test="${empty messages}">
-        There are no messages
+        <br>
+        <div class="alert alert-info">
+            <fmt:message bundle="${view}" key="messages.no_messages"/>
+        </div>
     </c:if>
     <c:forEach var="message" items="${messages}">
 
@@ -28,8 +40,7 @@
             <div class="panel-body">
                 <div class="media-left">
                     <c:set var="companionImageId" value="${message.getSender().getPhoto().getId()}"/>
-                    <img src="<c:url value="/main/image?imageId=${companionImageId}"/>" class="media-object"
-                         style="height:70px">
+                    <img src="<c:url value="/main/image?imageId=${companionImageId}"/>" class="media-object chat-photo">
                 </div>
                 <div class="media-body">
                     <c:set var="senderName"

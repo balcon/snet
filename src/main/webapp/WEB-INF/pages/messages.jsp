@@ -8,23 +8,27 @@
 <fmt:setBundle basename="i18n.view" var="view"/>
 
 <tags:mainMenu active="messages">
-    <div class="page-header col-md-offset-4">
-        <h3><fmt:message bundle="${view}" key="titles.messages"/></h3>
+    <div class="col-md-offset-3">
+        <h3><fmt:message bundle="${view}" key="messages.last_messages"/></h3>
     </div>
-    <h3>Messages</h3>
     <c:if test="${empty lastMessages}">
-        There are no messages
+        <br>
+        <div class="alert alert-info">
+            <fmt:message bundle="${view}" key="messages.no_messages"/>
+        </div>
     </c:if>
     <c:url var="urlToChat" value="/main/chat"/>
 
     <c:forEach var="lastMessage" items="${lastMessages}">
         <a href="${urlToChat}?companionId=${lastMessage.getCompanion().getId()}" style="text-decoration: none;">
-            <div class="media panel panel-primary" style="margin-bottom: 5px">
+            <c:set var="unreadMessages" value="${lastMessage.getNumberUnread()}"/>
+            <div class="media panel panel-primary
+              <c:if test="${unreadMessages>0}"> unread-message</c:if>" style="margin-bottom: 5px">
                 <div class="panel-body">
                     <div class="media-left media-top">
                         <c:set var="companionImageId" value="${lastMessage.getCompanion().getPhoto().getId()}"/>
-                        <img src="<c:url value="/main/image?imageId=${companionImageId}"/>" class="media-object"
-                             style="height:70px">
+                        <img src="<c:url value="/main/image?imageId=${companionImageId}"/>"
+                             class="media-object chat-photo">
                     </div>
                     <div class="media-body">
                         <c:set var="companionName"
@@ -37,16 +41,18 @@
                                                var="parsedDateTime" type="both"/>
                                 <i><fmt:formatDate value="${parsedDateTime}" type="both" timeStyle="short"/></i>
                             </small>
-                            <c:set var="unreadMessages" value="${lastMessage.getNumberUnread()}"/>
                             <c:if test="${unreadMessages>0}"><span class="badge">${unreadMessages}</span></c:if>
                         </h4>
 
-                        <p><c:if test="${lastMessage.isResponse()}">
-                            <c:set var="loggedUserImageId"
-                                   value="${lastMessage.getLoggedUser().getPhoto().getId()}"/>
-                            <img src="<c:url value="/main/image?imageId=${loggedUserImageId}"/>"
-                                 style="height:30px"></c:if>
-                            <c:out value=" ${lastMessage.getBody()}"/></p>
+                        <p>
+                            <c:if test="${lastMessage.isResponse()}">
+                                <c:set var="loggedUserImageId"
+                                       value="${lastMessage.getLoggedUser().getPhoto().getId()}"/>
+                                <img src="<c:url value="/main/image?imageId=${loggedUserImageId}"/>"
+                                     class="chat-photo-response">
+                            </c:if>
+                            <c:out value=" ${lastMessage.getBody()}"/>
+                        </p>
                     </div>
                 </div>
             </div>

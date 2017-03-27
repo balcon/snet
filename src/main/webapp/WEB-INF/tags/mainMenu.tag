@@ -32,6 +32,16 @@
             border-width: 3px;
         }
 
+        img.chat-photo{
+            height:72px;
+            width: 54px;
+        }
+
+        img.chat-photo-response{
+            height:32px;
+            width: 24px;
+        }
+
     </style>
     <title>SNetwork</title>
 </head>
@@ -91,18 +101,14 @@
                 <li <c:if test='${active=="profile"}'>class="active"</c:if>>
                     <a href="<c:url value="/main/profile"/>"><span class="glyphicon glyphicon-cog"></span>
                         <fmt:message bundle="${view}" key="titles.profile"/></a></li>
-                <li><a href="<c:url value="/logout"/>"><span class="glyphicon glyphicon-off"></span>
+                <li><a href="<c:url value="/logout"/>"><span class="glyphicon glyphicon-log-out"></span>
                     <fmt:message bundle="${view}" key="menu.logout"/></a></li>
             </ul>
         </div>
-        <div class="col-md-9 col-xs-9 well">
+        <div class="col-md-9 col-xs-9 well" style="min-height: 290px">
             <jsp:doBody/>
         </div>
     </div>
 </div>
 </body>
 </html>
-
-<%--<c:if test="${not empty sessionScope.user.getUsername()}">--%>
-<%--<td>Logged as: <b><c:out value="${sessionScope.user.getFirstName()}"/> <c:out value="${sessionScope.user.getLastName()}"/>(ID: ${sessionScope.user.getId()})</b></td>--%>
-<%--</c:if>--%>

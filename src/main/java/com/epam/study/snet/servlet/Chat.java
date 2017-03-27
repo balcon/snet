@@ -20,6 +20,7 @@ public class Chat extends HttpServlet {
     private final UserDao userDao = DaoConfig.daoFactory.getUserDao();
     private final MessageDao messageDao = DaoConfig.daoFactory.getMessageDao();
 
+    //todo make class for chat
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         List<Message> messages;
@@ -42,6 +43,7 @@ public class Chat extends HttpServlet {
             }
             messageDao.makeReadBetweenUsers(companion, loggedUser);
 
+            req.setAttribute("companionName", companion.getFirstName()+" "+companion.getLastName());
             req.setAttribute("numberPages", numberPages);
             req.setAttribute("activePage",page);
             req.setAttribute("messages", messages);
