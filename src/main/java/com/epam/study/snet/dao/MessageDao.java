@@ -8,13 +8,17 @@ import java.util.List;
 public interface MessageDao {
     Message create(Message message) throws DaoException;
 
-    List<Message> getListOfLastMessages(User user) throws DaoException;
+    List<Message> getListOfLatest(User user) throws DaoException;
 
-    List<Message> getListBySenderAndReceiver(User sender, User receiver) throws DaoException;
+    List<Message> getListBetweenUsers(User user1, User user2) throws DaoException;
 
-    List<Message> getListBySenderAndReceiver(User sender, User receiver, int skip,  int limit) throws DaoException;
+    List<Message> getListBetweenUsers(User user1, User user2, int skip, int limit) throws DaoException;
 
-    int getNumberUnreadMessages(User reciever) throws DaoException;
+    int getNumberUnread(User receiver) throws DaoException;
 
-    void makeMessagesRead(User sender, User receiver) throws DaoException;
+    int getNumberUnreadBetweenUsers(User sender, User receiver) throws DaoException;
+
+    int getNumberBetweenUsers(User user1, User user2) throws DaoException;
+
+    void makeReadBetweenUsers(User sender, User receiver) throws DaoException;
 }

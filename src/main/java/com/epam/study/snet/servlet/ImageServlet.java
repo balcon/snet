@@ -38,10 +38,10 @@ public class ImageServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Part imagePart = req.getPart("imageFile");
-        User currentUser = (User) req.getSession().getAttribute("user");
+        User loggedUser = (User) req.getSession().getAttribute("user");
         Image image = null;
         image = imageDao.create(imagePart.getInputStream());
-        User user = User.builder().id(currentUser.getId()).photo(image).build();
+        User user = User.builder().id(loggedUser.getId()).photo(image).build();
         DaoConfig.daoFactory.getUserDao().update(user);
         String contextPath = req.getContextPath();
         resp.sendRedirect(contextPath + "/main/profile");

@@ -22,21 +22,28 @@ public class Chat extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        User currentUser = (User) req.getSession().getAttribute("user");
+        List<Message> messages;
+        int numberPages = 0;
+        int page=1;
+        final int LIMIT = 10;
+        User loggedUser = (User) req.getSession().getAttribute("user");
         try {
             User companion = userDao.getById(Long.valueOf(req.getParameter("companionId")));
-            int skip = 0;
-            int limit = 10;
+            int numberMessages = messageDao.getNumberBetweenUsers(loggedUser, companion);
+            numberPages = (numberMessages - 1) / LIMIT + 1;
+            if (req.getParameter("page") != null) {
+                page = Integer.valueOf(req.getParameter("page"));
+                if (page > 0)
+                    messages = messageDao.getListBetweenUsers(loggedUser, companion, (page - 1) * LIMIT, LIMIT);
+                else
+                    messages = messageDao.getListBetweenUsers(loggedUser, companion);
+            } else {
+                messages = messageDao.getListBetweenUsers(loggedUser, companion, (page - 1) * LIMIT, LIMIT);
+            }
+            messageDao.makeReadBetweenUsers(companion, loggedUser);
 
-            String pageString = req.getParameter("page");
-         //   if (skipString != null && !skipString.isEmpty()) skip = Integer.valueOf(skipString);
-
-            int trueNumber = messageDao.getListBySenderAndReceiver(currentUser, companion).size();
-            List<Message> messages = messageDao.getListBySenderAndReceiver(currentUser, companion, skip, limit);
-            int numberOfPages = (trueNumber / limit) + 1;
-            messageDao.makeMessagesRead(companion, currentUser);
-            req.setAttribute("numberOfPages", numberOfPages);
-            req.setAttribute("trueNumber", trueNumber);
+            req.setAttribute("numberPages", numberPages);
+            req.setAttribute("activePage",page);
             req.setAttribute("messages", messages);
             req.setAttribute("companionId", req.getParameter("companionId"));
             req.getRequestDispatcher("/WEB-INF/pages/chat.jsp").forward(req, resp);
@@ -60,7 +67,7 @@ public class Chat extends HttpServlet {
                     .receiver(receiver)
                     .body(body).build();
             messageDao.create(message);
-            int unreadMessages = DaoConfig.daoFactory.getMessageDao().getNumberUnreadMessages(sender);
+            int unreadMessages = DaoConfig.daoFactory.getMessageDao().getNumberUnread(sender);
             req.getSession().setAttribute("unreadMessages", unreadMessages);
             String contextPath = req.getContextPath();
             resp.sendRedirect(contextPath + "/main/chat?companionId=" + req.getParameter("companionId"));

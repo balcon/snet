@@ -4,7 +4,6 @@ import lombok.Builder;
 import lombok.Value;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Value
 @Builder
@@ -14,5 +13,6 @@ public class LastMessage {
     String body;
     boolean response;
     boolean haveUnread;
-    Date lastMessageTime;
+    LocalDateTime lastMessageTime;
+    int numberUnread;
 }

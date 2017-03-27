@@ -48,18 +48,18 @@ public class MySqlMessageDaoTest extends MySqlDaoTests {
 
     @Test
     public void numberReadMessages() throws Exception {
-        int number = messageDao.getNumberUnreadMessages(user3);
+        int number = messageDao.getNumberUnread(user3);
 
         assertEquals(number, 2);
     }
 
     @Test
     public void makeMessagesRead() throws Exception {
-        int numberBefore=messageDao.getNumberUnreadMessages(user2);
-        messageDao.makeMessagesRead(user1,user2);
-        int numberAfter=messageDao.getNumberUnreadMessages(user2);
+        int numberBefore = messageDao.getNumberUnread(user2);
+        messageDao.makeReadBetweenUsers(user1, user2);
+        int numberAfter = messageDao.getNumberUnread(user2);
 
-        assertTrue(numberAfter<numberBefore);
+        assertTrue(numberAfter < numberBefore);
     }
 
     @Test
@@ -75,15 +75,29 @@ public class MySqlMessageDaoTest extends MySqlDaoTests {
     @Test
     public void getListWithLastMessages() throws Exception {
         //TODO: heisenbag
-        List<Message> messages = messageDao.getListOfLastMessages(user1);
+        List<Message> messages = messageDao.getListOfLatest(user1);
 
         assertEquals(messages.size(), 2);
     }
 
     @Test
-    public void getListBySenderAndReceiver() throws Exception {
-        List<Message> messages = messageDao.getListBySenderAndReceiver(user1, user2);
-        assertTrue(messages.get(0).isUnread());
+    public void getListBetweenUsers() throws Exception {
+        List<Message> messages = messageDao.getListBetweenUsers(user1, user2);
+
         assertEquals(messages.size(), 3);
+    }
+
+    @Test
+    public void getNumberMessages() throws Exception {
+        int number = messageDao.getNumberBetweenUsers(user1, user2);
+
+        assertEquals(number, 3);
+    }
+
+    @Test
+    public void getNumberUnreadBetweenUsers() throws Exception {
+        int number = messageDao.getNumberUnreadBetweenUsers(user2, user3);
+
+        assertEquals(number, 1);
     }
 }

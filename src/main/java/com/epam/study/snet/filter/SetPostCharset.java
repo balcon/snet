@@ -26,7 +26,7 @@ public class SetPostCharset implements Filter {
         if (req.getSession().getAttribute("user") != null) {
             User user = (User) req.getSession().getAttribute("user");
             try {
-                int unreadMessages = DaoConfig.daoFactory.getMessageDao().getNumberUnreadMessages(user);
+                int unreadMessages = DaoConfig.daoFactory.getMessageDao().getNumberUnread(user);
                 req.getSession().setAttribute("unreadMessages", unreadMessages);
             } catch (DaoException e) {
                 e.printStackTrace();
