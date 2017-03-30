@@ -17,7 +17,7 @@ public class RedirectToLogin implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse resp = (HttpServletResponse) response;
-        if (req.getSession().getAttribute("user") == null) {
+        if (req.getSession().getAttribute("loggedUser") == null) {
             String contextPath = req.getContextPath();
             resp.sendRedirect(contextPath + "/login");
         } else

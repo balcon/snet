@@ -5,16 +5,27 @@
 <fmt:setLocale value="${sessionScope.locale}"/>
 <fmt:setBundle basename="i18n.view" var="view"/>
 <fmt:setBundle basename="i18n.errors" var="errors"/>
+
 <tags:mainMenu active="profile">
-    <div class="page-header col-md-offset-4">
+    <div class="page-header col-md-offset-4 text-center">
         <h3><fmt:message bundle="${view}" key="titles.profile"/></h3>
     </div>
     <div class="col-md-3">
-        <c:set var="companionImageId" value="${sessionScope.user.getPhoto().getId()}"/> <%-- TODO : do somethin with User Session--%>
+        <c:set var="companionImageId"
+               value="${sessionScope.loggedUser.getPhoto().getId()}"/> <%-- TODO : do somethin with User Session--%>
         <img src="<c:url value="/main/image?imageId=${companionImageId}"/>" class="rounded img-thumbnail">
-        <form action="<c:url value="/main/image"/>" method="post" enctype="multipart/form-data">
-            <input type="file" name="imageFile">
-            <input type="submit" value="Upload">
+        <form class="text-center" action="<c:url value="/main/image"/>" method="post" enctype="multipart/form-data">
+            <button class="btn btn-primary btn-file btn-sm">
+                <div id="imageBtnLabel">
+                    <span class="glyphicon glyphicon-folder-open"></span>
+                    <fmt:message bundle="${view}" key="upload.browse"/>
+                </div>
+                <input type="file" name="imageFile" id="image"/>
+            </button>
+            <button type="submit" class="btn btn-primary btn-sm">
+                <span class="glyphicon glyphicon-upload"></span>
+                <fmt:message bundle="${view}" key="upload.upload"/>
+            </button>
         </form>
     </div>
     <div class="col-md-6">
@@ -37,5 +48,18 @@
 
         </form>
     </div>
-    </div>
+    <script type="text/javascript">
+        (function ($) {
+            $(function () {
+                $('.btn-file').each(function () {
+                    $('input[type=file]', this).change(function () {
+                        var value = $(this).val();
+                        document.getElementById("imageBtnLabel").innerHTML =
+                            value.substring(value.lastIndexOf('\\') + 1, value.length);
+                    });
+                });
+            });
+        })(jQuery);
+    </script>
 </tags:mainMenu>
+

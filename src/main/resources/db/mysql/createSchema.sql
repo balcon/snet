@@ -16,7 +16,7 @@ CREATE TABLE snet.messages (
   senderId BIGINT NOT NULL,
   receiverId BIGINT NOT NULL,
   sendingTime DATETIME NOT NULL,
-  messageBody VARCHAR(255),
+  messageBody TEXT,
   unread BOOL DEFAULT TRUE
 );
 

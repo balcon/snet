@@ -14,7 +14,7 @@
                 <td>Last Name</td>
             </tr>
             <c:forEach var="user" items="${users}">
-                <c:if test="${user.getId()!=sessionScope.user.getId()}">
+                <c:if test="${user.getId()!=sessionScope.loggedUser.getId()}">
                     <tr>
                         <td>
                             <c:out value="${user.getId()}"/>

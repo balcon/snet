@@ -24,7 +24,7 @@ public class Messages extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        User loggedUser = (User) req.getSession().getAttribute("user");
+        User loggedUser = (User) req.getSession().getAttribute("loggedUser");
         try {
             List<Message> messages = messageDao.getListOfLatest(loggedUser);
             List<LastMessage> lastMessages = new ArrayList<>();

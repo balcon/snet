@@ -53,21 +53,23 @@
                             <i><fmt:formatDate value="${parsedDateTime}" type="both" timeStyle="short"/></i>
                         </small>
                     </h4>
-
-                    <p>
-                        <c:out value="${message.getBody()}"/></p>
+                    <p style="white-space:pre;"><c:out value='${message.getBody()}'/></p>
                 </div>
             </div>
         </div>
-        <c:url var="urlToChat" value="/main/chat"/>
     </c:forEach>
-    <c:if test="${numberPages>1}">
+    <c:url var="urlToChat" value="/main/chat"/>
+    <c:if test="${numberPages>1&&activePage!=0}">
         <div class="text-center">
             <ul class="pagination">
                 <c:forEach var="page" begin="1" end="${numberPages}">
                     <li <c:if test="${page==activePage}">class="active"</c:if>>
                         <a href="${urlToChat}?companionId=${companionId}&page=${page}">${page}</a></li>
                 </c:forEach>
+                <li><a href="${urlToChat}?companionId=${companionId}&page=0">
+                    <fmt:message bundle="${view}" key="messages.show_all"/>
+
+                </a></li>
             </ul>
         </div>
     </c:if>

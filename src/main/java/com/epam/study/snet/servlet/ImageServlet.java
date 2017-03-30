@@ -38,7 +38,7 @@ public class ImageServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Part imagePart = req.getPart("imageFile");
-        User loggedUser = (User) req.getSession().getAttribute("user");
+        User loggedUser = (User) req.getSession().getAttribute("loggedUser");
         Image image = null;
         image = imageDao.create(imagePart.getInputStream());
         User user = User.builder().id(loggedUser.getId()).photo(image).build();

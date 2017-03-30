@@ -23,8 +23,8 @@ public class SetPostCharset implements Filter {
         request.setCharacterEncoding("utf8");
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse resp = (HttpServletResponse) response;
-        if (req.getSession().getAttribute("user") != null) {
-            User user = (User) req.getSession().getAttribute("user");
+        if (req.getSession().getAttribute("loggedUser") != null) {
+            User user = (User) req.getSession().getAttribute("loggedUser");
             try {
                 int unreadMessages = DaoConfig.daoFactory.getMessageDao().getNumberUnread(user);
                 req.getSession().setAttribute("unreadMessages", unreadMessages);

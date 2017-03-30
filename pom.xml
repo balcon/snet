@@ -66,9 +66,9 @@
         </dependency>
 
         <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-all</artifactId>
-            <version>1.10.19</version>
+            <groupId>org.webjars.bower</groupId>
+            <artifactId>bootstrap-fileinput</artifactId>
+            <version>4.3.8</version>
         </dependency>
 
 

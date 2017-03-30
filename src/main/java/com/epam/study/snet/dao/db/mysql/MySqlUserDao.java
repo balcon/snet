@@ -46,7 +46,7 @@ public class MySqlUserDao implements UserDao {
         List<User> users = new ArrayList<>();
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(
-                    "SELECT * FROM snet.users");
+                    "SELECT * FROM snet.users ORDER BY lastName,firstName");
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 users.add(getUserFromResultSet(resultSet));

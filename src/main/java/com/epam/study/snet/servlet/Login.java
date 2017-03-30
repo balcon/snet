@@ -39,7 +39,7 @@ public class Login extends HttpServlet {
                 User user = userDao.getByUsername(fields.getUsername());
                 String passHash = DigestUtils.md5Hex(fields.getPassword());
                 if (user != null && user.getPassword().equals(passHash)) {
-                    req.getSession().setAttribute("user", user);
+                    req.getSession().setAttribute("loggedUser", user);
                     String contextPath = req.getContextPath();
                     resp.sendRedirect(contextPath + "/main");
 

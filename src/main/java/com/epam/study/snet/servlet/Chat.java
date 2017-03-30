@@ -27,7 +27,7 @@ public class Chat extends HttpServlet {
         int numberPages = 0;
         int page=1;
         final int LIMIT = 10;
-        User loggedUser = (User) req.getSession().getAttribute("user");
+        User loggedUser = (User) req.getSession().getAttribute("loggedUser");
         try {
             User companion = userDao.getById(Long.valueOf(req.getParameter("companionId")));
             int numberMessages = messageDao.getNumberBetweenUsers(loggedUser, companion);
@@ -60,7 +60,7 @@ public class Chat extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        User sender = (User) req.getSession().getAttribute("user");
+        User sender = (User) req.getSession().getAttribute("loggedUser");
         try {
             User receiver = userDao.getById(Long.valueOf(req.getParameter("companionId")));
             String body = req.getParameter("body");
