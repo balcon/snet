@@ -21,4 +21,6 @@ public interface MessageDao {
     int getNumberBetweenUsers(User user1, User user2) throws DaoException;
 
     void makeReadBetweenUsers(User sender, User receiver) throws DaoException;
+
+    void removeById(long messageId) throws DaoException;
 }

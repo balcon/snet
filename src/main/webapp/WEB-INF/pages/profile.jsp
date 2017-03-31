@@ -11,10 +11,10 @@
         <h3><fmt:message bundle="${view}" key="titles.profile"/></h3>
     </div>
     <div class="col-md-3">
-        <c:set var="companionImageId"
-               value="${sessionScope.loggedUser.getPhoto().getId()}"/> <%-- TODO : do somethin with User Session--%>
-        <img src="<c:url value="/main/image?imageId=${companionImageId}"/>" class="rounded img-thumbnail">
-        <form class="text-center" action="<c:url value="/main/image"/>" method="post" enctype="multipart/form-data">
+        <%--<c:set var="companionImageId"--%>
+               <%--value="${sessionScope.loggedUser.getPhoto().getId()}"/> &lt;%&ndash; TODO : do somethin with User Session&ndash;%&gt;--%>
+        <img src="<c:url value="${sessionScope.loggedUser.getPhoto().getSourcePath()}"/>" class="rounded img-thumbnail">
+            <form class="text-center" action="<c:url value="/main/image"/>" method="post" enctype="multipart/form-data">
             <button class="btn btn-primary btn-file btn-sm">
                 <div id="imageBtnLabel">
                     <span class="glyphicon glyphicon-folder-open"></span>

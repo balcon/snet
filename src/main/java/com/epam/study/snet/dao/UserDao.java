@@ -9,9 +9,15 @@ public interface UserDao {
 
     List<User> getList() throws DaoException;
 
+    List<User> getList(User excludedUser) throws DaoException;
+
+    List<User> getList(User excludedUser, long skip, int limit) throws DaoException;
+
     User getById(Long id) throws DaoException;
 
     User getByUsername(String username) throws DaoException;
+
+    long getNumber() throws DaoException;
 
     void update(User user) throws DaoException;
 }

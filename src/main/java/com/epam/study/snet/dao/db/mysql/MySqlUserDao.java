@@ -46,7 +46,43 @@ public class MySqlUserDao implements UserDao {
         List<User> users = new ArrayList<>();
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(
-                    "SELECT * FROM snet.users ORDER BY lastName,firstName");
+                    "SELECT * FROM snet.users");
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                users.add(getUserFromResultSet(resultSet));
+            }
+        } catch (SQLException e) {
+            throw new DaoException("Can't get userlist", e);
+        }
+        return users;
+    }
+
+    @Override
+    public List<User> getList(User excludedUser) throws DaoException {
+        List<User> users = new ArrayList<>();
+        try (Connection connection = dataSource.getConnection()) {
+            PreparedStatement statement = connection.prepareStatement(
+                    "SELECT * FROM snet.users WHERE userId!=? ORDER BY lastName,firstName");
+            statement.setLong(1, excludedUser.getId());
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                users.add(getUserFromResultSet(resultSet));
+            }
+        } catch (SQLException e) {
+            throw new DaoException("Can't get userlist", e);
+        }
+        return users;
+    }
+
+    @Override
+    public List<User> getList(User excludedUser, long skip, int limit) throws DaoException {
+        List<User> users = new ArrayList<>();
+        try (Connection connection = dataSource.getConnection()) {
+            PreparedStatement statement = connection.prepareStatement(
+                    "SELECT * FROM snet.users WHERE userId!=? ORDER BY lastName,firstName LIMIT ?,?");
+            statement.setLong(1, excludedUser.getId());
+            statement.setLong(2, skip);
+            statement.setLong(3, limit);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 users.add(getUserFromResultSet(resultSet));
@@ -92,6 +128,22 @@ public class MySqlUserDao implements UserDao {
     }
 
     @Override
+    public long getNumber() throws DaoException {
+        int numberUsers = 0;
+        try (Connection connection = dataSource.getConnection()) {
+            PreparedStatement statement = connection.prepareStatement(
+                    "SELECT COUNT(*) FROM snet.users ");
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                numberUsers = resultSet.getInt(1);
+            }
+        } catch (SQLException e) {
+            throw new DaoException("Can't get numberm users", e);
+        }
+        return numberUsers;
+    }
+
+    @Override
     public void update(User user) throws DaoException {
         long userId;
         long imageId;
@@ -111,9 +163,8 @@ public class MySqlUserDao implements UserDao {
     private User getUserFromResultSet(ResultSet resultSet) throws SQLException {
         Date birthday = resultSet.getDate("birthday");
         String gender = resultSet.getString("gender");
-        Image photo = null;
         Long imageId = resultSet.getLong("imageId");
-        if (!resultSet.wasNull()) photo = Image.builder().id(imageId).build();
+        Image photo = Image.builder().id(imageId).build();
 
         return User.builder()
                 .id(resultSet.getLong("userId"))
@@ -123,7 +174,6 @@ public class MySqlUserDao implements UserDao {
                 .lastName(resultSet.getString("lastName"))
                 .birthday(birthday.toLocalDate())
                 .gender(gender.equals("MALE") ? Gender.MALE : Gender.FEMALE)
-                .photo(photo)
-                .build();
+                .photo(photo).build();
     }
 }

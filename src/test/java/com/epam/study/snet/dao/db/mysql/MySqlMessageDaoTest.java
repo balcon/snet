@@ -3,7 +3,7 @@ package com.epam.study.snet.dao.db.mysql;
 import com.epam.study.snet.enums.Gender;
 import com.epam.study.snet.model.Message;
 import com.epam.study.snet.model.User;
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -14,20 +14,19 @@ import static org.junit.Assert.*;
 
 public class MySqlMessageDaoTest extends MySqlDaoTests {
 
-    private User user1;
-    private User user2;
-    private User user3;
+    private static User user1;
+    private static User user2;
+    private static User user3;
 
-    private Message testMessage;
+    private static Message testMessage;
 
-
-    @Before
-    public void setUp() throws Exception {
+    @BeforeClass
+    public static void setUp() throws Exception {
         user1 = userDao.create(User.builder().username("u1").birthday(LocalDate.now()).gender(Gender.FEMALE).build());
         user2 = userDao.create(User.builder().username("u2").birthday(LocalDate.now()).gender(Gender.FEMALE).build());
         user3 = userDao.create(User.builder().username("u3").birthday(LocalDate.now()).gender(Gender.FEMALE).build());
 
-        testMessage = Message.builder().sender(user1).receiver(user2).body("Hi, u2!").build();
+        testMessage = Message.builder().sender(user3).receiver(user2).body("Hi, u2!").build();
 
         messageDao.create(Message.builder().sender(user1).receiver(user2).body("from u1 to u2").build());
         messageDao.create(Message.builder().sender(user1).receiver(user3).body("from u1 to u3").build());
@@ -41,7 +40,7 @@ public class MySqlMessageDaoTest extends MySqlDaoTests {
         Message message = messageDao.create(testMessage);
 
         assertEquals(message.getSendingTime().toLocalDate(), LocalDate.now());
-        assertEquals(message.getSender().getUsername(), "u1");
+        assertEquals(message.getSender().getUsername(), "u3");
         assertEquals(message.getBody(), "Hi, u2!");
         assertTrue(message.getId() != 0);
     }
@@ -92,6 +91,16 @@ public class MySqlMessageDaoTest extends MySqlDaoTests {
         int number = messageDao.getNumberBetweenUsers(user1, user2);
 
         assertEquals(number, 3);
+    }
+
+    @Test
+    public void removeById() throws Exception {
+        Message message = messageDao.create(testMessage);
+        List<Message> messagesBefore=messageDao.getListBetweenUsers(user3,user2);
+        messageDao.removeById(message.getId());
+        List<Message> messagesAfter=messageDao.getListBetweenUsers(user3,user2);
+
+        assertEquals(messagesBefore.size()-messagesAfter.size(),1);
     }
 
     @Test

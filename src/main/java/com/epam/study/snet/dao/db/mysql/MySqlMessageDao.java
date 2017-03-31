@@ -188,6 +188,18 @@ public class MySqlMessageDao implements MessageDao {
         }
     }
 
+    @Override
+    public void removeById(long messageId) throws DaoException {
+        try(Connection connection=dataSource.getConnection()){
+            PreparedStatement statement = connection.prepareStatement(
+                    "DELETE FROM snet.messages WHERE messageId=?");
+            statement.setLong(1,messageId);
+            statement.execute();
+        } catch (SQLException e) {
+            throw new DaoException("Can't remove message",e);
+        }
+    }
+
     private Message getMessageFromResultSet(ResultSet resultSet) throws DaoException, SQLException {
         //TODO: think! How make better
         long senderId = resultSet.getLong("senderId");

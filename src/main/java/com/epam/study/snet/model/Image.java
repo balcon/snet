@@ -7,4 +7,8 @@ import lombok.Value;
 @Builder
 public class Image {
     long id;
+    public String getSourcePath() {
+        if (id != 0) return "/main/image?imageId=" + id;
+        else return "/images/anonymous.jpg";
+    }
 }
