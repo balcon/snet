@@ -192,7 +192,7 @@ public class MySqlMessageDao implements MessageDao {
     public void removeById(long messageId) throws DaoException {
         try(Connection connection=dataSource.getConnection()){
             PreparedStatement statement = connection.prepareStatement(
-                    "DELETE FROM snet.messages WHERE messageId=?");
+                    "DELETE FROM snet.messages WHERE messageId=? AND unread=TRUE");
             statement.setLong(1,messageId);
             statement.execute();
         } catch (SQLException e) {
