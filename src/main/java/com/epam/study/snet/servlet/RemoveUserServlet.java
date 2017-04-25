@@ -18,8 +18,10 @@ public class RemoveUserServlet extends HttpServlet {
         User loggedUser = (User) req.getSession().getAttribute("loggedUser");
         try {
             DaoConfig.daoFactory.getUserDao().removeById(loggedUser.getId());
+            req.getSession().setAttribute("loggedUser",null);
+
             String contextPath = req.getContextPath();
-            resp.sendRedirect(contextPath+"/login");
+            resp.sendRedirect(contextPath+"/main");
         } catch (DaoException e) {
             e.printStackTrace();
             req.getRequestDispatcher("/WEB-INF/pages/errorpage.jsp").forward(req, resp);

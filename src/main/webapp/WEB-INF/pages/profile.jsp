@@ -120,12 +120,12 @@
                             </label>
                         </div>
                         <div class="checkbox">
-                            <label><input id="check2" type="checkbox" onchange="enableRemoveButton()">
+                            <label><input id="check2" type="checkbox" onchange="enableRemoveButton()" disabled>
                                 <fmt:message bundle="${view}" key="remove.shure"/>
                             </label>
                         </div>
                         <br>
-                        <button type="submit" id="removeBtn" class="btn btn-danger col-md-offset-3" disabled>
+                        <button type="submit" id="removeBtn" class="btn btn-danger col-md-offset-4" disabled>
                             <fmt:message bundle="${view}" key="remove.button"/>
                         </button>
                     </form>
@@ -136,11 +136,12 @@
 
     <script type="text/javascript">
         function enableRemoveButton() {
-            if (check1.checked && check2.checked) {
-                removeBtn.disabled = false;
+            if (check1.checked) {
+                check2.disabled = false;
+                removeBtn.disabled = !check2.checked;
             }
             else {
-
+                check2.disabled = true;
                 removeBtn.disabled = true;
             }
         }
