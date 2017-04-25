@@ -2,7 +2,7 @@ package com.epam.study.snet.filter;
 
 import com.epam.study.snet.dao.DaoConfig;
 import com.epam.study.snet.dao.DaoException;
-import com.epam.study.snet.model.User;
+import com.epam.study.snet.entity.User;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;

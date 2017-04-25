@@ -1,7 +1,7 @@
 package com.epam.study.snet.model;
 
+import com.epam.study.snet.entity.User;
 import com.epam.study.snet.enums.FormErrors;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.junit.Test;
 
 import java.time.LocalDate;
@@ -9,11 +9,11 @@ import java.util.Map;
 
 import static org.junit.Assert.*;
 
-public class RegistrationFieldsTest {
+public class ProfileValidatorTest {
 
     @Test
     public void correctInputs() throws Exception {
-        RegistrationFields fields = RegistrationFields.builder()
+        ProfileValidator fields = ProfileValidator.builder()
                 .username("juser")
                 .password("user.password")
                 .confirmPassword("user.password")
@@ -29,7 +29,7 @@ public class RegistrationFieldsTest {
 
     @Test
     public void someFieldsIsEmpty() throws Exception {
-        RegistrationFields fields = RegistrationFields.builder()
+        ProfileValidator fields = ProfileValidator.builder()
                 .username("")
                 .password("user.password")
                 .confirmPassword("user.password")
@@ -44,11 +44,11 @@ public class RegistrationFieldsTest {
 
     @Test
     public void usernameOnlyLatinCharactersAndNumbers() throws Exception {
-        RegistrationFields fields1 = RegistrationFields.builder()
+        ProfileValidator fields1 = ProfileValidator.builder()
                 .username("Use*r").build();
-        RegistrationFields fields2 = RegistrationFields.builder()
+        ProfileValidator fields2 = ProfileValidator.builder()
                 .username("кириллица").build();
-        RegistrationFields fields3 = RegistrationFields.builder()
+        ProfileValidator fields3 = ProfileValidator.builder()
                 .username("user_xp-89").build();
 
         assertTrue(fields1.validate().get("username") == FormErrors.username_incorrect);
@@ -58,7 +58,7 @@ public class RegistrationFieldsTest {
 
     @Test
     public void passNotEqualsWithConfirm() throws Exception {
-        RegistrationFields fields = RegistrationFields.builder()
+        ProfileValidator fields = ProfileValidator.builder()
                 .username("juser")
                 .password("user.password")
                 .confirmPassword("anotherPassword")
@@ -79,7 +79,7 @@ public class RegistrationFieldsTest {
         String lastName="Smith";
         String birthday="1990-10-20";
         String gender="FEMALE";
-        RegistrationFields fields = RegistrationFields.builder()
+        ProfileValidator fields = ProfileValidator.builder()
                 .username(username)
                 .password(password)
                 .firstName(firstName)
@@ -89,7 +89,7 @@ public class RegistrationFieldsTest {
         User user=fields.toUser();
 
         assertEquals(user.getUsername(),username);
-        assertEquals(user.getPassword(), DigestUtils.md5Hex(password));
+        assertEquals(user.getPassword(), password);
         assertEquals(user.getFirstName(),firstName);
         assertEquals(user.getLastName(),lastName);
         assertEquals(user.getBirthday().toString(),birthday);
@@ -98,7 +98,7 @@ public class RegistrationFieldsTest {
 
     @Test
     public void avoidNPE() throws Exception {
-        RegistrationFields fields = RegistrationFields.builder()
+        ProfileValidator fields = ProfileValidator.builder()
                 .username(null)
                 .gender(null).build();
 

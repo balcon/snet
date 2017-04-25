@@ -14,6 +14,7 @@ import java.util.Properties;
 public class DaoConfig {
 
     private static DataSource getDataSource() {
+        //TODO How it works?
         DataSource ds=null;
         try {
             InitialContext initContext = new InitialContext();

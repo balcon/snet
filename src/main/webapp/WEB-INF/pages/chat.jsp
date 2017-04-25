@@ -8,7 +8,7 @@
 <fmt:setBundle basename="i18n.view" var="view"/>
 
 <jsp:useBean id="chat" scope="request" type="com.epam.study.snet.model.Chat"/>
-<jsp:useBean id="loggedUser" scope="session" type="com.epam.study.snet.model.User"/>
+<jsp:useBean id="loggedUser" scope="session" type="com.epam.study.snet.entity.User"/>
 
 <tags:mainMenu active="messages">
 
@@ -17,20 +17,22 @@
     </div>
     <c:set var="companionId" value="${chat.companion.id}"/>
     <c:url var="urlToChat" value="/main/chat"/>
-    <form action="${urlToChat}" method="post">
-        <input type="hidden" name="companionId" value="${companionId}">
-        <div class="form-group" style="margin-bottom: 10px">
-            <div class="input-group">
+    <c:if test="${chat.companion.deleted==false}">
+        <form action="${urlToChat}" method="post">
+            <input type="hidden" name="companionId" value="${companionId}">
+            <div class="form-group" style="margin-bottom: 10px">
+                <div class="input-group">
             <textarea style="resize: vertical;" name="body" class="form-control  col-xs-12" rows="2"
                       placeholder="<fmt:message bundle="${view}" key="chat.invitiation"/>"></textarea>
-                <div class="input-group-btn">
-                    <button type="submit" class="btn btn-primary btn-lg">
-                        <span class="glyphicon glyphicon-send"></span>
-                    </button>
+                    <div class="input-group-btn">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <span class="glyphicon glyphicon-send"></span>
+                        </button>
+                    </div>
                 </div>
             </div>
-        </div>
-    </form>
+        </form>
+    </c:if>
     <c:if test="${empty chat.messages}">
         <div class="alert alert-info">
             <fmt:message bundle="${view}" key="messages.no_messages"/>

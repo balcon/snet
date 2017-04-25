@@ -1,6 +1,6 @@
 package com.epam.study.snet.dao;
 
-import com.epam.study.snet.model.User;
+import com.epam.study.snet.entity.User;
 
 import java.util.List;
 
@@ -20,4 +20,8 @@ public interface UserDao {
     long getNumber() throws DaoException;
 
     void update(User user) throws DaoException;
+
+    void updateById(Long id, User user2) throws DaoException;
+
+    void removeById(Long id) throws DaoException;
 }

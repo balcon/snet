@@ -4,8 +4,9 @@ import com.epam.study.snet.dao.DaoConfig;
 import com.epam.study.snet.dao.DaoException;
 import com.epam.study.snet.dao.UserDao;
 import com.epam.study.snet.enums.FormErrors;
-import com.epam.study.snet.model.RegistrationFields;
-import com.epam.study.snet.model.User;
+import com.epam.study.snet.model.ProfileValidator;
+import com.epam.study.snet.entity.User;
+import org.apache.commons.codec.digest.DigestUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -17,7 +18,7 @@ import java.util.Map;
 
 @WebServlet("/registration")
 
-public class Registration extends HttpServlet {
+public class RegistrationServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.getRequestDispatcher("/WEB-INF/pages/registration.jsp").forward(req, resp);
@@ -25,7 +26,7 @@ public class Registration extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        RegistrationFields fields = RegistrationFields.builder()
+        ProfileValidator profile = ProfileValidator.builder()
                 .username(req.getParameter("username"))
                 .password(req.getParameter("password"))
                 .confirmPassword(req.getParameter("confirmPassword"))
@@ -35,13 +36,14 @@ public class Registration extends HttpServlet {
                 .gender(req.getParameter("gender")).build();
 
 
-        Map<String, FormErrors> validation = fields.validate();
+        Map<String, FormErrors> validation = profile.validate();
         UserDao userDao = DaoConfig.daoFactory.getUserDao();
         try {
             if (validation.isEmpty()) {
-                if (userDao.getByUsername(fields.getUsername()) == null) {
-                    User user = fields.toUser();
-                    DaoConfig.daoFactory.getUserDao().create(user);
+                if (userDao.getByUsername(profile.getUsername()) == null) {
+                    User user = profile.toUser();
+                    user.setPassword(DigestUtils.md5Hex(user.getPassword()));
+                    userDao.create(user);
                     resp.sendRedirect(req.getContextPath() + "/login");
                 } else {
                     validation.put("username", FormErrors.username_exists);

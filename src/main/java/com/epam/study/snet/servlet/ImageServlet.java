@@ -2,8 +2,9 @@ package com.epam.study.snet.servlet;
 
 import com.epam.study.snet.dao.DaoConfig;
 import com.epam.study.snet.dao.ImageDao;
+import com.epam.study.snet.dao.UserDao;
 import com.epam.study.snet.model.Image;
-import com.epam.study.snet.model.User;
+import com.epam.study.snet.entity.User;
 import lombok.SneakyThrows;
 
 import javax.servlet.ServletException;
@@ -22,6 +23,7 @@ import java.io.IOException;
 public class ImageServlet extends HttpServlet {
     private ImageDao imageDao = DaoConfig.daoFactory.getImageDao();
 //TODO make rewrite image. Not add new
+//TODO sneakyThrows!
     @SneakyThrows
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -33,7 +35,7 @@ public class ImageServlet extends HttpServlet {
         resp.getOutputStream().write(imageBytes);
 
     }
-
+//TODO sneakyThrows!
     @SneakyThrows
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -41,8 +43,11 @@ public class ImageServlet extends HttpServlet {
         User loggedUser = (User) req.getSession().getAttribute("loggedUser");
         Image image = null;
         image = imageDao.create(imagePart.getInputStream());
+     //TODO make better
         User user = User.builder().id(loggedUser.getId()).photo(image).build();
-        DaoConfig.daoFactory.getUserDao().update(user);
+        UserDao userDao = DaoConfig.daoFactory.getUserDao();
+        userDao.update(user);
+        req.getSession().setAttribute("loggedUser", userDao.getById(loggedUser.getId()));
         String contextPath = req.getContextPath();
         resp.sendRedirect(contextPath + "/main/profile");
     }

@@ -1,7 +1,7 @@
 package com.epam.study.snet.dao.db.mysql;
 
 import com.epam.study.snet.enums.Gender;
-import com.epam.study.snet.model.User;
+import com.epam.study.snet.entity.User;
 import org.junit.Test;
 
 import java.time.LocalDate;
@@ -49,14 +49,21 @@ public class MySqlUserDaoTest extends MySqlDaoTests {
         Long userId = user1.getId();
         User user2 = userDao.getById(userId);
 
+        assertFalse(user1.isDeleted());
         assertEquals(user1.getId(), user2.getId());
     }
 
     @Test
     public void getNumber() throws Exception {
-        long number=userDao.getNumber();
+        User user = userDao.create(testUser);
+        long number = userDao.getNumber();
 
-        assertTrue(number!=0);
+        assertTrue(number != 0);
+
+        userDao.removeById(user.getId());
+        long numberAfterRemove=userDao.getNumber();
+
+        assertEquals(number-numberAfterRemove,1);
     }
 
     @Test
@@ -69,10 +76,20 @@ public class MySqlUserDaoTest extends MySqlDaoTests {
                 .birthday(LocalDate.now())
                 .gender(Gender.MALE).build();
         user = userDao.create(user);
+        User user2 = userDao.create(testUser);
         List<User> users = userDao.getList();
         List<User> usersExcluded = userDao.getList(user);
 
-        assertEquals(users.size()-usersExcluded.size(),1);
+        int allUsers = users.size();
+        int usersWithoutUser = usersExcluded.size();
+        assertEquals(allUsers - usersWithoutUser, 1);
+
+        userDao.removeById(user2.getId());
+
+        usersExcluded = userDao.getList(user);
+        int usersWithoutUserAfterRemove = usersExcluded.size();
+
+        assertEquals(usersWithoutUser - usersWithoutUserAfterRemove, 1);
     }
 
     @Test
@@ -85,10 +102,17 @@ public class MySqlUserDaoTest extends MySqlDaoTests {
                 .birthday(LocalDate.now())
                 .gender(Gender.MALE).build();
         user = userDao.create(user);
+        User user2 = userDao.create(testUser);
 
-        List<User> users=userDao.getList(user,0,1);
+        List<User> users = userDao.getList(user, 0, 1);
 
-        assertEquals(users.size(),1);
+        assertEquals(users.size(), 1);
+
+        int size = userDao.getList(user, 0, 100).size();
+        userDao.removeById(user2.getId());
+        int sizeAfterRemove = userDao.getList(user, 0, 100).size();
+
+        assertEquals(size - sizeAfterRemove, 1);
     }
 
     @Test
@@ -104,5 +128,54 @@ public class MySqlUserDaoTest extends MySqlDaoTests {
         User user2 = userDao.getByUsername("pit2");
 
         assertEquals(user1.getId(), user2.getId());
+    }
+
+    @Test
+    public void removeUserById() throws Exception {
+        User user = User.builder()
+                .username("u5")
+                .password("pass")
+                .firstName("Timmy")
+                .lastName("Robertson")
+                .birthday(LocalDate.now())
+                .gender(Gender.MALE).build();
+        user = userDao.create(user);
+        Long userId = user.getId();
+
+        assertFalse(user.isDeleted());
+
+        userDao.removeById(userId);
+        user = userDao.getById(userId);
+
+        assertTrue(user.isDeleted());
+    }
+
+    @Test
+    public void updateUserById() throws Exception {
+        User user1 = User.builder()
+                .username("u5")
+                .password("pass")
+                .firstName("Timmy")
+                .lastName("Robertson")
+                .birthday(LocalDate.now())
+                .gender(Gender.MALE).build();
+        user1 = userDao.create(user1);
+
+        User user2 = User.builder()
+                .username(user1.getUsername())
+                .password("newPass")
+                .firstName(user1.getFirstName())
+                .lastName("newLastName")
+                .birthday(user1.getBirthday())
+                .gender(user1.getGender()).build();
+
+        userDao.updateById(user1.getId(), user2);
+
+        User user1new = userDao.getById(user1.getId());
+
+        assertTrue(user1.getFirstName().equals(user1new.getFirstName()));
+        assertTrue(user1.getBirthday().equals(user1new.getBirthday()));
+        assertFalse(user1.getLastName().equals(user1new.getLastName()));
+        assertFalse(user1.getPassword().equals(user1new.getPassword()));
     }
 }

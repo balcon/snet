@@ -8,7 +8,8 @@ CREATE TABLE snet.users (
   lastName VARCHAR(255) NOT NULL,
   birthday DATE NOT NULL,
   gender VARCHAR(255) NOT NULL,
-  imageId BIGINT NULL
+  imageId BIGINT NULL,
+  deleted BOOLEAN NOT NULL DEFAULT FALSE
 );
 
 CREATE TABLE snet.messages (

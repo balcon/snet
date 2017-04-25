@@ -5,6 +5,7 @@
 <fmt:setLocale value="${sessionScope.locale}"/>
 <fmt:setBundle basename="i18n.view" var="view"/>
 <fmt:setBundle basename="i18n.errors" var="errors"/>
+
 <tags:mainMenu>
     <div class="page-header col-md-offset-4">
         <h3><fmt:message bundle="${view}" key="titles.registration"/></h3>
@@ -23,14 +24,14 @@
                            setupValue="${param.password}"
                            validation='${validation.containsKey("password")}'
                            validationErrorProp='${validation.get("password")}' inline="true"/>
-        
+
         <tags:typicalInput type="password"
                            name="confirmPassword"
                            labelProp="user.confirmPassword"
                            setupValue="${param.confirmPassword}"
                            validation='${validation.containsKey("confirmPassword")}'
                            validationErrorProp='${validation.get("confirmPassword")}' inline="true"/>
-        
+
         <tags:typicalInput type="text"
                            name="firstName"
                            labelProp="user.firstName"
@@ -44,7 +45,7 @@
                            setupValue="${param.lastName}"
                            validation='${validation.containsKey("lastName")}'
                            validationErrorProp='${validation.get("lastName")}' inline="true"/>
-
+            <%--TODO change to JQ datepicker with l10n--%>
         <tags:typicalInput type="date"
                            name="birthday"
                            labelProp="user.birthday"
@@ -58,7 +59,7 @@
             <label class="col-md-3 control-label" for="gender">${gender}
             </label>
             <div class="col-md-6">
-                <select class="form-control" id="gender" name="gender" placeholder="koko">
+                <select class="form-control" id="gender" name="gender">
                     <option value="" hidden>${gender}</option>
                     <option value="MALE"
                             <c:if test='${param.gender=="MALE"}'>selected</c:if>><fmt:message bundle="${view}"

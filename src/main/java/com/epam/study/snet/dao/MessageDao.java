@@ -1,7 +1,7 @@
 package com.epam.study.snet.dao;
 
-import com.epam.study.snet.model.Message;
-import com.epam.study.snet.model.User;
+import com.epam.study.snet.entity.Message;
+import com.epam.study.snet.entity.User;
 
 import java.util.List;
 

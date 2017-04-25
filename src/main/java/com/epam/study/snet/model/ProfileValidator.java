@@ -1,10 +1,10 @@
 package com.epam.study.snet.model;
 
+import com.epam.study.snet.entity.User;
 import com.epam.study.snet.enums.FormErrors;
 import com.epam.study.snet.enums.Gender;
 import lombok.Builder;
 import lombok.Value;
-import org.apache.commons.codec.digest.DigestUtils;
 
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -12,7 +12,7 @@ import java.util.Map;
 
 @Value
 @Builder
-public class RegistrationFields {
+public class ProfileValidator {
     String username;
     String password;
     String confirmPassword;
@@ -51,7 +51,7 @@ public class RegistrationFields {
         Gender gender = this.gender.equals("MALE") ? Gender.MALE : Gender.FEMALE;
         return User.builder()
                 .username(username)
-                .password(DigestUtils.md5Hex(password))
+                .password(password)
                 .firstName(firstName)
                 .lastName(lastName)
                 .birthday(LocalDate.parse(birthday))

@@ -2,8 +2,8 @@ package com.epam.study.snet.dao.db.mysql;
 
 import com.epam.study.snet.dao.DaoException;
 import com.epam.study.snet.dao.MessageDao;
-import com.epam.study.snet.model.Message;
-import com.epam.study.snet.model.User;
+import com.epam.study.snet.entity.Message;
+import com.epam.study.snet.entity.User;
 
 import javax.sql.DataSource;
 import java.sql.*;

@@ -103,6 +103,7 @@
                 <li <c:if test='${active=="people"}'>class="active"</c:if>>
                     <a href="<c:url value="/main/people"/>"><span class="glyphicon glyphicon-user"></span>
                         <fmt:message bundle="${view}" key="titles.users"/></a></li>
+                        <%--TODO number users in main menu--%>
                 <li <c:if test='${active=="calendar"}'>class="active"</c:if>>
                     <a href="<c:url value="/main/calendar"/>"><span class="glyphicon glyphicon-th"></span>
                         <fmt:message bundle="${view}" key="titles.calendar"/></a></li>

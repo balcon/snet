@@ -1,4 +1,4 @@
-package com.epam.study.snet.model;
+package com.epam.study.snet.entity;
 
 import lombok.Builder;
 import lombok.Value;

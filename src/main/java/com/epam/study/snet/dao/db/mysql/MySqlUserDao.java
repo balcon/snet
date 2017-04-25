@@ -4,7 +4,7 @@ import com.epam.study.snet.dao.DaoException;
 import com.epam.study.snet.dao.UserDao;
 import com.epam.study.snet.enums.Gender;
 import com.epam.study.snet.model.Image;
-import com.epam.study.snet.model.User;
+import com.epam.study.snet.entity.User;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -46,7 +46,7 @@ public class MySqlUserDao implements UserDao {
         List<User> users = new ArrayList<>();
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(
-                    "SELECT * FROM snet.users");
+                    "SELECT * FROM snet.users WHERE deleted=FALSE");
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 users.add(getUserFromResultSet(resultSet));
@@ -62,7 +62,7 @@ public class MySqlUserDao implements UserDao {
         List<User> users = new ArrayList<>();
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(
-                    "SELECT * FROM snet.users WHERE userId!=? ORDER BY lastName,firstName");
+                    "SELECT * FROM snet.users WHERE userId!=? AND deleted=FALSE ORDER BY lastName,firstName");
             statement.setLong(1, excludedUser.getId());
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
@@ -79,7 +79,7 @@ public class MySqlUserDao implements UserDao {
         List<User> users = new ArrayList<>();
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(
-                    "SELECT * FROM snet.users WHERE userId!=? ORDER BY lastName,firstName LIMIT ?,?");
+                    "SELECT * FROM snet.users WHERE userId!=? AND deleted=FALSE ORDER BY lastName,firstName LIMIT ?,?");
             statement.setLong(1, excludedUser.getId());
             statement.setLong(2, skip);
             statement.setLong(3, limit);
@@ -132,7 +132,7 @@ public class MySqlUserDao implements UserDao {
         int numberUsers = 0;
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(
-                    "SELECT COUNT(*) FROM snet.users ");
+                    "SELECT COUNT(*) FROM snet.users WHERE deleted=FALSE");
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
                 numberUsers = resultSet.getInt(1);
@@ -144,6 +144,7 @@ public class MySqlUserDao implements UserDao {
     }
 
     @Override
+    //TODO what is it?
     public void update(User user) throws DaoException {
         long userId;
         long imageId;
@@ -157,6 +158,36 @@ public class MySqlUserDao implements UserDao {
             statement.execute();
         } catch (SQLException e) {
             throw new DaoException("Can't update user", e);
+        }
+    }
+
+    @Override
+    public void updateById(Long id, User newUser) throws DaoException {
+        try (Connection connection = dataSource.getConnection()) {
+            PreparedStatement statement = connection.prepareStatement(
+                    "UPDATE snet.users SET firstName=?,lastName=?,passHash=?,birthday=?,gender=?" +
+                            " WHERE userId=?");
+            statement.setString(1, newUser.getFirstName());
+            statement.setString(2, newUser.getLastName());
+            statement.setString(3, newUser.getPassword());
+            statement.setString(4, newUser.getBirthday().toString());
+            statement.setString(5, newUser.getGender().toString());
+            statement.setLong(6, id);
+            statement.execute();
+        } catch (SQLException e) {
+            throw new DaoException("Can't update user", e);
+        }
+    }
+
+    @Override
+    public void removeById(Long id) throws DaoException {
+        try (Connection connection = dataSource.getConnection()) {
+            PreparedStatement statement = connection.prepareStatement(
+                    "UPDATE snet.users SET deleted=TRUE WHERE userId=?");
+            statement.setLong(1, id);
+            statement.execute();
+        } catch (SQLException e) {
+            throw new DaoException("Can't remove user", e);
         }
     }
 
@@ -174,6 +205,7 @@ public class MySqlUserDao implements UserDao {
                 .lastName(resultSet.getString("lastName"))
                 .birthday(birthday.toLocalDate())
                 .gender(gender.equals("MALE") ? Gender.MALE : Gender.FEMALE)
-                .photo(photo).build();
+                .photo(photo)
+                .deleted(resultSet.getBoolean("deleted")).build();
     }
 }

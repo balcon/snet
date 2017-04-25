@@ -5,7 +5,7 @@ import com.epam.study.snet.dao.DaoException;
 import com.epam.study.snet.dao.UserDao;
 import com.epam.study.snet.enums.FormErrors;
 import com.epam.study.snet.model.LoginFields;
-import com.epam.study.snet.model.User;
+import com.epam.study.snet.entity.User;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import javax.servlet.ServletException;
