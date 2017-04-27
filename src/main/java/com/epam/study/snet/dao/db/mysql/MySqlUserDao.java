@@ -2,9 +2,9 @@ package com.epam.study.snet.dao.db.mysql;
 
 import com.epam.study.snet.dao.DaoException;
 import com.epam.study.snet.dao.UserDao;
+import com.epam.study.snet.entity.User;
 import com.epam.study.snet.enums.Gender;
 import com.epam.study.snet.model.Image;
-import com.epam.study.snet.entity.User;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -14,7 +14,7 @@ import java.util.List;
 public class MySqlUserDao implements UserDao {
     private final DataSource dataSource;
 
-    public MySqlUserDao(DataSource dataSource) {
+    MySqlUserDao(DataSource dataSource) {
         this.dataSource = dataSource;
     }
 
@@ -43,54 +43,21 @@ public class MySqlUserDao implements UserDao {
 
     @Override
     public List<User> getList() throws DaoException {
-        List<User> users = new ArrayList<>();
-        try (Connection connection = dataSource.getConnection()) {
-            PreparedStatement statement = connection.prepareStatement(
-                    "SELECT * FROM snet.users WHERE deleted=FALSE");
-            ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                users.add(getUserFromResultSet(resultSet));
-            }
-        } catch (SQLException e) {
-            throw new DaoException("Can't get userlist", e);
-        }
-        return users;
+        String queryString = "SELECT * FROM snet.users WHERE deleted=FALSE";
+        return executeGetList(queryString);
     }
 
     @Override
     public List<User> getList(User excludedUser) throws DaoException {
-        List<User> users = new ArrayList<>();
-        try (Connection connection = dataSource.getConnection()) {
-            PreparedStatement statement = connection.prepareStatement(
-                    "SELECT * FROM snet.users WHERE userId!=? AND deleted=FALSE ORDER BY lastName,firstName");
-            statement.setLong(1, excludedUser.getId());
-            ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                users.add(getUserFromResultSet(resultSet));
-            }
-        } catch (SQLException e) {
-            throw new DaoException("Can't get userlist", e);
-        }
-        return users;
+        String queryString = "SELECT * FROM snet.users WHERE userId!=? AND deleted=FALSE ORDER BY lastName,firstName";
+        return executeGetList(queryString, excludedUser.getId());
     }
 
     @Override
     public List<User> getList(User excludedUser, long skip, int limit) throws DaoException {
-        List<User> users = new ArrayList<>();
-        try (Connection connection = dataSource.getConnection()) {
-            PreparedStatement statement = connection.prepareStatement(
-                    "SELECT * FROM snet.users WHERE userId!=? AND deleted=FALSE ORDER BY lastName,firstName LIMIT ?,?");
-            statement.setLong(1, excludedUser.getId());
-            statement.setLong(2, skip);
-            statement.setLong(3, limit);
-            ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                users.add(getUserFromResultSet(resultSet));
-            }
-        } catch (SQLException e) {
-            throw new DaoException("Can't get userlist", e);
-        }
-        return users;
+        String queryString = "SELECT * FROM snet.users WHERE userId!=? AND deleted=FALSE" +
+                " ORDER BY lastName,firstName LIMIT ?,?";
+        return executeGetList(queryString, excludedUser.getId(), skip, limit);
     }
 
     @Override
@@ -189,6 +156,23 @@ public class MySqlUserDao implements UserDao {
         } catch (SQLException e) {
             throw new DaoException("Can't remove user", e);
         }
+    }
+
+    private List<User> executeGetList(String queryString, long... param) throws DaoException {
+        List<User> users = new ArrayList<>();
+        try (Connection connection = dataSource.getConnection()) {
+            PreparedStatement statement = connection.prepareStatement(queryString);
+            for (int i = 0; i < param.length; i++) {
+                statement.setLong(i + 1, param[i]);
+            }
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                users.add(getUserFromResultSet(resultSet));
+            }
+        } catch (SQLException e) {
+            throw new DaoException("Can't get userlist", e);
+        }
+        return users;
     }
 
     private User getUserFromResultSet(ResultSet resultSet) throws SQLException {

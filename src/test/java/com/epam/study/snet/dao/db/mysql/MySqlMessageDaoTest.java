@@ -86,6 +86,13 @@ public class MySqlMessageDaoTest extends MySqlDaoTests {
     }
 
     @Test
+    public void getLimitedListBetweenUsers() throws Exception {
+        List<Message> messages=messageDao.getListBetweenUsers(user1,user2,0,1);
+
+        assertEquals(messages.size(),1);
+    }
+
+    @Test
     public void getNumberMessages() throws Exception {
         int number = messageDao.getNumberBetweenUsers(user1, user2);
 

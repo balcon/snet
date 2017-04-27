@@ -18,7 +18,7 @@ public class MySqlDaoFactory implements DaoFactory {
         }
     }
 
-    public MySqlDaoFactory(DataSource dataSource) {
+    MySqlDaoFactory(DataSource dataSource) {
         this.dataSource = dataSource;
     }
 
