@@ -7,6 +7,7 @@ import com.epam.study.snet.entity.User;
 import com.epam.study.snet.enums.FormErrors;
 import com.epam.study.snet.model.LoginFields;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -19,6 +20,8 @@ import java.util.Map;
 
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
+    private static Logger log = Logger.getLogger(LoginServlet.class.getCanonicalName());
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String defaultLocale = req.getLocale().getLanguage() + "_" + req.getLocale().getCountry();
@@ -40,9 +43,9 @@ public class LoginServlet extends HttpServlet {
                 String passHash = DigestUtils.md5Hex(fields.getPassword());
                 if (user != null && user.getPassword().equals(passHash)) {
                     req.getSession().setAttribute("loggedUser", user);
+                    log.info("User ["+user.getUsername()+"],id["+user.getId()+"] is logged in");
                     String contextPath = req.getContextPath();
                     resp.sendRedirect(contextPath + "/main");
-
                 } else {
                     validation.put("loginForm", FormErrors.bad_login_password);
                     req.setAttribute("validation", validation);

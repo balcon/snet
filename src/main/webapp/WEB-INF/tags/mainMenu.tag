@@ -118,7 +118,7 @@
                 <li <c:if test='${active=="profile"}'>class="active"</c:if>>
                     <a href="<c:url value="/main/profile"/>"><span class="glyphicon glyphicon-cog"></span>
                         <fmt:message bundle="${view}" key="titles.profile"/></a></li>
-                <li><a href="<c:url value="/logout"/>"><span class="glyphicon glyphicon-log-out"></span>
+                <li><a href="<c:url value="/main/logout"/>"><span class="glyphicon glyphicon-log-out"></span>
                     <fmt:message bundle="${view}" key="menu.logout"/></a></li>
             </ul>
         </div>

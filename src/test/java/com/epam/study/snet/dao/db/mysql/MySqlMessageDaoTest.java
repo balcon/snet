@@ -71,7 +71,7 @@ public class MySqlMessageDaoTest extends MySqlDaoTests {
     }
 
     @Test
-
+@Ignore
     public void getListWithLastMessages() throws Exception {
         List<Message> messages = messageDao.getListOfLatest(user1);
 
