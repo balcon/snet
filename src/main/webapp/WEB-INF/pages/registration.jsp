@@ -45,7 +45,6 @@
                            setupValue="${param.lastName}"
                            validation='${validation.containsKey("lastName")}'
                            validationErrorProp='${validation.get("lastName")}' inline="true"/>
-            <%--TODO change to JQ datepicker with l10n--%>
         <tags:typicalInput type="date"
                            name="birthday"
                            labelProp="user.birthday"

@@ -1,7 +1,7 @@
 package com.epam.study.snet.model;
 
-import com.epam.study.snet.dao.DaoConfig;
 import com.epam.study.snet.dao.DaoException;
+import com.epam.study.snet.dao.DaoFactory;
 import com.epam.study.snet.dao.MessageDao;
 import com.epam.study.snet.dao.UserDao;
 import com.epam.study.snet.entity.Message;
@@ -9,6 +9,7 @@ import com.epam.study.snet.entity.User;
 import lombok.Value;
 
 import java.util.List;
+
 //todo validate chat with itself
 @Value
 public class Chat {
@@ -19,8 +20,8 @@ public class Chat {
     int activePage;
 
     public Chat(User loggedUser, String companionId, String page) throws DaoException {
-        UserDao userDao = DaoConfig.daoFactory.getUserDao();
-        MessageDao messageDao = DaoConfig.daoFactory.getMessageDao();
+        UserDao userDao = DaoFactory.getFactory().getUserDao();
+        MessageDao messageDao = DaoFactory.getFactory().getMessageDao();
         companion = userDao.getById(Long.valueOf(companionId));
         int numberMessages = messageDao.getNumberBetweenUsers(loggedUser, companion);
         numberPages = (numberMessages - 1) / LIMIT + 1;

@@ -1,14 +1,22 @@
 package com.epam.study.snet.dao.db.mysql;
 
-import com.epam.study.snet.dao.DaoFactory;
-import com.epam.study.snet.dao.ImageDao;
-import com.epam.study.snet.dao.MessageDao;
-import com.epam.study.snet.dao.UserDao;
+import com.epam.study.snet.dao.*;
 
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 public class MySqlDaoFactory implements DaoFactory {
-    private final DataSource dataSource;
+    private DataSource dataSource;
+
+    public MySqlDaoFactory() throws DaoException {
+        try {
+            InitialContext initContext = new InitialContext();
+            dataSource = (DataSource) initContext.lookup("java:comp/env/jdbc/appname");
+        } catch (NamingException e) {
+            throw new DaoException("Can't get context", e);
+        }
+    }
 
     public MySqlDaoFactory(DataSource dataSource) {
         this.dataSource = dataSource;

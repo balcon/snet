@@ -1,7 +1,7 @@
 package com.epam.study.snet.servlet;
 
-import com.epam.study.snet.dao.DaoConfig;
 import com.epam.study.snet.dao.DaoException;
+import com.epam.study.snet.dao.DaoFactory;
 import com.epam.study.snet.dao.UserDao;
 import com.epam.study.snet.enums.FormErrors;
 import com.epam.study.snet.model.ProfileValidator;
@@ -37,8 +37,9 @@ public class RegistrationServlet extends HttpServlet {
 
 
         Map<String, FormErrors> validation = profile.validate();
-        UserDao userDao = DaoConfig.daoFactory.getUserDao();
+
         try {
+            UserDao userDao = DaoFactory.getFactory().getUserDao();
             if (validation.isEmpty()) {
                 if (userDao.getByUsername(profile.getUsername()) == null) {
                     User user = profile.toUser();

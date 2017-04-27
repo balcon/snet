@@ -2,9 +2,6 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ attribute name="active" %>
 
-<fmt:setLocale value="${sessionScope.locale}"/>
-<fmt:setBundle basename="i18n.view" var="view"/>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -34,31 +31,43 @@
             border-width: 3px;
         }
 
-        img.chat-photo{
-            height:72px;
+        img.chat-photo {
+            height: 72px;
             width: 54px;
         }
 
-        img.chat-photo-response{
-            height:32px;
+        img.chat-photo-response {
+            height: 32px;
             width: 24px;
         }
 
-        img.list-photo{
-            height:88px;
+        img.list-photo {
+            height: 88px;
             width: 66px;
         }
 
 
     </style>
-    <title>SNetwork</title>
+    <title>SNet</title>
 </head>
 <body>
 
+<fmt:setLocale value="${sessionScope.locale}"/>
+<fmt:setBundle basename="i18n.view" var="view"/>
 <nav class="navbar navbar-inverse" style="margin-bottom: 0px">
     <div class="container">
         <div class="navbar-header">
-            <a class="navbar-brand" href="#">WebSiteName</a>
+            <a class="navbar-brand" href="<c:url value="/main"/>">
+                <fmt:message bundle="${view}" key="header.title"/>
+                <c:if test="${sessionScope.loggedUser!=null}">
+                    <small>
+                        <fmt:message bundle="${view}" key="header.registered">
+                            <c:set var="regUsers" value="${sessionScope.registeredUsers}"/>
+                            <fmt:param value='<span class="badge">${regUsers}</span>'/>
+                        </fmt:message>
+                    </small>
+                </c:if>
+            </a>
         </div>
         <c:url var="locale" value="/locale"/>
         <c:set var="currentPage" value="${requestScope['javax.servlet.forward.request_uri']}"/>
@@ -103,7 +112,6 @@
                 <li <c:if test='${active=="people"}'>class="active"</c:if>>
                     <a href="<c:url value="/main/people"/>"><span class="glyphicon glyphicon-user"></span>
                         <fmt:message bundle="${view}" key="titles.users"/></a></li>
-                        <%--TODO number users in main menu--%>
                 <li <c:if test='${active=="calendar"}'>class="active"</c:if>>
                     <a href="<c:url value="/main/calendar"/>"><span class="glyphicon glyphicon-th"></span>
                         <fmt:message bundle="${view}" key="titles.calendar"/></a></li>

@@ -56,7 +56,6 @@
                                validationErrorProp='${validation.get("lastName")}'
                                inline="false"/>
 
-                <%--TODO change to JQ datepicker with l10n--%>
             <tags:typicalInput type="date"
                                name="birthday"
                                labelProp="user.birthday"

@@ -1,12 +1,12 @@
 package com.epam.study.snet.servlet;
 
-import com.epam.study.snet.dao.DaoConfig;
 import com.epam.study.snet.dao.DaoException;
+import com.epam.study.snet.dao.DaoFactory;
 import com.epam.study.snet.dao.MessageDao;
 import com.epam.study.snet.dao.UserDao;
-import com.epam.study.snet.model.Chat;
 import com.epam.study.snet.entity.Message;
 import com.epam.study.snet.entity.User;
+import com.epam.study.snet.model.Chat;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -17,8 +17,6 @@ import java.io.IOException;
 
 @WebServlet("/main/chat")
 public class ChatServlet extends HttpServlet {
-    private final UserDao userDao = DaoConfig.daoFactory.getUserDao();
-    private final MessageDao messageDao = DaoConfig.daoFactory.getMessageDao();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -37,6 +35,8 @@ public class ChatServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         User sender = (User) req.getSession().getAttribute("loggedUser");
         try {
+            UserDao userDao = DaoFactory.getFactory().getUserDao();
+            MessageDao messageDao = DaoFactory.getFactory().getMessageDao();
             User receiver = userDao.getById(Long.valueOf(req.getParameter("companionId")));
             String action = req.getParameter("action");
             if (action != null && action.equals("remove")) {
@@ -51,7 +51,7 @@ public class ChatServlet extends HttpServlet {
                         .receiver(receiver)
                         .body(body).build();
                 messageDao.create(message);
-                int unreadMessages = DaoConfig.daoFactory.getMessageDao().getNumberUnread(sender);
+                int unreadMessages = DaoFactory.getFactory().getMessageDao().getNumberUnread(sender);
                 req.getSession().setAttribute("unreadMessages", unreadMessages);
                 String contextPath = req.getContextPath();
                 resp.sendRedirect(contextPath + "/main/chat?companionId=" + receiver.getId());

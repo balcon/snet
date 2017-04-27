@@ -1,7 +1,7 @@
 package com.epam.study.snet.model;
 
-import com.epam.study.snet.dao.DaoConfig;
 import com.epam.study.snet.dao.DaoException;
+import com.epam.study.snet.dao.DaoFactory;
 import com.epam.study.snet.dao.UserDao;
 import com.epam.study.snet.entity.User;
 import lombok.Value;
@@ -16,7 +16,7 @@ public class People {
     long numberPages;
     long activePage;
     public People(User loggedUser, String page) throws DaoException {
-        UserDao userDao = DaoConfig.daoFactory.getUserDao();
+        UserDao userDao = DaoFactory.getFactory().getUserDao();
         long numberUsers = userDao.getNumber() - 1;
         numberPages = (numberUsers - 1) / LIMIT + 1;
         if (page != null) {

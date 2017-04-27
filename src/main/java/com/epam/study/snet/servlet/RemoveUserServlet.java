@@ -1,7 +1,7 @@
 package com.epam.study.snet.servlet;
 
-import com.epam.study.snet.dao.DaoConfig;
 import com.epam.study.snet.dao.DaoException;
+import com.epam.study.snet.dao.DaoFactory;
 import com.epam.study.snet.entity.User;
 
 import javax.servlet.ServletException;
@@ -17,7 +17,7 @@ public class RemoveUserServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         User loggedUser = (User) req.getSession().getAttribute("loggedUser");
         try {
-            DaoConfig.daoFactory.getUserDao().removeById(loggedUser.getId());
+            DaoFactory.getFactory().getUserDao().removeById(loggedUser.getId());
             req.getSession().setAttribute("loggedUser",null);
 
             String contextPath = req.getContextPath();

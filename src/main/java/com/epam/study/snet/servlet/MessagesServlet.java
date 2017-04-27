@@ -1,11 +1,8 @@
 package com.epam.study.snet.servlet;
 
-import com.epam.study.snet.dao.DaoConfig;
 import com.epam.study.snet.dao.DaoException;
-import com.epam.study.snet.dao.MessageDao;
-import com.epam.study.snet.dao.UserDao;
-import com.epam.study.snet.model.Messages;
 import com.epam.study.snet.entity.User;
+import com.epam.study.snet.model.Messages;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -16,16 +13,14 @@ import java.io.IOException;
 
 @WebServlet("/main/messages")
 public class MessagesServlet extends HttpServlet {
-    private UserDao userDao = DaoConfig.daoFactory.getUserDao();
-    private MessageDao messageDao = DaoConfig.daoFactory.getMessageDao();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         User loggedUser = (User) req.getSession().getAttribute("loggedUser");
 
         try {
-            Messages messages=new Messages(loggedUser);
-            req.setAttribute("messages",messages);
+            Messages messages = new Messages(loggedUser);
+            req.setAttribute("messages", messages);
             req.getRequestDispatcher("/WEB-INF/pages/messages.jsp").forward(req, resp);
         } catch (DaoException e) {
             e.printStackTrace();

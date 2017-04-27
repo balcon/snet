@@ -1,10 +1,10 @@
 package com.epam.study.snet.servlet;
 
-import com.epam.study.snet.dao.DaoConfig;
+import com.epam.study.snet.dao.DaoFactory;
 import com.epam.study.snet.dao.ImageDao;
 import com.epam.study.snet.dao.UserDao;
-import com.epam.study.snet.model.Image;
 import com.epam.study.snet.entity.User;
+import com.epam.study.snet.model.Image;
 import lombok.SneakyThrows;
 
 import javax.servlet.ServletException;
@@ -21,12 +21,14 @@ import java.io.IOException;
         maxFileSize = 1024 * 1024 * 10,      // 10MB
         maxRequestSize = 1024 * 1024 * 50)   // 50MB
 public class ImageServlet extends HttpServlet {
-    private ImageDao imageDao = DaoConfig.daoFactory.getImageDao();
-//TODO make rewrite image. Not add new
+
+
+    //TODO make rewrite image. Not add new
 //TODO sneakyThrows!
     @SneakyThrows
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        ImageDao imageDao = DaoFactory.getFactory().getImageDao();
         byte[] imageBytes;
         long imageId = Long.valueOf(req.getParameter("imageId"));
         Image image = Image.builder().id(imageId).build();
@@ -35,17 +37,19 @@ public class ImageServlet extends HttpServlet {
         resp.getOutputStream().write(imageBytes);
 
     }
-//TODO sneakyThrows!
+
+    //TODO sneakyThrows!
     @SneakyThrows
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        ImageDao imageDao = DaoFactory.getFactory().getImageDao();
         Part imagePart = req.getPart("imageFile");
         User loggedUser = (User) req.getSession().getAttribute("loggedUser");
         Image image = null;
         image = imageDao.create(imagePart.getInputStream());
-     //TODO make better
+        //TODO make better
         User user = User.builder().id(loggedUser.getId()).photo(image).build();
-        UserDao userDao = DaoConfig.daoFactory.getUserDao();
+        UserDao userDao = DaoFactory.getFactory().getUserDao();
         userDao.update(user);
         req.getSession().setAttribute("loggedUser", userDao.getById(loggedUser.getId()));
         String contextPath = req.getContextPath();

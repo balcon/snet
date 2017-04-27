@@ -2,6 +2,7 @@ package com.epam.study.snet.dao.db.mysql;
 
 import com.epam.study.snet.dao.DaoException;
 import com.epam.study.snet.dao.MessageDao;
+import com.epam.study.snet.dao.UserDao;
 import com.epam.study.snet.entity.Message;
 import com.epam.study.snet.entity.User;
 
@@ -10,7 +11,6 @@ import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
 
 public class MySqlMessageDao implements MessageDao {
     private final DataSource dataSource;
@@ -117,37 +117,33 @@ public class MySqlMessageDao implements MessageDao {
 
     @Override
     public int getNumberUnread(User receiver) throws DaoException {
-        int numberUnreadMessages = 0;
-        try (Connection connection = dataSource.getConnection()) {
-            PreparedStatement statement = connection.prepareStatement(
-                    "SELECT COUNT(*) FROM snet.messages " +
-                            "WHERE receiverId=? AND unread=TRUE");
-            statement.setLong(1, receiver.getId());
-            ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                numberUnreadMessages = resultSet.getInt(1);
-            }
-        } catch (SQLException e) {
-            throw new DaoException("Can't get number of unread messages", e);
-        }
-        return numberUnreadMessages;
+        String queryString="SELECT COUNT(*) FROM snet.messages " +
+                "WHERE receiverId=? AND unread=TRUE";
+        return executeGetNumber(queryString,receiver);
+
     }
 
     @Override
     public int getNumberUnreadBetweenUsers(User sender, User receiver) throws DaoException {
+        String queryString = "SELECT COUNT(*) FROM snet.messages " +
+                "WHERE senderId=? AND receiverId=? AND unread=TRUE";
+        return executeGetNumber(queryString, sender, receiver);
+    }
+
+    private int executeGetNumber(String queryString, User... users) throws DaoException {
         int numberUnreadMessages = 0;
         try (Connection connection = dataSource.getConnection()) {
-            PreparedStatement statement = connection.prepareStatement(
-                    "SELECT COUNT(*) FROM snet.messages " +
-                            "WHERE senderId=? AND receiverId=? AND unread=TRUE");
-            statement.setLong(1,sender.getId());
-            statement.setLong(2, receiver.getId());
+            PreparedStatement statement = connection.prepareStatement(queryString);
+            for (int i = 0; i < users.length; i++) {
+                statement.setLong(i + 1, users[i].getId());
+                statement.setLong(i + 1, users[i].getId());
+            }
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
                 numberUnreadMessages = resultSet.getInt(1);
             }
         } catch (SQLException e) {
-            throw new DaoException("Can't get number of unread messages", e);
+            throw new DaoException("Can't get number of messages", e);
         }
         return numberUnreadMessages;
     }
@@ -165,12 +161,12 @@ public class MySqlMessageDao implements MessageDao {
             statement.setLong(4, user1.getId());
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
-                numberMessages=resultSet.getInt(1);
+                numberMessages = resultSet.getInt(1);
             }
         } catch (SQLException e) {
             throw new DaoException("Can't get number of messages", e);
         }
-       return numberMessages;
+        return numberMessages;
     }
 
     @Override
@@ -189,23 +185,23 @@ public class MySqlMessageDao implements MessageDao {
 
     @Override
     public void removeById(long messageId) throws DaoException {
-        try(Connection connection=dataSource.getConnection()){
+        try (Connection connection = dataSource.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(
                     "DELETE FROM snet.messages WHERE messageId=? AND unread=TRUE");
-            statement.setLong(1,messageId);
+            statement.setLong(1, messageId);
             statement.execute();
         } catch (SQLException e) {
-            throw new DaoException("Can't remove message",e);
+            throw new DaoException("Can't remove message", e);
         }
     }
 
     private Message getMessageFromResultSet(ResultSet resultSet) throws DaoException, SQLException {
-        //TODO: think! How make better
+        UserDao userDao = new MySqlDaoFactory(dataSource).getUserDao();
+
         long senderId = resultSet.getLong("senderId");
-        User sender = new MySqlDaoFactory(dataSource).getUserDao().getById(senderId);
-        //TODO: this to
+        User sender = userDao.getById(senderId);
         long receiverId = resultSet.getLong("receiverId");
-        User reciever = new MySqlDaoFactory(dataSource).getUserDao().getById(receiverId);
+        User reciever = userDao.getById(receiverId);
 
         Date sendingDate = resultSet.getDate("sendingTime");
         Time sendingTime = resultSet.getTime("sendingTime");
@@ -216,8 +212,7 @@ public class MySqlMessageDao implements MessageDao {
                 .receiver(reciever)
                 .body(resultSet.getString("messageBody"))
                 .sendingTime(LocalDateTime.of(sendingDate.toLocalDate(), sendingTime.toLocalTime()))
-                .unread(resultSet.getBoolean("unread"))
-                .build();
+                .unread(resultSet.getBoolean("unread")).build();
         return message;
     }
 }

@@ -1,11 +1,11 @@
 package com.epam.study.snet.servlet;
 
-import com.epam.study.snet.dao.DaoConfig;
 import com.epam.study.snet.dao.DaoException;
+import com.epam.study.snet.dao.DaoFactory;
 import com.epam.study.snet.dao.UserDao;
+import com.epam.study.snet.entity.User;
 import com.epam.study.snet.enums.FormErrors;
 import com.epam.study.snet.model.ProfileValidator;
-import com.epam.study.snet.entity.User;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import javax.servlet.ServletException;
@@ -46,14 +46,14 @@ public class ProfileServlet extends HttpServlet {
                 .gender(req.getParameter("gender")).build();
 
         Map<String, FormErrors> validation = profile.validate();
-        UserDao userDao = DaoConfig.daoFactory.getUserDao();
         try {
+            UserDao userDao = DaoFactory.getFactory().getUserDao();
             if (validation.isEmpty()) {
                 User newUser = profile.toUser();
                 newUser.setPassword(DigestUtils.md5Hex(newUser.getPassword()));
                 userDao.updateById(loggedUser.getId(), newUser);
                 req.getSession().setAttribute("loggedUser", userDao.getById(loggedUser.getId()));
-                req.setAttribute("changed",req.getParameter("changed"));
+                req.setAttribute("changed", req.getParameter("changed"));
                 req.getRequestDispatcher("/WEB-INF/pages/profile.jsp").forward(req, resp);
             } else {
                 req.setAttribute("validation", validation);
