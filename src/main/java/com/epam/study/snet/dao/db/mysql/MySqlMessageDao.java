@@ -15,7 +15,7 @@ import java.util.List;
 public class MySqlMessageDao implements MessageDao {
     private final DataSource dataSource;
 
-    public MySqlMessageDao(DataSource dataSource) {
+    MySqlMessageDao(DataSource dataSource) {
         this.dataSource = dataSource;
     }
 
@@ -41,7 +41,6 @@ public class MySqlMessageDao implements MessageDao {
             throw new DaoException("Can't create message", e);
         }
         return message;
-        //todo: think about return, when exception happens
     }
 
     @Override

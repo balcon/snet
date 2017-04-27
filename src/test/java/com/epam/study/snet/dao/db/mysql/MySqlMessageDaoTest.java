@@ -70,7 +70,6 @@ public class MySqlMessageDaoTest extends MySqlDaoTests {
         assertFalse(message.getId() == badId);
     }
 
-    @Ignore
     @Test
     public void getListWithLastMessages() throws Exception {
         //TODO: heisenbag

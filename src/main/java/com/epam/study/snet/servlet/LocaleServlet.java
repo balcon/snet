@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 @WebServlet("/locale")
-public class Locale extends HttpServlet {
+public class LocaleServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.getSession().setAttribute("locale", req.getParameter("locale"));
@@ -17,6 +17,5 @@ public class Locale extends HttpServlet {
         String queryString = req.getParameter("queryString");
         if(queryString!=null) currentURL+="?"+queryString;
         resp.sendRedirect(currentURL);
-
     }
 }

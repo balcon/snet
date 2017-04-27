@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @WebServlet("/login")
-public class Login extends HttpServlet {
+public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String defaultLocale=req.getLocale().getLanguage()+"_"+req.getLocale().getCountry();
