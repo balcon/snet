@@ -70,8 +70,8 @@ public class MySqlMessageDaoTest extends MySqlDaoTests {
         assertFalse(message.getId() == badId);
     }
 
-    @Ignore
     @Test
+
     public void getListWithLastMessages() throws Exception {
         List<Message> messages = messageDao.getListOfLatest(user1);
 
