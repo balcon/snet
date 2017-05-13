@@ -10,8 +10,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-//TODO better!
-public class MySqlImageDao implements ImageDao {
+
+//TODO do it better!
+public class MySqlImageDao implements ImageDao{
     private DataSource dataSource;
 
     MySqlImageDao(DataSource dataSource) {
@@ -26,7 +27,6 @@ public class MySqlImageDao implements ImageDao {
                     "INSERT INTO snet.images(image) VALUES (?)");
             statement.setBlob(1, imageStream);
             statement.execute();
-
             long imageId = 0;
             ResultSet generatedKeys = statement.getGeneratedKeys();
             if (generatedKeys.next())

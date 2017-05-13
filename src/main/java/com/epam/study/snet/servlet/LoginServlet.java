@@ -5,7 +5,7 @@ import com.epam.study.snet.dao.DaoFactory;
 import com.epam.study.snet.dao.UserDao;
 import com.epam.study.snet.entity.User;
 import com.epam.study.snet.enums.FormErrors;
-import com.epam.study.snet.model.LoginFields;
+import com.epam.study.snet.model.LoginValidator;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.log4j.Logger;
 
@@ -24,14 +24,12 @@ public class LoginServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String defaultLocale = req.getLocale().getLanguage() + "_" + req.getLocale().getCountry();
-        if (req.getSession().getAttribute("locale") == null) req.getSession().setAttribute("locale", "en_US");
         req.getRequestDispatcher("/WEB-INF/pages/login.jsp").forward(req, resp);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        LoginFields fields = LoginFields.builder()
+        LoginValidator fields = LoginValidator.builder()
                 .username(req.getParameter("username"))
                 .password(req.getParameter("password")).build();
 
@@ -43,7 +41,7 @@ public class LoginServlet extends HttpServlet {
                 String passHash = DigestUtils.md5Hex(fields.getPassword());
                 if (user != null && user.getPassword().equals(passHash)) {
                     req.getSession().setAttribute("loggedUser", user);
-                    log.info("User ["+user.getUsername()+"],id["+user.getId()+"] is logged in");
+                    log.info("["+user.getUsername()+"](id:["+user.getId()+"]) is logged in");
                     String contextPath = req.getContextPath();
                     resp.sendRedirect(contextPath + "/main");
                 } else {

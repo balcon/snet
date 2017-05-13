@@ -82,7 +82,7 @@ public class MySqlUserDao implements UserDao {
         User user = null;
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(
-                    "SELECT * FROM snet.users WHERE username=?");
+                    "SELECT * FROM snet.users WHERE username=? AND deleted=FALSE");
             statement.setString(1, username);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {

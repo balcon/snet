@@ -9,7 +9,7 @@ import java.util.Map;
 
 @Value
 @Builder
-public class LoginFields {
+public class LoginValidator {
     String username;
     String password;
 

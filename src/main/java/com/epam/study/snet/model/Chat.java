@@ -21,7 +21,7 @@ public class Chat {
 
     public Chat(User loggedUser, String companionId, String page) throws DaoException {
         UserDao userDao = DaoFactory.getFactory().getUserDao();
-        MessageDao messageDao = DaoFactory.getFactory().getMessageDao();
+        MessageDao messageDao = DaoFactory.getFactory().getMessageDao(userDao);
         companion = userDao.getById(Long.valueOf(companionId));
         int numberMessages = messageDao.getNumberBetweenUsers(loggedUser, companion);
         numberPages = (numberMessages - 1) / LIMIT + 1;

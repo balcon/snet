@@ -7,6 +7,6 @@ public interface DaoFactory {
         return new MySqlDaoFactory();
     }
     UserDao getUserDao();
-    MessageDao getMessageDao();
-    ImageDao getImageDao();
+    MessageDao getMessageDao(UserDao userDao);
+    ImageDao<byte[]> getImageDao();
 }

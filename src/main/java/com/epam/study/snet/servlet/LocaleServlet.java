@@ -15,7 +15,7 @@ public class LocaleServlet extends HttpServlet {
         req.getSession().setAttribute("locale", req.getParameter("locale"));
         String currentURL = req.getParameter("currentPage");
         String queryString = req.getParameter("queryString");
-        if(queryString!=null&&(!queryString.isEmpty())) currentURL+="?"+queryString;
+        if(queryString!=null) currentURL+="?"+queryString;
         resp.sendRedirect(currentURL);
     }
 }

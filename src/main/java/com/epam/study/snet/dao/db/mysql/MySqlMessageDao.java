@@ -14,9 +14,11 @@ import java.util.List;
 
 public class MySqlMessageDao implements MessageDao {
     private final DataSource dataSource;
+    private final UserDao userDao;
 
-    MySqlMessageDao(DataSource dataSource) {
+    MySqlMessageDao(DataSource dataSource, UserDao userDao) {
         this.dataSource = dataSource;
+        this.userDao = userDao;
     }
 
     @Override
@@ -165,8 +167,6 @@ public class MySqlMessageDao implements MessageDao {
     }
 
     private Message getMessageFromResultSet(ResultSet resultSet) throws DaoException, SQLException {
-        UserDao userDao = new MySqlDaoFactory(dataSource).getUserDao();
-
         long senderId = resultSet.getLong("senderId");
         User sender = userDao.getById(senderId);
         long receiverId = resultSet.getLong("receiverId");

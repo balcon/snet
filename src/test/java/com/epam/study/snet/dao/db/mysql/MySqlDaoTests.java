@@ -22,18 +22,16 @@ public abstract class MySqlDaoTests {
     @BeforeClass
     public static void createH2Schema() throws Exception {
         String createScriptPath = "src\\main\\resources\\db\\mysql\\createSchema.sql";
-        String testDataScriptPath = "src\\test\\resources\\db\\h2\\testData.sql";
 
         dataSource = new JdbcDataSource();
         dataSource.setUrl("jdbc:h2:mem:test;MODE=MYSQL;DB_CLOSE_DELAY=-1");
 
         try (Connection connection = dataSource.getConnection()) {
             executeScript(connection, createScriptPath);
-            executeScript(connection, testDataScriptPath);
         }
         DaoFactory daoFactory = new MySqlDaoFactory(dataSource);
         userDao = daoFactory.getUserDao();
-        messageDao=daoFactory.getMessageDao();
+        messageDao=daoFactory.getMessageDao(userDao);
     }
 
     @AfterClass

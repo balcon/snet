@@ -7,6 +7,8 @@ import com.epam.study.snet.entity.User;
 import com.epam.study.snet.enums.FormErrors;
 import com.epam.study.snet.model.ProfileValidator;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.log4j.Logger;
+import sun.rmi.runtime.Log;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -18,6 +20,8 @@ import java.util.Map;
 
 @WebServlet("/main/profile")
 public class ProfileServlet extends HttpServlet {
+    static final Logger log= Logger.getLogger(ProfileServlet.class.getCanonicalName());
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.getRequestDispatcher("/WEB-INF/pages/profile.jsp").forward(req, resp);
@@ -61,7 +65,7 @@ public class ProfileServlet extends HttpServlet {
 
             }
         } catch (DaoException e) {
-            e.printStackTrace();
+            log.error("["+loggedUser.getUsername()+"](id:["+loggedUser.getId()+"]) try upgrade profile",e);
             req.getRequestDispatcher("/WEB-INF/pages/errorpage.jsp").forward(req, resp);
         }
     }

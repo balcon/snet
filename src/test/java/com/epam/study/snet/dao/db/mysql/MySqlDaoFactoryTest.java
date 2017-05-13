@@ -24,7 +24,8 @@ public class MySqlDaoFactoryTest {
     @Test
     public void getMessageDao() throws Exception {
         DaoFactory daoFactory = new MySqlDaoFactory(dataSource);
-        MessageDao messageDao = daoFactory.getMessageDao();
+        UserDao userDao=daoFactory.getUserDao();
+        MessageDao messageDao = daoFactory.getMessageDao(userDao);
 
         assertTrue(messageDao instanceof MySqlMessageDao);
     }

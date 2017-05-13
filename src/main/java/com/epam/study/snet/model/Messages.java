@@ -3,6 +3,7 @@ package com.epam.study.snet.model;
 import com.epam.study.snet.dao.DaoException;
 import com.epam.study.snet.dao.DaoFactory;
 import com.epam.study.snet.dao.MessageDao;
+import com.epam.study.snet.dao.UserDao;
 import com.epam.study.snet.entity.Message;
 import com.epam.study.snet.entity.User;
 import lombok.Value;
@@ -15,7 +16,8 @@ public class Messages {
     List<LastMessage> lastMessages;
 
     public Messages(User loggedUser) throws DaoException {
-        MessageDao messageDao = DaoFactory.getFactory().getMessageDao();
+        UserDao userDao=DaoFactory.getFactory().getUserDao();
+        MessageDao messageDao = DaoFactory.getFactory().getMessageDao(userDao);
         List<Message> messages = messageDao.getListOfLatest(loggedUser);
         lastMessages = new ArrayList<>();
         for (Message message : messages) {

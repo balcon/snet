@@ -7,6 +7,7 @@ import com.epam.study.snet.dao.UserDao;
 import com.epam.study.snet.entity.Message;
 import com.epam.study.snet.entity.User;
 import com.epam.study.snet.model.Chat;
+import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -17,7 +18,7 @@ import java.io.IOException;
 
 @WebServlet("/main/chat")
 public class ChatServlet extends HttpServlet {
-
+    private static Logger log=Logger.getLogger(ChatServlet.class.getCanonicalName());
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         User loggedUser = (User) req.getSession().getAttribute("loggedUser");
@@ -26,7 +27,7 @@ public class ChatServlet extends HttpServlet {
             req.setAttribute("chat", chat);
             req.getRequestDispatcher("/WEB-INF/pages/chat.jsp").forward(req, resp);
         } catch (DaoException e) {
-            e.printStackTrace();
+            log.error("["+loggedUser.getUsername()+"](id:["+loggedUser.getId()+"]) try to read chat",e);
             req.getRequestDispatcher("/WEB-INF/pages/errorpage.jsp").forward(req, resp);
         }
     }
@@ -36,7 +37,7 @@ public class ChatServlet extends HttpServlet {
         User sender = (User) req.getSession().getAttribute("loggedUser");
         try {
             UserDao userDao = DaoFactory.getFactory().getUserDao();
-            MessageDao messageDao = DaoFactory.getFactory().getMessageDao();
+            MessageDao messageDao = DaoFactory.getFactory().getMessageDao(userDao);
             User receiver = userDao.getById(Long.valueOf(req.getParameter("companionId")));
             String action = req.getParameter("action");
             if (action != null && action.equals("remove")) {
@@ -51,13 +52,13 @@ public class ChatServlet extends HttpServlet {
                         .receiver(receiver)
                         .body(body).build();
                 messageDao.create(message);
-                int unreadMessages = DaoFactory.getFactory().getMessageDao().getNumberUnread(sender);
+                int unreadMessages = messageDao.getNumberUnread(sender);
                 req.getSession().setAttribute("unreadMessages", unreadMessages);
                 String contextPath = req.getContextPath();
                 resp.sendRedirect(contextPath + "/main/chat?companionId=" + receiver.getId());
             }
         } catch (DaoException e) {
-            e.printStackTrace();
+            log.error("["+sender.getUsername()+"](id:["+sender.getId()+"]) try to write/remove message",e);
             req.getRequestDispatcher("/WEB-INF/pages/errorpage.jsp").forward(req, resp);
         }
     }

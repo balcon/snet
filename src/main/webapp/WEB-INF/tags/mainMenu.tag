@@ -54,20 +54,23 @@
 
 <fmt:setLocale value="${sessionScope.locale}"/>
 <fmt:setBundle basename="i18n.view" var="view"/>
+<jsp:useBean id="sessionInfo" scope="session" class="com.epam.study.snet.model.SessionInfo"/>
 <nav class="navbar navbar-inverse" style="margin-bottom: 0px">
     <div class="container">
         <div class="navbar-header">
             <a class="navbar-brand" href="<c:url value="/main"/>">
-                <fmt:message bundle="${view}" key="header.title"/>
+                <%--<img src="<c:url value="/images/logo.png"/>" height="30px">--%>
+                <fmt:message bundle="${view}" key="header.title"/></a>
+            <div class="navbar-text">
                 <c:if test="${sessionScope.loggedUser!=null}">
                     <small>
                         <fmt:message bundle="${view}" key="header.registered">
-                            <c:set var="regUsers" value="${sessionScope.registeredUsers}"/>
+                            <c:set var="regUsers" value="${sessionInfo.registeredUsers}"/>
                             <fmt:param value='<span class="badge">${regUsers}</span>'/>
                         </fmt:message>
                     </small>
                 </c:if>
-            </a>
+        </div>
         </div>
         <c:url var="locale" value="/locale"/>
         <c:set var="currentPage" value="${requestScope['javax.servlet.forward.request_uri']}"/>
@@ -106,15 +109,12 @@
                 <li <c:if test='${active=="messages"}'>class="active"</c:if>>
                     <a href="<c:url value="/main/messages"/>"><span class="glyphicon glyphicon-envelope"></span>
                         <fmt:message bundle="${view}" key="titles.messages"/>
-                        <c:if test="${sessionScope.unreadMessages > 0}">
-                            <span class="badge">${sessionScope.unreadMessages}</span></c:if>
+                        <c:if test="${sessionInfo.unreadMessages > 0}">
+                            <span class="badge">${sessionInfo.unreadMessages}</span></c:if>
                     </a></li>
                 <li <c:if test='${active=="people"}'>class="active"</c:if>>
                     <a href="<c:url value="/main/people"/>"><span class="glyphicon glyphicon-user"></span>
                         <fmt:message bundle="${view}" key="titles.users"/></a></li>
-                <li <c:if test='${active=="calendar"}'>class="active"</c:if>>
-                    <a href="<c:url value="/main/calendar"/>"><span class="glyphicon glyphicon-th"></span>
-                        <fmt:message bundle="${view}" key="titles.calendar"/></a></li>
                 <li <c:if test='${active=="profile"}'>class="active"</c:if>>
                     <a href="<c:url value="/main/profile"/>"><span class="glyphicon glyphicon-cog"></span>
                         <fmt:message bundle="${view}" key="titles.profile"/></a></li>

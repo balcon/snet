@@ -7,6 +7,7 @@ import com.epam.study.snet.enums.FormErrors;
 import com.epam.study.snet.model.ProfileValidator;
 import com.epam.study.snet.entity.User;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -19,6 +20,7 @@ import java.util.Map;
 @WebServlet("/registration")
 
 public class RegistrationServlet extends HttpServlet {
+    static private Logger log=Logger.getLogger(RegistrationServlet.class.getCanonicalName());
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.getRequestDispatcher("/WEB-INF/pages/registration.jsp").forward(req, resp);
@@ -44,7 +46,8 @@ public class RegistrationServlet extends HttpServlet {
                 if (userDao.getByUsername(profile.getUsername()) == null) {
                     User user = profile.toUser();
                     user.setPassword(DigestUtils.md5Hex(user.getPassword()));
-                    userDao.create(user);
+                    user=userDao.create(user);
+                    log.info("Registeren new user ["+user.getUsername()+"](id:["+user.getId()+"]");
                     resp.sendRedirect(req.getContextPath() + "/login");
                 } else {
                     validation.put("username", FormErrors.username_exists);
@@ -57,7 +60,7 @@ public class RegistrationServlet extends HttpServlet {
 
             }
         } catch (DaoException e) {
-            e.printStackTrace();
+            log.error("Trying to register a new user",e);
             req.getRequestDispatcher("/WEB-INF/pages/errorpage.jsp").forward(req, resp);
         }
     }

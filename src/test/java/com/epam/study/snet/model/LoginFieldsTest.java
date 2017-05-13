@@ -11,7 +11,7 @@ public class LoginFieldsTest {
 
     @Test
     public void correctInputs() throws Exception {
-        LoginFields fields = LoginFields.builder()
+        LoginValidator fields = LoginValidator.builder()
                 .username("User")
                 .password("Password").build();
         Map<String, FormErrors> validation = fields.validate();
@@ -21,7 +21,7 @@ public class LoginFieldsTest {
 
     @Test
     public void incorrectInputs() throws Exception {
-        LoginFields fields=LoginFields.builder()
+        LoginValidator fields= LoginValidator.builder()
                 .username("").build();
         Map<String, FormErrors> validation= fields.validate();
 
