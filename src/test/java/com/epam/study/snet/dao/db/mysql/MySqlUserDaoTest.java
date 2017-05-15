@@ -16,6 +16,7 @@ public class MySqlUserDaoTest extends MySqlDaoTests {
             .password("123")
             .firstName("Peter")
             .lastName("Johnson")
+            .country("UK")
             .birthday(LocalDate.of(1980, 5, 12))
             .gender(Gender.MALE).build();
 
@@ -23,8 +24,12 @@ public class MySqlUserDaoTest extends MySqlDaoTests {
     public void createUser() throws Exception {
         User user = userDao.create(testUser);
 
-        assertEquals(user.getFirstName(), "Peter");
         assertTrue(user.getId() != 0);
+        assertEquals(user.getFirstName(), "Peter");
+        assertEquals(user.getLastName(),"Johnson");
+        assertEquals(user.getBirthday(),LocalDate.of(1980, 5, 12));
+        assertEquals(user.getGender(),Gender.MALE);
+        assertEquals(user.getCountry(),"UK");
     }
 
     @Test
@@ -50,7 +55,11 @@ public class MySqlUserDaoTest extends MySqlDaoTests {
         User user2 = userDao.getById(userId);
 
         assertFalse(user1.isDeleted());
-        assertEquals(user1.getId(), user2.getId());
+        assertEquals(user2.getFirstName(), "Peter");
+        assertEquals(user2.getLastName(),"Johnson");
+        assertEquals(user2.getBirthday(),LocalDate.of(1980, 5, 12));
+        assertEquals(user2.getGender(),Gender.MALE);
+        assertEquals(user2.getCountry(),"UK");
     }
 
     @Test
@@ -158,6 +167,7 @@ public class MySqlUserDaoTest extends MySqlDaoTests {
                 .firstName("Timmy")
                 .lastName("Robertson")
                 .birthday(LocalDate.now())
+                .country("US")
                 .gender(Gender.MALE).build();
         user1 = userDao.create(user1);
 
@@ -167,6 +177,7 @@ public class MySqlUserDaoTest extends MySqlDaoTests {
                 .firstName(user1.getFirstName())
                 .lastName("newLastName")
                 .birthday(user1.getBirthday())
+                .country("UK")
                 .gender(user1.getGender()).build();
 
         userDao.updateById(user1.getId(), user2);
@@ -177,5 +188,6 @@ public class MySqlUserDaoTest extends MySqlDaoTests {
         assertTrue(user1.getBirthday().equals(user1new.getBirthday()));
         assertFalse(user1.getLastName().equals(user1new.getLastName()));
         assertFalse(user1.getPassword().equals(user1new.getPassword()));
+        assertFalse(user1.getCountry().equals(user1new.getCountry()));
     }
 }

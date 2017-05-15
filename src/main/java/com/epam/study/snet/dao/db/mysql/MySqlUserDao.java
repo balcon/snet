@@ -21,14 +21,15 @@ public class MySqlUserDao implements UserDao {
     public User create(User user) throws DaoException {
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(
-                    "INSERT INTO snet.users (username, passHash, firstName, lastName, birthday, gender)" +
-                            " VALUES (?,?,?,?,?,?)");
+                    "INSERT INTO snet.users (username, passHash, firstName, lastName, birthday, gender, country)" +
+                            " VALUES (?,?,?,?,?,?,?)");
             statement.setString(1, user.getUsername());
             statement.setString(2, user.getPassword());
             statement.setString(3, user.getFirstName());
             statement.setString(4, user.getLastName());
             statement.setString(5, user.getBirthday().toString());
             statement.setString(6, user.getGender().toString());
+            statement.setString(7, user.getCountry());
             statement.execute();
             long userId = 0;
             ResultSet generatedKeys = statement.getGeneratedKeys();
@@ -132,14 +133,15 @@ public class MySqlUserDao implements UserDao {
     public void updateById(Long id, User newUser) throws DaoException {
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(
-                    "UPDATE snet.users SET firstName=?,lastName=?,passHash=?,birthday=?,gender=?" +
+                    "UPDATE snet.users SET firstName=?,lastName=?,passHash=?,birthday=?,gender=?,country=?" +
                             " WHERE userId=?");
             statement.setString(1, newUser.getFirstName());
             statement.setString(2, newUser.getLastName());
             statement.setString(3, newUser.getPassword());
             statement.setString(4, newUser.getBirthday().toString());
             statement.setString(5, newUser.getGender().toString());
-            statement.setLong(6, id);
+            statement.setString(6, newUser.getCountry());
+            statement.setLong(7, id);
             statement.execute();
         } catch (SQLException e) {
             throw new DaoException("Can't update user", e);
@@ -188,6 +190,7 @@ public class MySqlUserDao implements UserDao {
                 .firstName(resultSet.getString("firstName"))
                 .lastName(resultSet.getString("lastName"))
                 .birthday(birthday.toLocalDate())
+                .country(resultSet.getString("country"))
                 .gender(gender.equals("MALE") ? Gender.MALE : Gender.FEMALE)
                 .photo(photo)
                 .deleted(resultSet.getBoolean("deleted")).build();

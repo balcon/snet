@@ -25,6 +25,8 @@
                     <c:set var="fullName"
                            value="${user.firstName} ${user.lastName}"/>
                     <h4 class="media-heading"><c:out value="${fullName}"/></h4>
+                    <span class="flag-icon flag-icon-${loggedUser.country.toLowerCase()}"></span>
+ups
                 </div>
                 <div class="media-right">
                     <c:url var="urlToChat" value="/main/chat"/>

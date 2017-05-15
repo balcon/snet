@@ -21,6 +21,7 @@ public class User {
     LocalDate birthday;
     Gender gender;
     Image photo;
+    String country;
     boolean deleted;
 
     public void setId(Long id) {

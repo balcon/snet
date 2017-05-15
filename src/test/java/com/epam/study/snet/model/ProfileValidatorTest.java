@@ -20,6 +20,7 @@ public class ProfileValidatorTest {
                 .firstName("John")
                 .lastName("Smith")
                 .gender("male")
+                .country("RU")
                 .birthday(LocalDate.now().toString())
                 .gender("MALE").build();
         Map<String, FormErrors> validate = fields.validate();
@@ -40,6 +41,7 @@ public class ProfileValidatorTest {
 
         assertTrue(validate.containsKey("username"));
         assertTrue(validate.containsKey("gender"));
+        assertTrue(validate.containsKey("country"));
     }
 
     @Test
@@ -73,12 +75,12 @@ public class ProfileValidatorTest {
 
     @Test
     public void toUserCorrect() throws Exception {
-        String username="joan_smith";
-        String password="pass123";
-        String firstName="Joan";
-        String lastName="Smith";
-        String birthday="1990-10-20";
-        String gender="FEMALE";
+        String username = "joan_smith";
+        String password = "pass123";
+        String firstName = "Joan";
+        String lastName = "Smith";
+        String birthday = "1990-10-20";
+        String gender = "FEMALE";
         ProfileValidator fields = ProfileValidator.builder()
                 .username(username)
                 .password(password)
@@ -86,14 +88,14 @@ public class ProfileValidatorTest {
                 .lastName(lastName)
                 .birthday(birthday)
                 .gender(gender).build();
-        User user=fields.toUser();
+        User user = fields.toUser();
 
-        assertEquals(user.getUsername(),username);
+        assertEquals(user.getUsername(), username);
         assertEquals(user.getPassword(), password);
-        assertEquals(user.getFirstName(),firstName);
-        assertEquals(user.getLastName(),lastName);
-        assertEquals(user.getBirthday().toString(),birthday);
-        assertEquals(user.getGender().toString(),gender);
+        assertEquals(user.getFirstName(), firstName);
+        assertEquals(user.getLastName(), lastName);
+        assertEquals(user.getBirthday().toString(), birthday);
+        assertEquals(user.getGender().toString(), gender);
     }
 
     @Test

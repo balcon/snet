@@ -20,6 +20,7 @@ public class ProfileValidator {
     String lastName;
     String birthday;
     String gender;
+    String country;
 
     public Map<String, FormErrors> validate() {
         Map<String, FormErrors> errors = new HashMap<>();
@@ -43,6 +44,7 @@ public class ProfileValidator {
         if (lastName == null || lastName.isEmpty()) errors.put("lastName", FormErrors.field_empty);
         if (birthday == null || birthday.isEmpty()) errors.put("birthday", FormErrors.field_empty);
         if (gender == null || gender.isEmpty()) errors.put("gender", FormErrors.field_empty);
+        if (country==null || country.isEmpty()) errors.put("country", FormErrors.field_empty);
 
         return errors;
     }
@@ -55,6 +57,7 @@ public class ProfileValidator {
                 .firstName(firstName)
                 .lastName(lastName)
                 .birthday(LocalDate.parse(birthday))
+                .country(country)
                 .gender(gender).build();
     }
 }

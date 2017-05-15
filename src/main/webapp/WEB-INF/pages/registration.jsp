@@ -45,6 +45,38 @@
                            setupValue="${param.lastName}"
                            validation='${validation.containsKey("lastName")}'
                            validationErrorProp='${validation.get("lastName")}' inline="true"/>
+
+            <%-- COUNTRY INPUT--%>
+        <div class="form-group <c:if test='${validation.containsKey("country")}'> has-error has-feedback </c:if>">
+            <fmt:message var="countryTitle" bundle="${view}" key="user.country"/>
+            <label class="col-md-3 control-label" for="country">${countryTitle}
+            </label>
+            <jsp:useBean id="countries" scope="request" type="java.util.Map"/>
+            <div class="col-md-6">
+                <select class="form-control" id="country" name="country">
+                    <option value="" hidden>${countryTitle}</option>
+                    <c:forEach var="oneCountry" items="${countries}">
+                        <option value="${oneCountry.value}"
+                                <c:if test='${param.country==oneCountry.value}'>selected</c:if>>
+                                ${oneCountry.key}</option>
+                    </c:forEach>
+                        <%--<option value="MALE"--%>
+                        <%--<c:if test='${param.gender=="MALE"}'>selected</c:if>><fmt:message bundle="${view}"--%>
+                        <%--key="user.gender.male"/></option>--%>
+                        <%--<option value="FEMALE"--%>
+                        <%--<c:if test='${param.gender=="FEMALE"}'>selected</c:if>><fmt:message bundle="${view}"--%>
+                        <%--key="user.gender.female"/></option>--%>
+                </select>
+                <c:if test='${validation.containsKey("gender")}'>
+                    <span class="glyphicon glyphicon-exclamation-sign form-control-feedback"></span>
+                    <span class="help-block">
+                        <small><fmt:message bundle="${errors}" key='${validation.get("gender")}'/></small>
+                    </span>
+                </c:if>
+            </div>
+        </div>
+            <%-- end of COUNTRY input --%>
+
         <tags:typicalInput type="date"
                            name="birthday"
                            labelProp="user.birthday"

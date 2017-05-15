@@ -10,7 +10,8 @@
 
 <tags:mainMenu active="profile">
     <div class="col-xs-offset-4">
-        <h3><fmt:message bundle="${view}" key="titles.profile"/> <u>${loggedUser.username}</u></h3>
+        <h3><span class="flag-icon flag-icon-${loggedUser.country.toLowerCase()}"></span>
+            <fmt:message bundle="${view}" key="titles.profile"/> <u>${loggedUser.username}</u></h3>
     </div>
     <c:if test='${changed.equals("prof")}'>
         <div class="alert alert-success" role="alert">

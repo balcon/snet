@@ -15,7 +15,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Locale;
 import java.util.Map;
+import java.util.TreeMap;
 
 @WebServlet("/registration")
 
@@ -23,6 +25,7 @@ public class RegistrationServlet extends HttpServlet {
     static private Logger log=Logger.getLogger(RegistrationServlet.class.getCanonicalName());
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setAttribute("countries",getCountries());
         req.getRequestDispatcher("/WEB-INF/pages/registration.jsp").forward(req, resp);
     }
 
@@ -35,6 +38,7 @@ public class RegistrationServlet extends HttpServlet {
                 .firstName(req.getParameter("firstName"))
                 .lastName(req.getParameter("lastName"))
                 .birthday(req.getParameter("birthday"))
+                .country(req.getParameter("country"))
                 .gender(req.getParameter("gender")).build();
 
 
@@ -52,10 +56,12 @@ public class RegistrationServlet extends HttpServlet {
                 } else {
                     validation.put("username", FormErrors.username_exists);
                     req.setAttribute("validation", validation);
+                    req.setAttribute("countries", getCountries());
                     req.getRequestDispatcher("/WEB-INF/pages/registration.jsp").forward(req, resp);
                 }
             } else {
                 req.setAttribute("validation", validation);
+                req.setAttribute("countries", getCountries());
                 req.getRequestDispatcher("/WEB-INF/pages/registration.jsp").forward(req, resp);
 
             }
@@ -63,5 +69,15 @@ public class RegistrationServlet extends HttpServlet {
             log.error("Trying to register a new user",e);
             req.getRequestDispatcher("/WEB-INF/pages/errorpage.jsp").forward(req, resp);
         }
+    }
+
+    private Map<String, String> getCountries() {
+        String[] isoCountries = Locale.getISOCountries();
+        Map<String,String> countries=new TreeMap<>();
+        for (String isoCountry : isoCountries) {
+            String displayCountry=new Locale("",isoCountry).getDisplayCountry(Locale.ENGLISH);
+            countries.put(displayCountry,isoCountry);
+        }
+        return countries;
     }
 }
