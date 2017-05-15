@@ -4,6 +4,7 @@ import com.epam.study.snet.dao.DaoException;
 import com.epam.study.snet.dao.DaoFactory;
 import com.epam.study.snet.dao.UserDao;
 import com.epam.study.snet.entity.User;
+import com.epam.study.snet.enums.Relation;
 import lombok.Value;
 
 import java.util.List;

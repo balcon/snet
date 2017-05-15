@@ -56,16 +56,10 @@
                 <select class="form-control" id="country" name="country">
                     <option value="" hidden>${countryTitle}</option>
                     <c:forEach var="oneCountry" items="${countries}">
-                        <option value="${oneCountry.value}"
-                                <c:if test='${param.country==oneCountry.value}'>selected</c:if>>
-                                ${oneCountry.key}</option>
+                        <option value="${oneCountry.key}"
+                                <c:if test='${param.country==oneCountry.key}'>selected</c:if>>
+                                ${oneCountry.value}</option>
                     </c:forEach>
-                        <%--<option value="MALE"--%>
-                        <%--<c:if test='${param.gender=="MALE"}'>selected</c:if>><fmt:message bundle="${view}"--%>
-                        <%--key="user.gender.male"/></option>--%>
-                        <%--<option value="FEMALE"--%>
-                        <%--<c:if test='${param.gender=="FEMALE"}'>selected</c:if>><fmt:message bundle="${view}"--%>
-                        <%--key="user.gender.female"/></option>--%>
                 </select>
                 <c:if test='${validation.containsKey("gender")}'>
                     <span class="glyphicon glyphicon-exclamation-sign form-control-feedback"></span>

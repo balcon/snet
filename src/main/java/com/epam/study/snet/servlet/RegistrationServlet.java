@@ -4,6 +4,7 @@ import com.epam.study.snet.dao.DaoException;
 import com.epam.study.snet.dao.DaoFactory;
 import com.epam.study.snet.dao.UserDao;
 import com.epam.study.snet.enums.FormErrors;
+import com.epam.study.snet.model.Countries;
 import com.epam.study.snet.model.ProfileValidator;
 import com.epam.study.snet.entity.User;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -25,7 +26,7 @@ public class RegistrationServlet extends HttpServlet {
     static private Logger log=Logger.getLogger(RegistrationServlet.class.getCanonicalName());
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.setAttribute("countries",getCountries());
+        req.setAttribute("countries",Countries.getCountries());
         req.getRequestDispatcher("/WEB-INF/pages/registration.jsp").forward(req, resp);
     }
 
@@ -56,12 +57,12 @@ public class RegistrationServlet extends HttpServlet {
                 } else {
                     validation.put("username", FormErrors.username_exists);
                     req.setAttribute("validation", validation);
-                    req.setAttribute("countries", getCountries());
+                    req.setAttribute("countries", Countries.getCountries());
                     req.getRequestDispatcher("/WEB-INF/pages/registration.jsp").forward(req, resp);
                 }
             } else {
                 req.setAttribute("validation", validation);
-                req.setAttribute("countries", getCountries());
+                req.setAttribute("countries", Countries.getCountries());
                 req.getRequestDispatcher("/WEB-INF/pages/registration.jsp").forward(req, resp);
 
             }
@@ -71,13 +72,5 @@ public class RegistrationServlet extends HttpServlet {
         }
     }
 
-    private Map<String, String> getCountries() {
-        String[] isoCountries = Locale.getISOCountries();
-        Map<String,String> countries=new TreeMap<>();
-        for (String isoCountry : isoCountries) {
-            String displayCountry=new Locale("",isoCountry).getDisplayCountry(Locale.ENGLISH);
-            countries.put(displayCountry,isoCountry);
-        }
-        return countries;
-    }
+
 }

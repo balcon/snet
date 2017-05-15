@@ -1,9 +1,6 @@
 package com.epam.study.snet.dao.db.mysql;
 
-import com.epam.study.snet.dao.DaoFactory;
-import com.epam.study.snet.dao.ImageDao;
-import com.epam.study.snet.dao.MessageDao;
-import com.epam.study.snet.dao.UserDao;
+import com.epam.study.snet.dao.*;
 import org.h2.jdbcx.JdbcDataSource;
 import org.junit.Test;
 
@@ -12,10 +9,10 @@ import static org.junit.Assert.assertTrue;
 public class MySqlDaoFactoryTest {
 
     private final JdbcDataSource dataSource = new JdbcDataSource();
+    DaoFactory daoFactory = new MySqlDaoFactory(dataSource);
 
     @Test
     public void getUserDao() throws Exception {
-        DaoFactory daoFactory = new MySqlDaoFactory(dataSource);
         UserDao userDao = daoFactory.getUserDao();
 
         assertTrue(userDao instanceof MySqlUserDao);
@@ -23,8 +20,7 @@ public class MySqlDaoFactoryTest {
 
     @Test
     public void getMessageDao() throws Exception {
-        DaoFactory daoFactory = new MySqlDaoFactory(dataSource);
-        UserDao userDao=daoFactory.getUserDao();
+        UserDao userDao = daoFactory.getUserDao();
         MessageDao messageDao = daoFactory.getMessageDao(userDao);
 
         assertTrue(messageDao instanceof MySqlMessageDao);
@@ -32,9 +28,15 @@ public class MySqlDaoFactoryTest {
 
     @Test
     public void getImageDao() throws Exception {
-        DaoFactory daoFactory=new MySqlDaoFactory(dataSource);
-        ImageDao imageDao=daoFactory.getImageDao();
+        ImageDao imageDao = daoFactory.getImageDao();
 
         assertTrue(imageDao instanceof MySqlImageDao);
+    }
+
+    @Test
+    public void getRelationsDao() throws Exception {
+        RelationshipDao relationsDao = daoFactory.getRelationshipDao();
+
+        assertTrue(relationsDao instanceof MySqlRelationshipDao);
     }
 }

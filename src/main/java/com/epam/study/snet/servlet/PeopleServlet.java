@@ -1,6 +1,7 @@
 package com.epam.study.snet.servlet;
 
 import com.epam.study.snet.dao.DaoException;
+import com.epam.study.snet.model.Countries;
 import com.epam.study.snet.model.People;
 import com.epam.study.snet.entity.User;
 import org.apache.log4j.Logger;
@@ -20,6 +21,7 @@ public class PeopleServlet extends HttpServlet {
         User loggedUser = (User) req.getSession().getAttribute("loggedUser");
         try {
             People people=new People(loggedUser,req.getParameter("page"));
+            req.setAttribute("countries", Countries.getCountries());
             req.setAttribute("people", people);
             req.getRequestDispatcher("/WEB-INF/pages/people.jsp").forward(req, resp);
         } catch (DaoException e) {

@@ -31,6 +31,11 @@ public class MySqlDaoFactory implements DaoFactory {
     }
 
     @Override
+    public RelationshipDao getRelationshipDao() {
+        return new MySqlRelationshipDao(dataSource);
+    }
+
+    @Override
     public UserDao getUserDao() {
         return new MySqlUserDao(dataSource);
     }

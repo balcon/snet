@@ -31,6 +31,14 @@
             border-width: 3px;
         }
 
+        div.media.bad-relation {
+           border-color: #AA0000;
+        }
+
+        div.media.good-relation {
+           border-color: #00AA00;
+        }
+
         img.chat-photo {
             height: 72px;
             width: 54px;

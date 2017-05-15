@@ -15,7 +15,8 @@
             <fmt:message bundle="${view}" key="people.no_people"/>
         </div>
     </c:if>
-    <c:forEach var="user" items="${people.users}">
+    <c:forEach var="user" items="${people.users}"><jsp:useBean id="countries" scope="request" type="java.util.Map"/>
+
         <div class="media panel panel-primary" style="margin-bottom: 1px; margin-top: 0px">
             <div class="panel-body">
                 <div class="media-left">
@@ -24,8 +25,10 @@
                 <div class="media-body">
                     <c:set var="fullName"
                            value="${user.firstName} ${user.lastName}"/>
-                    <h4 class="media-heading"><c:out value="${fullName}"/></h4>
-                    <span class="flag-icon flag-icon-${loggedUser.country.toLowerCase()}"></span>
+                    <h4 class="media-heading"><c:out value="${fullName}"/>,
+                        <small>${countries.get(user.country)}
+                            <span class="flag-icon flag-icon-${user.country.toLowerCase()}"></span>
+                        </small></h4>
 ups
                 </div>
                 <div class="media-right">

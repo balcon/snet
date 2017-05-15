@@ -2,6 +2,7 @@ package com.epam.study.snet.dao.db.mysql;
 
 import com.epam.study.snet.dao.DaoFactory;
 import com.epam.study.snet.dao.MessageDao;
+import com.epam.study.snet.dao.RelationshipDao;
 import com.epam.study.snet.dao.UserDao;
 import org.h2.jdbcx.JdbcDataSource;
 import org.junit.AfterClass;
@@ -15,9 +16,10 @@ import java.util.Scanner;
 
 public abstract class MySqlDaoTests {
 
-    private static JdbcDataSource dataSource;
+    static JdbcDataSource dataSource;
     static UserDao userDao;
     static MessageDao messageDao;
+    static RelationshipDao relationshipDao;
 
     @BeforeClass
     public static void createH2Schema() throws Exception {
@@ -31,7 +33,8 @@ public abstract class MySqlDaoTests {
         }
         DaoFactory daoFactory = new MySqlDaoFactory(dataSource);
         userDao = daoFactory.getUserDao();
-        messageDao=daoFactory.getMessageDao(userDao);
+        messageDao = daoFactory.getMessageDao(userDao);
+        relationshipDao = daoFactory.getRelationshipDao();
     }
 
     @AfterClass

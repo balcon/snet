@@ -26,3 +26,9 @@ CREATE TABLE snet.images(
   imageId BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   image BLOB
 );
+
+CREATE TABLE snet.relationship (
+  country1 varchar(255) NOT NULL,
+  country2 varchar(255) NOT NULL,
+  relation varchar(255) NOT NULL
+)
