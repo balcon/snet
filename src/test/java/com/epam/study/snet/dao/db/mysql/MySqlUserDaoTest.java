@@ -1,5 +1,7 @@
 package com.epam.study.snet.dao.db.mysql;
 
+import com.epam.study.snet.dao.UserDao;
+import com.epam.study.snet.entity.Country;
 import com.epam.study.snet.enums.Gender;
 import com.epam.study.snet.entity.User;
 import org.junit.Test;
@@ -10,13 +12,14 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 public class MySqlUserDaoTest extends MySqlDaoTests {
+    private UserDao userDao=daoFactory.getUserDao();
 
     private User testUser = User.builder()
             .username("pit")
             .password("123")
             .firstName("Peter")
             .lastName("Johnson")
-            .country("UK")
+            .country(new Country("UK"))
             .birthday(LocalDate.of(1980, 5, 12))
             .gender(Gender.MALE).build();
 
@@ -26,10 +29,10 @@ public class MySqlUserDaoTest extends MySqlDaoTests {
 
         assertTrue(user.getId() != 0);
         assertEquals(user.getFirstName(), "Peter");
-        assertEquals(user.getLastName(),"Johnson");
-        assertEquals(user.getBirthday(),LocalDate.of(1980, 5, 12));
-        assertEquals(user.getGender(),Gender.MALE);
-        assertEquals(user.getCountry(),"UK");
+        assertEquals(user.getLastName(), "Johnson");
+        assertEquals(user.getBirthday(), LocalDate.of(1980, 5, 12));
+        assertEquals(user.getGender(), Gender.MALE);
+        assertEquals(user.getCountry(), new Country("UK"));
     }
 
     @Test
@@ -56,10 +59,10 @@ public class MySqlUserDaoTest extends MySqlDaoTests {
 
         assertFalse(user1.isDeleted());
         assertEquals(user2.getFirstName(), "Peter");
-        assertEquals(user2.getLastName(),"Johnson");
-        assertEquals(user2.getBirthday(),LocalDate.of(1980, 5, 12));
-        assertEquals(user2.getGender(),Gender.MALE);
-        assertEquals(user2.getCountry(),"UK");
+        assertEquals(user2.getLastName(), "Johnson");
+        assertEquals(user2.getBirthday(), LocalDate.of(1980, 5, 12));
+        assertEquals(user2.getGender(), Gender.MALE);
+        assertEquals(user2.getCountry(), new Country("UK"));
     }
 
     @Test
@@ -70,9 +73,9 @@ public class MySqlUserDaoTest extends MySqlDaoTests {
         assertTrue(number != 0);
 
         userDao.removeById(user.getId());
-        long numberAfterRemove=userDao.getNumber();
+        long numberAfterRemove = userDao.getNumber();
 
-        assertEquals(number-numberAfterRemove,1);
+        assertEquals(number - numberAfterRemove, 1);
     }
 
     @Test
@@ -83,6 +86,7 @@ public class MySqlUserDaoTest extends MySqlDaoTests {
                 .firstName("f")
                 .lastName("l")
                 .birthday(LocalDate.now())
+                .country(new Country("US"))
                 .gender(Gender.MALE).build();
         user = userDao.create(user);
         User user2 = userDao.create(testUser);
@@ -108,6 +112,7 @@ public class MySqlUserDaoTest extends MySqlDaoTests {
                 .password("p")
                 .firstName("f")
                 .lastName("l")
+                .country(new Country("US"))
                 .birthday(LocalDate.now())
                 .gender(Gender.MALE).build();
         user = userDao.create(user);
@@ -132,6 +137,7 @@ public class MySqlUserDaoTest extends MySqlDaoTests {
                 .firstName("Peter")
                 .lastName("Johnson")
                 .birthday(LocalDate.now())
+                .country(new Country("US"))
                 .gender(Gender.MALE).build();
         User user1 = userDao.create(user);
         User user2 = userDao.getByUsername("pit2");
@@ -146,6 +152,7 @@ public class MySqlUserDaoTest extends MySqlDaoTests {
                 .password("pass")
                 .firstName("Timmy")
                 .lastName("Robertson")
+                .country(new Country("US"))
                 .birthday(LocalDate.now())
                 .gender(Gender.MALE).build();
         user = userDao.create(user);
@@ -167,7 +174,7 @@ public class MySqlUserDaoTest extends MySqlDaoTests {
                 .firstName("Timmy")
                 .lastName("Robertson")
                 .birthday(LocalDate.now())
-                .country("US")
+                .country(new Country("US"))
                 .gender(Gender.MALE).build();
         user1 = userDao.create(user1);
 
@@ -177,7 +184,7 @@ public class MySqlUserDaoTest extends MySqlDaoTests {
                 .firstName(user1.getFirstName())
                 .lastName("newLastName")
                 .birthday(user1.getBirthday())
-                .country("UK")
+                .country(new Country("UK"))
                 .gender(user1.getGender()).build();
 
         userDao.updateById(user1.getId(), user2);

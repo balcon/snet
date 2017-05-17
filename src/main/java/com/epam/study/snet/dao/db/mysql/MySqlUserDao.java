@@ -2,6 +2,7 @@ package com.epam.study.snet.dao.db.mysql;
 
 import com.epam.study.snet.dao.DaoException;
 import com.epam.study.snet.dao.UserDao;
+import com.epam.study.snet.entity.Country;
 import com.epam.study.snet.entity.User;
 import com.epam.study.snet.enums.Gender;
 import com.epam.study.snet.model.Image;
@@ -29,7 +30,7 @@ public class MySqlUserDao implements UserDao {
             statement.setString(4, user.getLastName());
             statement.setString(5, user.getBirthday().toString());
             statement.setString(6, user.getGender().toString());
-            statement.setString(7, user.getCountry());
+            statement.setString(7, user.getCountry().getCode());
             statement.execute();
             long userId = 0;
             ResultSet generatedKeys = statement.getGeneratedKeys();
@@ -140,7 +141,7 @@ public class MySqlUserDao implements UserDao {
             statement.setString(3, newUser.getPassword());
             statement.setString(4, newUser.getBirthday().toString());
             statement.setString(5, newUser.getGender().toString());
-            statement.setString(6, newUser.getCountry());
+            statement.setString(6, newUser.getCountry().getCode());
             statement.setLong(7, id);
             statement.execute();
         } catch (SQLException e) {
@@ -180,6 +181,7 @@ public class MySqlUserDao implements UserDao {
     private User getUserFromResultSet(ResultSet resultSet) throws SQLException {
         Date birthday = resultSet.getDate("birthday");
         String gender = resultSet.getString("gender");
+        String country = resultSet.getString("country");
         Long imageId = resultSet.getLong("imageId");
         Image photo = Image.builder().id(imageId).build();
 
@@ -190,7 +192,7 @@ public class MySqlUserDao implements UserDao {
                 .firstName(resultSet.getString("firstName"))
                 .lastName(resultSet.getString("lastName"))
                 .birthday(birthday.toLocalDate())
-                .country(resultSet.getString("country"))
+                .country(new Country(country))
                 .gender(gender.equals("MALE") ? Gender.MALE : Gender.FEMALE)
                 .photo(photo)
                 .deleted(resultSet.getBoolean("deleted")).build();

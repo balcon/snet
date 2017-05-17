@@ -15,9 +15,22 @@
             <fmt:message bundle="${view}" key="people.no_people"/>
         </div>
     </c:if>
-    <c:forEach var="user" items="${people.users}"><jsp:useBean id="countries" scope="request" type="java.util.Map"/>
 
-        <div class="media panel panel-primary" style="margin-bottom: 1px; margin-top: 0px">
+    <jsp:useBean id="countries" scope="request" type="java.util.Map"/>
+    <c:forEach var="user" items="${people.users}">
+        <c:set var="relation" value="${user.checkRelation(sessionScope.loggedUser)}"/>
+        <c:set var="relationStyle"/>
+        <c:if test='${relation=="BAD"}'>
+            <c:set var="relationStyle" value="relation-bad"/>
+        </c:if>
+         <c:if test='${relation=="GOOD"}'>
+            <c:set var="relationStyle" value="relation-good"/>
+        </c:if>
+         <c:if test='${relation=="SAME"}'>
+            <c:set var="relationStyle" value="relation-same"/>
+        </c:if>
+
+        <div class="media panel panel-primary ${relationStyle}" style="margin-bottom: 1px; margin-top: 0px">
             <div class="panel-body">
                 <div class="media-left">
                     <img src="<c:url value="${user.photo.sourcePath}"/>" class="media-object list-photo">
@@ -26,10 +39,10 @@
                     <c:set var="fullName"
                            value="${user.firstName} ${user.lastName}"/>
                     <h4 class="media-heading"><c:out value="${fullName}"/>,
-                        <small>${countries.get(user.country)}
-                            <span class="flag-icon flag-icon-${user.country.toLowerCase()}"></span>
-                        </small></h4>
-ups
+                        <small>${countries.get(user.country.code)}
+                            <span class="flag-icon flag-icon-${user.country.code.toLowerCase()}"></span>
+                        </small>
+                    </h4>
                 </div>
                 <div class="media-right">
                     <c:url var="urlToChat" value="/main/chat"/>
@@ -38,7 +51,6 @@ ups
             </div>
         </div>
     </c:forEach>
-    </ul>
     <c:url var="urlToPeople" value="/main/people"/>
     <c:set var="numberPages" value="${people.numberPages}"/>
     <c:set var="activePage" value="${people.activePage}"/>

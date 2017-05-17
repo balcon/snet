@@ -1,6 +1,7 @@
 package com.epam.study.snet.entity;
 
 import com.epam.study.snet.enums.Gender;
+import com.epam.study.snet.enums.Relation;
 import com.epam.study.snet.model.Image;
 import lombok.Builder;
 import lombok.Value;
@@ -21,7 +22,7 @@ public class User {
     LocalDate birthday;
     Gender gender;
     Image photo;
-    String country;
+    Country country;
     boolean deleted;
 
     public void setId(Long id) {
@@ -30,5 +31,9 @@ public class User {
     }
     public void setPassword(String password){
         this.password=password;
+    }
+
+    public Relation checkRelation(User otherUser) {
+        return country.checkRelation(otherUser.getCountry());
     }
 }

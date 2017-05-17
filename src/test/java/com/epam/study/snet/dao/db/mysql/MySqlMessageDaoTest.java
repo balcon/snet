@@ -1,5 +1,8 @@
 package com.epam.study.snet.dao.db.mysql;
 
+import com.epam.study.snet.dao.MessageDao;
+import com.epam.study.snet.dao.UserDao;
+import com.epam.study.snet.entity.Country;
 import com.epam.study.snet.enums.Gender;
 import com.epam.study.snet.entity.Message;
 import com.epam.study.snet.entity.User;
@@ -13,6 +16,8 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 public class MySqlMessageDaoTest extends MySqlDaoTests {
+    private static UserDao userDao=daoFactory.getUserDao();
+    private static MessageDao messageDao=daoFactory.getMessageDao(userDao);
 
     private static User user1;
     private static User user2;
@@ -22,9 +27,9 @@ public class MySqlMessageDaoTest extends MySqlDaoTests {
 
     @BeforeClass
     public static void setUp() throws Exception {
-        user1 = userDao.create(User.builder().username("u1").birthday(LocalDate.now()).gender(Gender.FEMALE).build());
-        user2 = userDao.create(User.builder().username("u2").birthday(LocalDate.now()).gender(Gender.FEMALE).build());
-        user3 = userDao.create(User.builder().username("u3").birthday(LocalDate.now()).gender(Gender.FEMALE).build());
+        user1 = userDao.create(User.builder().username("u1").birthday(LocalDate.now()).gender(Gender.FEMALE).country(new Country("US")).build());
+        user2 = userDao.create(User.builder().username("u2").birthday(LocalDate.now()).gender(Gender.FEMALE).country(new Country("US")).build());
+        user3 = userDao.create(User.builder().username("u3").birthday(LocalDate.now()).gender(Gender.FEMALE).country(new Country("US")).build());
 
         testMessage = Message.builder().sender(user3).receiver(user2).body("Hi, u2!").build();
 
@@ -71,7 +76,7 @@ public class MySqlMessageDaoTest extends MySqlDaoTests {
     }
 
     @Test
-@Ignore
+    @Ignore
     public void getListWithLastMessages() throws Exception {
         List<Message> messages = messageDao.getListOfLatest(user1);
 
@@ -87,9 +92,9 @@ public class MySqlMessageDaoTest extends MySqlDaoTests {
 
     @Test
     public void getLimitedListBetweenUsers() throws Exception {
-        List<Message> messages=messageDao.getListBetweenUsers(user1,user2,0,1);
+        List<Message> messages = messageDao.getListBetweenUsers(user1, user2, 0, 1);
 
-        assertEquals(messages.size(),1);
+        assertEquals(messages.size(), 1);
     }
 
     @Test
@@ -102,11 +107,11 @@ public class MySqlMessageDaoTest extends MySqlDaoTests {
     @Test
     public void removeById() throws Exception {
         Message message = messageDao.create(testMessage);
-        List<Message> messagesBefore=messageDao.getListBetweenUsers(user3,user2);
+        List<Message> messagesBefore = messageDao.getListBetweenUsers(user3, user2);
         messageDao.removeById(message.getId());
-        List<Message> messagesAfter=messageDao.getListBetweenUsers(user3,user2);
+        List<Message> messagesAfter = messageDao.getListBetweenUsers(user3, user2);
 
-        assertEquals(messagesBefore.size()-messagesAfter.size(),1);
+        assertEquals(messagesBefore.size() - messagesAfter.size(), 1);
     }
 
     @Test

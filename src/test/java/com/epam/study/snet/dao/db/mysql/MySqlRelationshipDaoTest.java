@@ -1,44 +1,52 @@
 package com.epam.study.snet.dao.db.mysql;
 
-
+import com.epam.study.snet.dao.RelationshipDao;
+import com.epam.study.snet.entity.Country;
 import com.epam.study.snet.enums.Relation;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
 public class MySqlRelationshipDaoTest extends MySqlDaoTests {
+    private RelationshipDao relationshipDao = daoFactory.getRelationshipDao();
+    private Country us = new Country("US");
+    private Country ru = new Country("RU");
+    private Country gb = new Country("GB");
+    private Country nz = new Country("NZ");
+    private Country kz = new Country("KZ");
+
     @Test
     public void setAndGetRelation() throws Exception {
-        relationshipDao.setRelation("RU","US",Relation.BAD);
+        relationshipDao.setRelation(ru, us, Relation.BAD);
 
-        Relation relation = relationshipDao.getRelation("US", "RU");
+        Relation relation = relationshipDao.getRelation(us, ru);
 
-        assertEquals(relation,Relation.BAD);
+        assertEquals(relation, Relation.BAD);
     }
 
     @Test
     public void resetRelation() throws Exception {
-        relationshipDao.setRelation("RU","GB",Relation.BAD);
-        relationshipDao.setRelation("GB","RU",Relation.GOOD);
-        Relation relation=relationshipDao.getRelation("RU","GB");
+        relationshipDao.setRelation(ru, gb, Relation.BAD);
+        relationshipDao.setRelation(gb, ru, Relation.GOOD);
+        Relation relation = relationshipDao.getRelation(ru, gb);
 
-        assertEquals(relation,Relation.GOOD);
+        assertEquals(relation, Relation.GOOD);
     }
 
     @Test
     public void getNeutralRelation() throws Exception {
-        Relation relation=relationshipDao.getRelation("RU","NZ");
+        Relation relation = relationshipDao.getRelation(ru, nz);
 
-        assertEquals(relation,Relation.NEUTRAL);
+        assertEquals(relation, Relation.NEUTRAL);
     }
 
     @Test
     public void resetToNeutral() throws Exception {
-        relationshipDao.setRelation("RU","KZ",Relation.GOOD);
-        relationshipDao.setRelation("KZ","RU",Relation.NEUTRAL);
+        relationshipDao.setRelation(ru, kz, Relation.GOOD);
+        relationshipDao.setRelation(kz, ru, Relation.NEUTRAL);
 
-        Relation relation=relationshipDao.getRelation("RU","KZ");
+        Relation relation = relationshipDao.getRelation(ru, kz);
 
-        assertEquals(relation,Relation.NEUTRAL);
+        assertEquals(relation, Relation.NEUTRAL);
     }
 }

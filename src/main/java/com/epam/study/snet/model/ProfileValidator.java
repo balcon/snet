@@ -1,5 +1,6 @@
 package com.epam.study.snet.model;
 
+import com.epam.study.snet.entity.Country;
 import com.epam.study.snet.entity.User;
 import com.epam.study.snet.enums.FormErrors;
 import com.epam.study.snet.enums.Gender;
@@ -57,7 +58,7 @@ public class ProfileValidator {
                 .firstName(firstName)
                 .lastName(lastName)
                 .birthday(LocalDate.parse(birthday))
-                .country(country)
+                .country(new Country(country))
                 .gender(gender).build();
     }
 }

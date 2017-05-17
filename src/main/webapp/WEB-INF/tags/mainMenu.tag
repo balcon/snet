@@ -31,14 +31,17 @@
             border-width: 3px;
         }
 
-        div.media.bad-relation {
-           border-color: #AA0000;
+        div.media.relation-bad {
+            border-color: #DD0000;
         }
 
-        div.media.good-relation {
-           border-color: #00AA00;
+        div.media.relation-good {
+            border-color: #00DD00;
         }
 
+        div.media.relation-same{
+            border-color: #00AAFF;
+        }
         img.chat-photo {
             height: 72px;
             width: 54px;
@@ -72,13 +75,11 @@
             <div class="navbar-text">
                 <c:if test="${sessionScope.loggedUser!=null}">
                     <small>
-                        <fmt:message bundle="${view}" key="header.registered">
-                            <c:set var="regUsers" value="${sessionInfo.registeredUsers}"/>
-                            <fmt:param value='<span class="badge">${regUsers}</span>'/>
-                        </fmt:message>
+                        <fmt:message bundle="${view}" key="header.registered"/>
+                        <span class="badge">${sessionInfo.registeredUsers}</span>
                     </small>
                 </c:if>
-        </div>
+            </div>
         </div>
         <c:url var="locale" value="/locale"/>
         <c:set var="currentPage" value="${requestScope['javax.servlet.forward.request_uri']}"/>

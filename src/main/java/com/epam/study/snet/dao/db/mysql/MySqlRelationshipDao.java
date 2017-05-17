@@ -2,6 +2,7 @@ package com.epam.study.snet.dao.db.mysql;
 
 import com.epam.study.snet.dao.DaoException;
 import com.epam.study.snet.dao.RelationshipDao;
+import com.epam.study.snet.entity.Country;
 import com.epam.study.snet.enums.Relation;
 
 import javax.sql.DataSource;
@@ -18,19 +19,23 @@ class MySqlRelationshipDao implements RelationshipDao {
     }
 
     @Override
-    public Relation getRelation(String country1, String country2) throws DaoException {
-        Relation relation = selectRelation(country1, country2);
-
-        return relation == null ? Relation.NEUTRAL : relation;
+    public Relation getRelation(Country country1, Country country2) throws DaoException {
+        Relation relation = selectRelation(country1.getCode(), country2.getCode());
+        if(country1.equals(country2)) return Relation.SAME;
+        if(relation==null) return Relation.NEUTRAL;
+        return relation;
     }
 
     @Override
-    public void setRelation(String country1, String country2, Relation relation) throws DaoException {
-        if (relation == Relation.NEUTRAL) deleteRelation(country1, country2);
-        else if (selectRelation(country1, country2) == null)
-            insertRelation(country1, country2, relation);
+    public void setRelation(Country country1, Country country2, Relation relation) throws DaoException {
+        String code1=country1.getCode();
+        String code2=country2.getCode();
+
+        if (relation == Relation.NEUTRAL) deleteRelation(code1, code2);
+        else if (selectRelation(code1, code2) == null)
+            insertRelation(code1, code2, relation);
         else
-            updateRelation(country1, country2, relation);
+            updateRelation(code1, code2, relation);
     }
 
     private Relation selectRelation(String country1, String country2) throws DaoException {
@@ -47,7 +52,7 @@ class MySqlRelationshipDao implements RelationshipDao {
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
                 String relationString = resultSet.getString("relation");
-                relation = (relationString == Relation.BAD.toString())
+                relation = (relationString.equals(Relation.BAD.toString()))
                         ? Relation.BAD
                         : Relation.GOOD;
             }

@@ -16,10 +16,8 @@ import java.util.Scanner;
 
 public abstract class MySqlDaoTests {
 
-    static JdbcDataSource dataSource;
-    static UserDao userDao;
-    static MessageDao messageDao;
-    static RelationshipDao relationshipDao;
+   private static JdbcDataSource dataSource;
+   protected static DaoFactory daoFactory;
 
     @BeforeClass
     public static void createH2Schema() throws Exception {
@@ -31,10 +29,7 @@ public abstract class MySqlDaoTests {
         try (Connection connection = dataSource.getConnection()) {
             executeScript(connection, createScriptPath);
         }
-        DaoFactory daoFactory = new MySqlDaoFactory(dataSource);
-        userDao = daoFactory.getUserDao();
-        messageDao = daoFactory.getMessageDao(userDao);
-        relationshipDao = daoFactory.getRelationshipDao();
+        daoFactory = new MySqlDaoFactory(dataSource);
     }
 
     @AfterClass
