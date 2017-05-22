@@ -5,10 +5,9 @@ import com.epam.study.snet.dao.DaoFactory;
 import com.epam.study.snet.dao.UserDao;
 import com.epam.study.snet.entity.User;
 import com.epam.study.snet.enums.FormErrors;
-import com.epam.study.snet.model.ProfileValidator;
+import com.epam.study.snet.model.ProfileFields;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.log4j.Logger;
-import sun.rmi.runtime.Log;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -30,9 +29,9 @@ public class ProfileServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         User loggedUser = (User) req.getSession().getAttribute("loggedUser");
-        ProfileValidator profile;
+        ProfileFields profile;
         if (req.getParameter("changed").equals("pass")) {
-            profile = ProfileValidator.builder()
+            profile = ProfileFields.builder()
                     .username(loggedUser.getUsername())
                     .password(req.getParameter("password"))
                     .confirmPassword(req.getParameter("confirmPassword"))
@@ -40,7 +39,7 @@ public class ProfileServlet extends HttpServlet {
                     .lastName(loggedUser.getLastName())
                     .birthday(loggedUser.getBirthday().toString())
                     .gender(loggedUser.getGender().toString()).build();
-        } else profile = ProfileValidator.builder()
+        } else profile = ProfileFields.builder()
                 .username(loggedUser.getUsername())
                 .password(loggedUser.getPassword())
                 .confirmPassword(loggedUser.getPassword())

@@ -9,11 +9,11 @@ import java.util.Map;
 
 import static org.junit.Assert.*;
 
-public class ProfileValidatorTest {
+public class ProfileFieldsTest {
 
     @Test
     public void correctInputs() throws Exception {
-        ProfileValidator fields = ProfileValidator.builder()
+        ProfileFields fields = ProfileFields.builder()
                 .username("juser")
                 .password("user.password")
                 .confirmPassword("user.password")
@@ -30,7 +30,7 @@ public class ProfileValidatorTest {
 
     @Test
     public void someFieldsIsEmpty() throws Exception {
-        ProfileValidator fields = ProfileValidator.builder()
+        ProfileFields fields = ProfileFields.builder()
                 .username("")
                 .password("user.password")
                 .confirmPassword("user.password")
@@ -46,11 +46,11 @@ public class ProfileValidatorTest {
 
     @Test
     public void usernameOnlyLatinCharactersAndNumbers() throws Exception {
-        ProfileValidator fields1 = ProfileValidator.builder()
+        ProfileFields fields1 = ProfileFields.builder()
                 .username("Use*r").build();
-        ProfileValidator fields2 = ProfileValidator.builder()
+        ProfileFields fields2 = ProfileFields.builder()
                 .username("кириллица").build();
-        ProfileValidator fields3 = ProfileValidator.builder()
+        ProfileFields fields3 = ProfileFields.builder()
                 .username("user_xp-89").build();
 
         assertTrue(fields1.validate().get("username") == FormErrors.username_incorrect);
@@ -60,7 +60,7 @@ public class ProfileValidatorTest {
 
     @Test
     public void passNotEqualsWithConfirm() throws Exception {
-        ProfileValidator fields = ProfileValidator.builder()
+        ProfileFields fields = ProfileFields.builder()
                 .username("juser")
                 .password("user.password")
                 .confirmPassword("anotherPassword")
@@ -81,7 +81,7 @@ public class ProfileValidatorTest {
         String lastName = "Smith";
         String birthday = "1990-10-20";
         String gender = "FEMALE";
-        ProfileValidator fields = ProfileValidator.builder()
+        ProfileFields fields = ProfileFields.builder()
                 .username(username)
                 .password(password)
                 .firstName(firstName)
@@ -100,7 +100,7 @@ public class ProfileValidatorTest {
 
     @Test
     public void avoidNPE() throws Exception {
-        ProfileValidator fields = ProfileValidator.builder()
+        ProfileFields fields = ProfileFields.builder()
                 .username(null)
                 .gender(null).build();
 

@@ -5,7 +5,7 @@ import com.epam.study.snet.dao.DaoFactory;
 import com.epam.study.snet.dao.UserDao;
 import com.epam.study.snet.enums.FormErrors;
 import com.epam.study.snet.model.Countries;
-import com.epam.study.snet.model.ProfileValidator;
+import com.epam.study.snet.model.ProfileFields;
 import com.epam.study.snet.entity.User;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.log4j.Logger;
@@ -16,9 +16,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Locale;
 import java.util.Map;
-import java.util.TreeMap;
 
 @WebServlet("/registration")
 
@@ -32,7 +30,7 @@ public class RegistrationServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        ProfileValidator profile = ProfileValidator.builder()
+        ProfileFields profile = ProfileFields.builder()
                 .username(req.getParameter("username"))
                 .password(req.getParameter("password"))
                 .confirmPassword(req.getParameter("confirmPassword"))

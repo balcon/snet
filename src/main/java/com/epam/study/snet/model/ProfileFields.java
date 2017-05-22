@@ -13,7 +13,7 @@ import java.util.Map;
 
 @Value
 @Builder
-public class ProfileValidator {
+public class ProfileFields {
     String username;
     String password;
     String confirmPassword;
