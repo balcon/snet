@@ -2,10 +2,9 @@ package com.epam.study.snet.dao.db.mysql;
 
 import com.epam.study.snet.dao.MessageDao;
 import com.epam.study.snet.dao.UserDao;
-import com.epam.study.snet.entity.Country;
-import com.epam.study.snet.enums.Gender;
 import com.epam.study.snet.entity.Message;
 import com.epam.study.snet.entity.User;
+import com.epam.study.snet.model.ProfileFields;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -16,8 +15,8 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 public class MySqlMessageDaoTest extends MySqlDaoTests {
-    private static UserDao userDao=daoFactory.getUserDao();
-    private static MessageDao messageDao=daoFactory.getMessageDao(userDao);
+    private static UserDao userDao = daoFactory.getUserDao();
+    private static MessageDao messageDao = daoFactory.getMessageDao(userDao);
 
     private static User user1;
     private static User user2;
@@ -27,9 +26,12 @@ public class MySqlMessageDaoTest extends MySqlDaoTests {
 
     @BeforeClass
     public static void setUp() throws Exception {
-        user1 = userDao.create(User.builder().username("u1").birthday(LocalDate.now()).gender(Gender.FEMALE).country(new Country("US")).build());
-        user2 = userDao.create(User.builder().username("u2").birthday(LocalDate.now()).gender(Gender.FEMALE).country(new Country("US")).build());
-        user3 = userDao.create(User.builder().username("u3").birthday(LocalDate.now()).gender(Gender.FEMALE).country(new Country("US")).build());
+        ProfileFields prof1 = ProfileFields.builder().username("u1").password("123").birthday(LocalDate.now().toString()).gender("FEMALE").country("US").build();
+        user1 = userDao.create(prof1);
+        ProfileFields prof2 = ProfileFields.builder().username("u2").password("123").birthday(LocalDate.now().toString()).gender("FEMALE").country("US").build();
+        user2 = userDao.create(prof2);
+        ProfileFields prof3 = ProfileFields.builder().username("u3").password("123").birthday(LocalDate.now().toString()).gender("FEMALE").country("US").build();
+        user3 = userDao.create(prof3);
 
         testMessage = Message.builder().sender(user3).receiver(user2).body("Hi, u2!").build();
 

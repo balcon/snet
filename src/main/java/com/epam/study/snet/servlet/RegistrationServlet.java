@@ -5,6 +5,7 @@ import com.epam.study.snet.dao.DaoFactory;
 import com.epam.study.snet.dao.UserDao;
 import com.epam.study.snet.enums.FormErrors;
 import com.epam.study.snet.model.Countries;
+import com.epam.study.snet.model.HashPass;
 import com.epam.study.snet.model.ProfileFields;
 import com.epam.study.snet.entity.User;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -47,10 +48,8 @@ public class RegistrationServlet extends HttpServlet {
             UserDao userDao = DaoFactory.getFactory().getUserDao();
             if (validation.isEmpty()) {
                 if (userDao.getByUsername(profile.getUsername()) == null) {
-                    User user = profile.toUser();
-                    user.setPassword(DigestUtils.md5Hex(user.getPassword()));
-                    user=userDao.create(user);
-                    log.info("Registeren new user ["+user.getUsername()+"](id:["+user.getId()+"]");
+                    User user=userDao.create(profile);
+                    log.info("Registered new user ["+user.getUsername()+"](ID:["+user.getId()+"]");
                     resp.sendRedirect(req.getContextPath() + "/login");
                 } else {
                     validation.put("username", FormErrors.username_exists);

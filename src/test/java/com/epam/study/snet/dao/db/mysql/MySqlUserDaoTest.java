@@ -2,8 +2,10 @@ package com.epam.study.snet.dao.db.mysql;
 
 import com.epam.study.snet.dao.UserDao;
 import com.epam.study.snet.entity.Country;
-import com.epam.study.snet.enums.Gender;
 import com.epam.study.snet.entity.User;
+import com.epam.study.snet.enums.Gender;
+import com.epam.study.snet.model.HashPass;
+import com.epam.study.snet.model.ProfileFields;
 import org.junit.Test;
 
 import java.time.LocalDate;
@@ -12,7 +14,16 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 public class MySqlUserDaoTest extends MySqlDaoTests {
-    private UserDao userDao=daoFactory.getUserDao();
+    private UserDao userDao = daoFactory.getUserDao();
+
+    private ProfileFields testProfile = ProfileFields.builder()
+            .username("pit")
+            .password("123")
+            .firstName("Peter")
+            .lastName("Johnson")
+            .country("UK")
+            .birthday(LocalDate.of(1980, 5, 12).toString())
+            .gender("MALE").build();
 
     private User testUser = User.builder()
             .username("pit")
@@ -25,23 +36,16 @@ public class MySqlUserDaoTest extends MySqlDaoTests {
 
     @Test
     public void createUser() throws Exception {
-        User user = userDao.create(testUser);
+        User user = userDao.create(testProfile);
 
         assertTrue(user.getId() != 0);
-        assertEquals(user.getFirstName(), "Peter");
-        assertEquals(user.getLastName(), "Johnson");
-        assertEquals(user.getBirthday(), LocalDate.of(1980, 5, 12));
-        assertEquals(user.getGender(), Gender.MALE);
-        assertEquals(user.getCountry(), new Country("UK"));
-    }
-
-    @Test
-    public void setIdOnceAgain() throws Exception {
-        User user = userDao.create(testUser);
-        long badId = 100500;
-        user.setId(badId);
-
-        assertFalse(user.getId() == badId);
+        assertEquals("pit", user.getUsername());
+        assertEquals(new HashPass().getHash("123"), user.getPassword());
+        assertEquals("Peter", user.getFirstName());
+        assertEquals("Johnson", user.getLastName());
+        assertEquals(LocalDate.of(1980, 5, 12), user.getBirthday());
+        assertEquals(Gender.MALE, user.getGender());
+        assertEquals(new Country("UK"), user.getCountry());
     }
 
     @Test
@@ -53,21 +57,21 @@ public class MySqlUserDaoTest extends MySqlDaoTests {
 
     @Test
     public void getUserById() throws Exception {
-        User user1 = userDao.create(testUser);
+        User user1 = userDao.create(testProfile);
         Long userId = user1.getId();
         User user2 = userDao.getById(userId);
 
         assertFalse(user1.isDeleted());
-        assertEquals(user2.getFirstName(), "Peter");
-        assertEquals(user2.getLastName(), "Johnson");
-        assertEquals(user2.getBirthday(), LocalDate.of(1980, 5, 12));
-        assertEquals(user2.getGender(), Gender.MALE);
-        assertEquals(user2.getCountry(), new Country("UK"));
+        assertEquals("Peter", user2.getFirstName());
+        assertEquals("Johnson", user2.getLastName());
+        assertEquals(LocalDate.of(1980, 5, 12), user2.getBirthday());
+        assertEquals(Gender.MALE, user2.getGender());
+        assertEquals(new Country("UK"), user2.getCountry());
     }
 
     @Test
     public void getNumber() throws Exception {
-        User user = userDao.create(testUser);
+        User user = userDao.create(testProfile);
         long number = userDao.getNumber();
 
         assertTrue(number != 0);
@@ -75,87 +79,87 @@ public class MySqlUserDaoTest extends MySqlDaoTests {
         userDao.removeById(user.getId());
         long numberAfterRemove = userDao.getNumber();
 
-        assertEquals(number - numberAfterRemove, 1);
+        assertEquals(1, number - numberAfterRemove);
     }
 
     @Test
     public void getListWithExclude() throws Exception {
-        User user = User.builder()
+        ProfileFields profile = ProfileFields.builder()
                 .username("u")
                 .password("p")
                 .firstName("f")
                 .lastName("l")
-                .birthday(LocalDate.now())
-                .country(new Country("US"))
-                .gender(Gender.MALE).build();
-        user = userDao.create(user);
-        User user2 = userDao.create(testUser);
+                .birthday(LocalDate.now().toString())
+                .country("US")
+                .gender("MALE").build();
+        User user = userDao.create(profile);
+        User user2 = userDao.create(testProfile);
         List<User> users = userDao.getList();
         List<User> usersExcluded = userDao.getList(user);
 
         int allUsers = users.size();
         int usersWithoutUser = usersExcluded.size();
-        assertEquals(allUsers - usersWithoutUser, 1);
+        assertEquals(1, allUsers - usersWithoutUser);
 
         userDao.removeById(user2.getId());
 
         usersExcluded = userDao.getList(user);
         int usersWithoutUserAfterRemove = usersExcluded.size();
 
-        assertEquals(usersWithoutUser - usersWithoutUserAfterRemove, 1);
+        assertEquals(1, usersWithoutUser - usersWithoutUserAfterRemove);
     }
 
     @Test
     public void getLimitedList() throws Exception {
-        User user = User.builder()
+        ProfileFields profile = ProfileFields.builder()
                 .username("u2")
                 .password("p")
                 .firstName("f")
                 .lastName("l")
-                .country(new Country("US"))
-                .birthday(LocalDate.now())
-                .gender(Gender.MALE).build();
-        user = userDao.create(user);
-        User user2 = userDao.create(testUser);
+                .country("US")
+                .birthday(LocalDate.now().toString())
+                .gender("MALE").build();
+        User user = userDao.create(profile);
+        User user2 = userDao.create(testProfile);
 
         List<User> users = userDao.getList(user, 0, 1);
 
-        assertEquals(users.size(), 1);
+        assertEquals(1, users.size());
 
         int size = userDao.getList(user, 0, 100).size();
         userDao.removeById(user2.getId());
         int sizeAfterRemove = userDao.getList(user, 0, 100).size();
 
-        assertEquals(size - sizeAfterRemove, 1);
+        assertEquals(1, size - sizeAfterRemove);
     }
 
     @Test
     public void getUserByUsername() throws Exception {
-        User user = User.builder()
+        ProfileFields profile = ProfileFields.builder()
                 .username("pit2")
                 .password("123")
                 .firstName("Peter")
                 .lastName("Johnson")
-                .birthday(LocalDate.now())
-                .country(new Country("US"))
-                .gender(Gender.MALE).build();
-        User user1 = userDao.create(user);
+                .birthday(LocalDate.now().toString())
+                .country("US")
+                .gender("MALE").build();
+        User user1 = userDao.create(profile);
         User user2 = userDao.getByUsername("pit2");
 
-        assertEquals(user1.getId(), user2.getId());
+        assertTrue(user1.getId() == user2.getId());
     }
 
     @Test
     public void removeUserById() throws Exception {
-        User user = User.builder()
+        ProfileFields profile = ProfileFields.builder()
                 .username("u5")
                 .password("pass")
                 .firstName("Timmy")
                 .lastName("Robertson")
-                .country(new Country("US"))
-                .birthday(LocalDate.now())
-                .gender(Gender.MALE).build();
-        user = userDao.create(user);
+                .country("US")
+                .birthday(LocalDate.now().toString())
+                .gender("MALE").build();
+        User user = userDao.create(profile);
         Long userId = user.getId();
 
         assertFalse(user.isDeleted());
@@ -168,33 +172,34 @@ public class MySqlUserDaoTest extends MySqlDaoTests {
 
     @Test
     public void updateUserById() throws Exception {
-        User user1 = User.builder()
+        ProfileFields profile1 = ProfileFields.builder()
                 .username("u5")
                 .password("pass")
                 .firstName("Timmy")
                 .lastName("Robertson")
-                .birthday(LocalDate.now())
-                .country(new Country("US"))
-                .gender(Gender.MALE).build();
-        user1 = userDao.create(user1);
+                .birthday(LocalDate.now().toString())
+                .country("US")
+                .gender("MALE").build();
 
-        User user2 = User.builder()
-                .username(user1.getUsername())
+        ProfileFields profile2 = ProfileFields.builder()
+                .username("newName")
                 .password("newPass")
-                .firstName(user1.getFirstName())
+                .firstName("newFirst")
                 .lastName("newLastName")
-                .birthday(user1.getBirthday())
-                .country(new Country("UK"))
-                .gender(user1.getGender()).build();
+                .birthday(LocalDate.of(2012, 12, 12).toString())
+                .country("UK")
+                .gender("FEMALE").build();
 
-        userDao.updateById(user1.getId(), user2);
+        User user1 = userDao.create(profile1);
+        userDao.updateById(user1.getId(), profile2);
+        User user2 = userDao.getById(user1.getId());
 
-        User user1new = userDao.getById(user1.getId());
-
-        assertTrue(user1.getFirstName().equals(user1new.getFirstName()));
-        assertTrue(user1.getBirthday().equals(user1new.getBirthday()));
-        assertFalse(user1.getLastName().equals(user1new.getLastName()));
-        assertFalse(user1.getPassword().equals(user1new.getPassword()));
-        assertFalse(user1.getCountry().equals(user1new.getCountry()));
+        assertEquals("newName", user2.getUsername());
+        assertEquals(new HashPass().getHash("newPass"), user2.getPassword());
+        assertEquals("newFirst", user2.getFirstName());
+        assertEquals("newLastName", user2.getLastName());
+        assertEquals(LocalDate.of(2012, 12, 12), user2.getBirthday());
+        assertEquals(new Country("UK"), user2.getCountry());
+        assertEquals(Gender.FEMALE, user2.getGender());
     }
 }

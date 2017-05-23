@@ -22,10 +22,10 @@ public class CountryTest extends MySqlDaoTests {
         relationshipDao.setRelation(nz, ru, Relation.BAD);
         relationshipDao.setRelation(nz, jp, Relation.GOOD);
 
-        assertEquals(nz.checkRelation(ru), Relation.BAD);
-        assertEquals(ru.checkRelation(nz), Relation.BAD);
-        assertEquals(nz.checkRelation(jp), Relation.GOOD);
-        assertEquals(ru.checkRelation(jp), Relation.NEUTRAL);
-        assertEquals(ru.checkRelation(ru2), Relation.SAME);
+        assertEquals(Relation.BAD, nz.checkRelation(ru));
+        assertEquals(Relation.BAD, ru.checkRelation(nz));
+        assertEquals(Relation.GOOD, nz.checkRelation(jp));
+        assertEquals(Relation.NEUTRAL, ru.checkRelation(jp));
+        assertEquals(Relation.SAME, ru.checkRelation(ru2));
     }
 }

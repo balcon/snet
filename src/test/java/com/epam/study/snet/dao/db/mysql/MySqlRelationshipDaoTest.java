@@ -21,7 +21,7 @@ public class MySqlRelationshipDaoTest extends MySqlDaoTests {
 
         Relation relation = relationshipDao.getRelation(us, ru);
 
-        assertEquals(relation, Relation.BAD);
+        assertEquals(Relation.BAD, relation);
     }
 
     @Test
@@ -30,14 +30,14 @@ public class MySqlRelationshipDaoTest extends MySqlDaoTests {
         relationshipDao.setRelation(gb, ru, Relation.GOOD);
         Relation relation = relationshipDao.getRelation(ru, gb);
 
-        assertEquals(relation, Relation.GOOD);
+        assertEquals(Relation.GOOD, relation);
     }
 
     @Test
     public void getNeutralRelation() throws Exception {
         Relation relation = relationshipDao.getRelation(ru, nz);
 
-        assertEquals(relation, Relation.NEUTRAL);
+        assertEquals(Relation.NEUTRAL, relation);
     }
 
     @Test
@@ -47,6 +47,6 @@ public class MySqlRelationshipDaoTest extends MySqlDaoTests {
 
         Relation relation = relationshipDao.getRelation(ru, kz);
 
-        assertEquals(relation, Relation.NEUTRAL);
+        assertEquals(Relation.NEUTRAL, relation);
     }
 }

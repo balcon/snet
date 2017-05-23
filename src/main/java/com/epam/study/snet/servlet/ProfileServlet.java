@@ -41,6 +41,7 @@ public class ProfileServlet extends HttpServlet {
                     .gender(loggedUser.getGender().toString()).build();
         } else profile = ProfileFields.builder()
                 .username(loggedUser.getUsername())
+                //todo make something with hash
                 .password(loggedUser.getPassword())
                 .confirmPassword(loggedUser.getPassword())
                 .firstName(req.getParameter("firstName"))
@@ -52,9 +53,7 @@ public class ProfileServlet extends HttpServlet {
         try {
             UserDao userDao = DaoFactory.getFactory().getUserDao();
             if (validation.isEmpty()) {
-                User newUser = profile.toUser();
-                newUser.setPassword(DigestUtils.md5Hex(newUser.getPassword()));
-                userDao.updateById(loggedUser.getId(), newUser);
+                userDao.updateById(loggedUser.getId(), profile);
                 req.getSession().setAttribute("loggedUser", userDao.getById(loggedUser.getId()));
                 req.setAttribute("changed", req.getParameter("changed"));
                 req.getRequestDispatcher("/WEB-INF/pages/profile.jsp").forward(req, resp);

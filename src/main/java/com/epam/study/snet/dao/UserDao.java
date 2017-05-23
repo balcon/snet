@@ -1,11 +1,12 @@
 package com.epam.study.snet.dao;
 
 import com.epam.study.snet.entity.User;
+import com.epam.study.snet.model.ProfileFields;
 
 import java.util.List;
 
 public interface UserDao {
-    User create(User user) throws DaoException;
+    User create(ProfileFields profile) throws DaoException;
 
     List<User> getList() throws DaoException;
 
@@ -21,7 +22,7 @@ public interface UserDao {
 
     void update(User user) throws DaoException;
 
-    void updateById(Long id, User user2) throws DaoException;
+    void updateById(Long id, ProfileFields profile) throws DaoException;
 
     void removeById(Long id) throws DaoException;
 }

@@ -5,38 +5,62 @@ import com.epam.study.snet.dao.UserDao;
 import com.epam.study.snet.entity.Country;
 import com.epam.study.snet.entity.User;
 import com.epam.study.snet.enums.Gender;
+import com.epam.study.snet.model.HashPass;
 import com.epam.study.snet.model.Image;
+import com.epam.study.snet.model.ProfileFields;
+import org.apache.log4j.Logger;
 
 import javax.sql.DataSource;
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MySqlUserDao implements UserDao {
+    private static Logger log=Logger.getLogger(MySqlUserDao.class.getCanonicalName());
     private final DataSource dataSource;
 
     MySqlUserDao(DataSource dataSource) {
         this.dataSource = dataSource;
     }
 
-    public User create(User user) throws DaoException {
+    public User create(ProfileFields profile) throws DaoException {
+        User user = null;
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(
                     "INSERT INTO snet.users (username, passHash, firstName, lastName, birthday, gender, country)" +
                             " VALUES (?,?,?,?,?,?,?)");
-            statement.setString(1, user.getUsername());
-            statement.setString(2, user.getPassword());
-            statement.setString(3, user.getFirstName());
-            statement.setString(4, user.getLastName());
-            statement.setString(5, user.getBirthday().toString());
-            statement.setString(6, user.getGender().toString());
-            statement.setString(7, user.getCountry().getCode());
+            statement.setString(1, profile.getUsername());
+            String passHash = new HashPass().getHash(profile.getPassword());
+            statement.setString(2, passHash);
+            statement.setString(3, profile.getFirstName());
+            statement.setString(4, profile.getLastName());
+            statement.setString(5, profile.getBirthday());
+            statement.setString(6, profile.getGender());
+            statement.setString(7, profile.getCountry());
             statement.execute();
+
+            log.debug("MySQL INSERT [snet.users]");
+
             long userId = 0;
             ResultSet generatedKeys = statement.getGeneratedKeys();
-            if (generatedKeys.next())
+            if (generatedKeys.next()) {
                 userId = generatedKeys.getLong(1);
-            user.setId(userId);
+            }
+            LocalDate birthday = LocalDate.parse(profile.getBirthday());
+            Gender gender = profile.getGender().equals("MALE") ? Gender.MALE : Gender.FEMALE;
+            Country country = new Country(profile.getCountry());
+
+            user = User.builder()
+                    .id(userId)
+                    .username(profile.getUsername())
+                    .password(passHash)
+                    .firstName(profile.getFirstName())
+                    .lastName(profile.getLastName())
+                    .birthday(birthday)
+                    .gender(gender)
+                    .country(country).build();
+
         } catch (SQLException e) {
             throw new DaoException("Can't create user", e);
         }
@@ -70,6 +94,7 @@ public class MySqlUserDao implements UserDao {
                     "SELECT * FROM snet.users WHERE userId=?");
             statement.setLong(1, id);
             ResultSet resultSet = statement.executeQuery();
+            log.debug("MySQL SELECT [snet.users]");
             if (resultSet.next()) {
                 user = getUserFromResultSet(resultSet);
             }
@@ -87,6 +112,7 @@ public class MySqlUserDao implements UserDao {
                     "SELECT * FROM snet.users WHERE username=? AND deleted=FALSE");
             statement.setString(1, username);
             ResultSet resultSet = statement.executeQuery();
+            log.debug("MySQL SELECT [snet.users]");
             if (resultSet.next()) {
                 user = getUserFromResultSet(resultSet);
             }
@@ -103,6 +129,7 @@ public class MySqlUserDao implements UserDao {
             PreparedStatement statement = connection.prepareStatement(
                     "SELECT COUNT(*) FROM snet.users WHERE deleted=FALSE");
             ResultSet resultSet = statement.executeQuery();
+            log.debug("MySQL SELECT [snet.users]");
             if (resultSet.next()) {
                 numberUsers = resultSet.getInt(1);
             }
@@ -131,19 +158,21 @@ public class MySqlUserDao implements UserDao {
     }
 
     @Override
-    public void updateById(Long id, User newUser) throws DaoException {
+    public void updateById(Long id, ProfileFields profile) throws DaoException {
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(
-                    "UPDATE snet.users SET firstName=?,lastName=?,passHash=?,birthday=?,gender=?,country=?" +
+                    "UPDATE snet.users SET firstName=?,lastName=?,passHash=?,birthday=?,gender=?,country=?,username=?" +
                             " WHERE userId=?");
-            statement.setString(1, newUser.getFirstName());
-            statement.setString(2, newUser.getLastName());
-            statement.setString(3, newUser.getPassword());
-            statement.setString(4, newUser.getBirthday().toString());
-            statement.setString(5, newUser.getGender().toString());
-            statement.setString(6, newUser.getCountry().getCode());
-            statement.setLong(7, id);
+            statement.setString(1, profile.getFirstName());
+            statement.setString(2, profile.getLastName());
+            statement.setString(3, new HashPass().getHash(profile.getPassword()));
+            statement.setString(4, profile.getBirthday());
+            statement.setString(5, profile.getGender());
+            statement.setString(6, profile.getCountry());
+            statement.setString(7, profile.getUsername());
+            statement.setLong(8, id);
             statement.execute();
+            log.debug("MySQL UPDATE [snet.users]");
         } catch (SQLException e) {
             throw new DaoException("Can't update user", e);
         }
@@ -156,6 +185,7 @@ public class MySqlUserDao implements UserDao {
                     "UPDATE snet.users SET deleted=TRUE WHERE userId=?");
             statement.setLong(1, id);
             statement.execute();
+            log.debug("MySQL UPDATE [snet.users]");
         } catch (SQLException e) {
             throw new DaoException("Can't remove user", e);
         }
@@ -169,6 +199,7 @@ public class MySqlUserDao implements UserDao {
                 statement.setLong(i + 1, param[i]);
             }
             ResultSet resultSet = statement.executeQuery();
+            log.debug("MySQL SELECT [snet.users]");
             while (resultSet.next()) {
                 users.add(getUserFromResultSet(resultSet));
             }
