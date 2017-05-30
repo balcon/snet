@@ -5,9 +5,8 @@ import com.epam.study.snet.dao.UserDao;
 import com.epam.study.snet.entity.Country;
 import com.epam.study.snet.entity.User;
 import com.epam.study.snet.enums.Gender;
-import com.epam.study.snet.model.HashPass;
 import com.epam.study.snet.model.Image;
-import com.epam.study.snet.model.ProfileFields;
+import com.epam.study.snet.validators.ProfileValidator;
 import org.apache.log4j.Logger;
 
 import javax.sql.DataSource;
@@ -24,15 +23,14 @@ public class MySqlUserDao implements UserDao {
         this.dataSource = dataSource;
     }
 
-    public User create(ProfileFields profile) throws DaoException {
+    public User create(ProfileValidator profile) throws DaoException {
         User user = null;
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(
                     "INSERT INTO snet.users (username, passHash, firstName, lastName, birthday, gender, country)" +
                             " VALUES (?,?,?,?,?,?,?)");
             statement.setString(1, profile.getUsername());
-            String passHash = new HashPass().getHash(profile.getPassword());
-            statement.setString(2, passHash);
+            statement.setString(2, profile.getPassword());
             statement.setString(3, profile.getFirstName());
             statement.setString(4, profile.getLastName());
             statement.setString(5, profile.getBirthday());
@@ -54,7 +52,7 @@ public class MySqlUserDao implements UserDao {
             user = User.builder()
                     .id(userId)
                     .username(profile.getUsername())
-                    .password(passHash)
+                    .password(profile.getPassword())
                     .firstName(profile.getFirstName())
                     .lastName(profile.getLastName())
                     .birthday(birthday)
@@ -87,7 +85,7 @@ public class MySqlUserDao implements UserDao {
     }
 
     @Override
-    public User getById(Long id) throws DaoException {
+    public User getById(long id) throws DaoException {
         User user = null;
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(
@@ -158,14 +156,14 @@ public class MySqlUserDao implements UserDao {
     }
 
     @Override
-    public void updateById(Long id, ProfileFields profile) throws DaoException {
+    public void updateById(long id, ProfileValidator profile) throws DaoException {
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(
                     "UPDATE snet.users SET firstName=?,lastName=?,passHash=?,birthday=?,gender=?,country=?,username=?" +
                             " WHERE userId=?");
             statement.setString(1, profile.getFirstName());
             statement.setString(2, profile.getLastName());
-            statement.setString(3, new HashPass().getHash(profile.getPassword()));
+            statement.setString(3, profile.getPassword());
             statement.setString(4, profile.getBirthday());
             statement.setString(5, profile.getGender());
             statement.setString(6, profile.getCountry());
@@ -179,7 +177,7 @@ public class MySqlUserDao implements UserDao {
     }
 
     @Override
-    public void removeById(Long id) throws DaoException {
+    public void removeById(long id) throws DaoException {
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(
                     "UPDATE snet.users SET deleted=TRUE WHERE userId=?");

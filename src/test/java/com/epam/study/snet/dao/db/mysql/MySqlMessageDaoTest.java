@@ -4,7 +4,8 @@ import com.epam.study.snet.dao.MessageDao;
 import com.epam.study.snet.dao.UserDao;
 import com.epam.study.snet.entity.Message;
 import com.epam.study.snet.entity.User;
-import com.epam.study.snet.model.ProfileFields;
+import com.epam.study.snet.validators.MessageValidator;
+import com.epam.study.snet.validators.ProfileValidator;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -22,34 +23,47 @@ public class MySqlMessageDaoTest extends MySqlDaoTests {
     private static User user2;
     private static User user3;
 
-    private static Message testMessage;
+    private static MessageValidator testMessage;
 
     @BeforeClass
     public static void setUp() throws Exception {
-        ProfileFields prof1 = ProfileFields.builder().username("u1").password("123").birthday(LocalDate.now().toString()).gender("FEMALE").country("US").build();
+        ProfileValidator prof1 = ProfileValidator.builder().username("u1").password("123").birthday(LocalDate.now().toString()).gender("FEMALE").country("US").build();
         user1 = userDao.create(prof1);
-        ProfileFields prof2 = ProfileFields.builder().username("u2").password("123").birthday(LocalDate.now().toString()).gender("FEMALE").country("US").build();
+        ProfileValidator prof2 = ProfileValidator.builder().username("u2").password("123").birthday(LocalDate.now().toString()).gender("FEMALE").country("US").build();
         user2 = userDao.create(prof2);
-        ProfileFields prof3 = ProfileFields.builder().username("u3").password("123").birthday(LocalDate.now().toString()).gender("FEMALE").country("US").build();
+        ProfileValidator prof3 = ProfileValidator.builder().username("u3").password("123").birthday(LocalDate.now().toString()).gender("FEMALE").country("US").build();
         user3 = userDao.create(prof3);
 
-        testMessage = Message.builder().sender(user3).receiver(user2).body("Hi, u2!").build();
+        testMessage = MessageValidator.builder()
+                .sender(user3)
+                .receiver(user2)
+                .body("Test Hi!").build();
 
-        messageDao.create(Message.builder().sender(user1).receiver(user2).body("from u1 to u2").build());
-        messageDao.create(Message.builder().sender(user1).receiver(user3).body("from u1 to u3").build());
-        messageDao.create(Message.builder().sender(user2).receiver(user3).body("from u2 to u3").build());
-        messageDao.create(Message.builder().sender(user1).receiver(user2).body("from u1 to u2").build());
-        messageDao.create(Message.builder().sender(user2).receiver(user1).body("from u2 to u1").build());
+        messageDao.create(MessageValidator.builder().sender(user1).receiver(user2).body("from u1 to u2").build());
+        messageDao.create(MessageValidator.builder().sender(user1).receiver(user3).body("from u1 to u3").build());
+        messageDao.create(MessageValidator.builder().sender(user2).receiver(user3).body("from u2 to u3").build());
+        messageDao.create(MessageValidator.builder().sender(user1).receiver(user2).body("from u1 to u2").build());
+        messageDao.create(MessageValidator.builder().sender(user2).receiver(user1).body("from u2 to u1").build());
     }
 
     @Test
     public void createMessage() throws Exception {
         Message message = messageDao.create(testMessage);
 
-        assertEquals(message.getSendingTime().toLocalDate(), LocalDate.now());
-        assertEquals(message.getSender().getUsername(), "u3");
-        assertEquals(message.getBody(), "Hi, u2!");
         assertTrue(message.getId() != 0);
+        assertEquals(user3, message.getSender());
+        assertEquals(user2, message.getReceiver());
+        assertEquals("Test Hi!", message.getBody());
+        assertEquals(LocalDate.now(),message.getSendingTime().toLocalDate());
+    }
+
+    @Test
+    public void getById() throws Exception {
+        Message message1=messageDao.create(testMessage);
+        Message message2=messageDao.getById(message1.getId());
+
+        assertTrue(message1.getId()==message2.getId());
+        assertTrue(message1.isUnread()==message2.isUnread());
     }
 
     @Test
@@ -66,15 +80,6 @@ public class MySqlMessageDaoTest extends MySqlDaoTests {
         int numberAfter = messageDao.getNumberUnread(user2);
 
         assertTrue(numberAfter < numberBefore);
-    }
-
-    @Test
-    public void setIdOnceAgain() throws Exception {
-        Message message = messageDao.create(testMessage);
-        long badId = 100500;
-        message.setId(badId);
-
-        assertFalse(message.getId() == badId);
     }
 
     @Test

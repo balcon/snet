@@ -1,11 +1,13 @@
-package com.epam.study.snet.model;
+package com.epam.study.snet.validators;
 
 import com.epam.study.snet.entity.Country;
 import com.epam.study.snet.entity.User;
 import com.epam.study.snet.enums.FormErrors;
 import com.epam.study.snet.enums.Gender;
+import com.epam.study.snet.model.HashPass;
 import lombok.Builder;
 import lombok.Value;
+import lombok.experimental.NonFinal;
 
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -13,8 +15,9 @@ import java.util.Map;
 
 @Value
 @Builder
-public class ProfileFields {
+public class ProfileValidator {
     String username;
+    @NonFinal
     String password;
     String confirmPassword;
     String firstName;
@@ -50,15 +53,7 @@ public class ProfileFields {
         return errors;
     }
 
-    public User toUser() {
-        Gender gender = this.gender.equals("MALE") ? Gender.MALE : Gender.FEMALE;
-        return User.builder()
-                .username(username)
-                .password(password)
-                .firstName(firstName)
-                .lastName(lastName)
-                .birthday(LocalDate.parse(birthday))
-                .country(new Country(country))
-                .gender(gender).build();
+    public void hashPass(HashPass hasher) {
+        password=hasher.getHash(password);
     }
 }

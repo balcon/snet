@@ -28,7 +28,7 @@ public class ImageServlet extends HttpServlet {
     @SneakyThrows
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        ImageDao<byte[]> imageDao = DaoFactory.getFactory().getImageDao();
+        ImageDao imageDao = DaoFactory.getFactory().getImageDao();
         byte[] imageBytes;
         long imageId = Long.valueOf(req.getParameter("imageId"));
         Image image = Image.builder().id(imageId).build();

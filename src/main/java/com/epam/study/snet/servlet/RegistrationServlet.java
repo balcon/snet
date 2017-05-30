@@ -6,9 +6,8 @@ import com.epam.study.snet.dao.UserDao;
 import com.epam.study.snet.enums.FormErrors;
 import com.epam.study.snet.model.Countries;
 import com.epam.study.snet.model.HashPass;
-import com.epam.study.snet.model.ProfileFields;
+import com.epam.study.snet.validators.ProfileValidator;
 import com.epam.study.snet.entity.User;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
@@ -31,7 +30,7 @@ public class RegistrationServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        ProfileFields profile = ProfileFields.builder()
+        ProfileValidator profile = ProfileValidator.builder()
                 .username(req.getParameter("username"))
                 .password(req.getParameter("password"))
                 .confirmPassword(req.getParameter("confirmPassword"))
@@ -48,6 +47,7 @@ public class RegistrationServlet extends HttpServlet {
             UserDao userDao = DaoFactory.getFactory().getUserDao();
             if (validation.isEmpty()) {
                 if (userDao.getByUsername(profile.getUsername()) == null) {
+                    profile.hashPass(new HashPass());
                     User user=userDao.create(profile);
                     log.info("Registered new user ["+user.getUsername()+"](ID:["+user.getId()+"]");
                     resp.sendRedirect(req.getContextPath() + "/login");

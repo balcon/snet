@@ -5,6 +5,7 @@ import com.epam.study.snet.dao.MessageDao;
 import com.epam.study.snet.dao.UserDao;
 import com.epam.study.snet.entity.Message;
 import com.epam.study.snet.entity.User;
+import com.epam.study.snet.validators.MessageValidator;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -22,14 +23,15 @@ public class MySqlMessageDao implements MessageDao {
     }
 
     @Override
-    public Message create(Message message) throws DaoException {
+    public Message create(MessageValidator messageValidator) throws DaoException {
+        Message message;
         try (Connection connection = dataSource.getConnection()) {
             LocalDateTime currentTime = LocalDateTime.now();
             PreparedStatement statement = connection.prepareStatement(
                     "INSERT INTO snet.messages (senderId, receiverId, messageBody,sendingTime) VALUES (?,?,?,?)");
-            statement.setLong(1, message.getSender().getId());
-            statement.setLong(2, message.getReceiver().getId());
-            statement.setString(3, message.getBody());
+            statement.setLong(1, messageValidator.getSender().getId());
+            statement.setLong(2, messageValidator.getReceiver().getId());
+            statement.setString(3, messageValidator.getBody());
             statement.setString(4, currentTime.toString());
             statement.execute();
 
@@ -37,8 +39,13 @@ public class MySqlMessageDao implements MessageDao {
             ResultSet generatedKeys = statement.getGeneratedKeys();
             if (generatedKeys.next())
                 messageId = generatedKeys.getLong(1);
-            message.setId(messageId);
-            message.setSendingTime(currentTime);
+            message = Message.builder()
+                    .id(messageId)
+                    .sender(messageValidator.getSender())
+                    .receiver(messageValidator.getReceiver())
+                    .body(messageValidator.getBody())
+                    .sendingTime(currentTime)
+                    .unread(true).build();
         } catch (SQLException e) {
             throw new DaoException("Can't create message", e);
         }
@@ -115,8 +122,25 @@ public class MySqlMessageDao implements MessageDao {
 
     @Override
     public void removeById(long messageId) throws DaoException {
-        String queryString = "DELETE FROM snet.messages WHERE messageId=? AND unread=TRUE";
+        String queryString = "DELETE FROM snet.messages WHERE messageId=?";
         executeVoid(queryString, messageId);
+    }
+
+    @Override
+    public Message getById(long messageId) throws DaoException {
+        Message message = null;
+        try (Connection connection = dataSource.getConnection()) {
+            PreparedStatement statement = connection.prepareStatement(
+                    "SELECT * FROM snet.messages WHERE messageId=?");
+            statement.setLong(1, messageId);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                message = getMessageFromResultSet(resultSet);
+            }
+        } catch (SQLException e) {
+            throw new DaoException("Can't get messages list", e);
+        }
+        return message;
     }
 
     private List<Message> executeGetList(String queryString, long... param) throws DaoException {

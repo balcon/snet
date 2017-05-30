@@ -2,11 +2,12 @@ package com.epam.study.snet.dao;
 
 import com.epam.study.snet.entity.Message;
 import com.epam.study.snet.entity.User;
+import com.epam.study.snet.validators.MessageValidator;
 
 import java.util.List;
 
 public interface MessageDao {
-    Message create(Message message) throws DaoException;
+    Message create(MessageValidator messageValidator) throws DaoException;
 
     List<Message> getListOfLatest(User user) throws DaoException;
 
@@ -23,4 +24,6 @@ public interface MessageDao {
     void makeReadBetweenUsers(User sender, User receiver) throws DaoException;
 
     void removeById(long messageId) throws DaoException;
+
+    Message getById(long messageId) throws DaoException;
 }

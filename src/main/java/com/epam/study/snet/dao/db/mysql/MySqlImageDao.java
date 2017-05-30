@@ -11,8 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-//TODO do it better!
-public class MySqlImageDao implements ImageDao{
+public class MySqlImageDao implements ImageDao {
     private DataSource dataSource;
 
     MySqlImageDao(DataSource dataSource) {
@@ -54,5 +53,17 @@ public class MySqlImageDao implements ImageDao{
             throw new DaoException("Can't get image", e);
         }
         return imageBytes;
+    }
+
+    @Override
+    public void removeById(long imageId) throws DaoException {
+        try (Connection connection = dataSource.getConnection()) {
+            PreparedStatement statement = connection.prepareStatement(
+                    "DELETE FROM snet.images WHERE imageId=?");
+            statement.setLong(1, imageId);
+            statement.execute();
+        } catch (SQLException e) {
+            throw new DaoException("Can't remove image", e);
+        }
     }
 }

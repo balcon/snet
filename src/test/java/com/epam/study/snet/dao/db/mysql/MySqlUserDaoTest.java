@@ -4,8 +4,7 @@ import com.epam.study.snet.dao.UserDao;
 import com.epam.study.snet.entity.Country;
 import com.epam.study.snet.entity.User;
 import com.epam.study.snet.enums.Gender;
-import com.epam.study.snet.model.HashPass;
-import com.epam.study.snet.model.ProfileFields;
+import com.epam.study.snet.validators.ProfileValidator;
 import org.junit.Test;
 
 import java.time.LocalDate;
@@ -16,7 +15,7 @@ import static org.junit.Assert.*;
 public class MySqlUserDaoTest extends MySqlDaoTests {
     private UserDao userDao = daoFactory.getUserDao();
 
-    private ProfileFields testProfile = ProfileFields.builder()
+    private ProfileValidator testProfile = ProfileValidator.builder()
             .username("pit")
             .password("123")
             .firstName("Peter")
@@ -25,22 +24,13 @@ public class MySqlUserDaoTest extends MySqlDaoTests {
             .birthday(LocalDate.of(1980, 5, 12).toString())
             .gender("MALE").build();
 
-    private User testUser = User.builder()
-            .username("pit")
-            .password("123")
-            .firstName("Peter")
-            .lastName("Johnson")
-            .country(new Country("UK"))
-            .birthday(LocalDate.of(1980, 5, 12))
-            .gender(Gender.MALE).build();
-
     @Test
     public void createUser() throws Exception {
         User user = userDao.create(testProfile);
 
         assertTrue(user.getId() != 0);
         assertEquals("pit", user.getUsername());
-        assertEquals(new HashPass().getHash("123"), user.getPassword());
+        assertEquals("123", user.getPassword());
         assertEquals("Peter", user.getFirstName());
         assertEquals("Johnson", user.getLastName());
         assertEquals(LocalDate.of(1980, 5, 12), user.getBirthday());
@@ -50,6 +40,7 @@ public class MySqlUserDaoTest extends MySqlDaoTests {
 
     @Test
     public void getUserList() throws Exception {
+        userDao.create(testProfile);
         List<User> users = userDao.getList();
 
         assertFalse(users.isEmpty());
@@ -60,7 +51,7 @@ public class MySqlUserDaoTest extends MySqlDaoTests {
         User user1 = userDao.create(testProfile);
         Long userId = user1.getId();
         User user2 = userDao.getById(userId);
-
+//todo photo ! test it!
         assertFalse(user1.isDeleted());
         assertEquals("Peter", user2.getFirstName());
         assertEquals("Johnson", user2.getLastName());
@@ -84,7 +75,7 @@ public class MySqlUserDaoTest extends MySqlDaoTests {
 
     @Test
     public void getListWithExclude() throws Exception {
-        ProfileFields profile = ProfileFields.builder()
+        ProfileValidator profile = ProfileValidator.builder()
                 .username("u")
                 .password("p")
                 .firstName("f")
@@ -111,7 +102,7 @@ public class MySqlUserDaoTest extends MySqlDaoTests {
 
     @Test
     public void getLimitedList() throws Exception {
-        ProfileFields profile = ProfileFields.builder()
+        ProfileValidator profile = ProfileValidator.builder()
                 .username("u2")
                 .password("p")
                 .firstName("f")
@@ -135,7 +126,7 @@ public class MySqlUserDaoTest extends MySqlDaoTests {
 
     @Test
     public void getUserByUsername() throws Exception {
-        ProfileFields profile = ProfileFields.builder()
+        ProfileValidator profile = ProfileValidator.builder()
                 .username("pit2")
                 .password("123")
                 .firstName("Peter")
@@ -151,7 +142,7 @@ public class MySqlUserDaoTest extends MySqlDaoTests {
 
     @Test
     public void removeUserById() throws Exception {
-        ProfileFields profile = ProfileFields.builder()
+        ProfileValidator profile = ProfileValidator.builder()
                 .username("u5")
                 .password("pass")
                 .firstName("Timmy")
@@ -172,7 +163,7 @@ public class MySqlUserDaoTest extends MySqlDaoTests {
 
     @Test
     public void updateUserById() throws Exception {
-        ProfileFields profile1 = ProfileFields.builder()
+        ProfileValidator profile1 = ProfileValidator.builder()
                 .username("u5")
                 .password("pass")
                 .firstName("Timmy")
@@ -181,7 +172,7 @@ public class MySqlUserDaoTest extends MySqlDaoTests {
                 .country("US")
                 .gender("MALE").build();
 
-        ProfileFields profile2 = ProfileFields.builder()
+        ProfileValidator profile2 = ProfileValidator.builder()
                 .username("newName")
                 .password("newPass")
                 .firstName("newFirst")
@@ -195,7 +186,7 @@ public class MySqlUserDaoTest extends MySqlDaoTests {
         User user2 = userDao.getById(user1.getId());
 
         assertEquals("newName", user2.getUsername());
-        assertEquals(new HashPass().getHash("newPass"), user2.getPassword());
+        assertEquals("newPass", user2.getPassword());
         assertEquals("newFirst", user2.getFirstName());
         assertEquals("newLastName", user2.getLastName());
         assertEquals(LocalDate.of(2012, 12, 12), user2.getBirthday());

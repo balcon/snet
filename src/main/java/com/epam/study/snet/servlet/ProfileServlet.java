@@ -5,8 +5,8 @@ import com.epam.study.snet.dao.DaoFactory;
 import com.epam.study.snet.dao.UserDao;
 import com.epam.study.snet.entity.User;
 import com.epam.study.snet.enums.FormErrors;
-import com.epam.study.snet.model.ProfileFields;
-import org.apache.commons.codec.digest.DigestUtils;
+import com.epam.study.snet.model.HashPass;
+import com.epam.study.snet.validators.ProfileValidator;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
@@ -19,7 +19,7 @@ import java.util.Map;
 
 @WebServlet("/main/profile")
 public class ProfileServlet extends HttpServlet {
-    static final Logger log= Logger.getLogger(ProfileServlet.class.getCanonicalName());
+    static final Logger log = Logger.getLogger(ProfileServlet.class.getCanonicalName());
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -29,9 +29,10 @@ public class ProfileServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         User loggedUser = (User) req.getSession().getAttribute("loggedUser");
-        ProfileFields profile;
+        ProfileValidator profile;
+        Map<String, FormErrors> validation;
         if (req.getParameter("changed").equals("pass")) {
-            profile = ProfileFields.builder()
+            profile = ProfileValidator.builder()
                     .username(loggedUser.getUsername())
                     .password(req.getParameter("password"))
                     .confirmPassword(req.getParameter("confirmPassword"))
@@ -39,17 +40,19 @@ public class ProfileServlet extends HttpServlet {
                     .lastName(loggedUser.getLastName())
                     .birthday(loggedUser.getBirthday().toString())
                     .gender(loggedUser.getGender().toString()).build();
-        } else profile = ProfileFields.builder()
-                .username(loggedUser.getUsername())
-                //todo make something with hash
-                .password(loggedUser.getPassword())
-                .confirmPassword(loggedUser.getPassword())
-                .firstName(req.getParameter("firstName"))
-                .lastName(req.getParameter("lastName"))
-                .birthday(req.getParameter("birthday"))
-                .gender(req.getParameter("gender")).build();
-
-        Map<String, FormErrors> validation = profile.validate();
+            validation = profile.validate();
+            profile.hashPass(new HashPass());
+        } else {
+            profile = ProfileValidator.builder()
+                    .username(loggedUser.getUsername())
+                    .password(loggedUser.getPassword())
+                    .confirmPassword(loggedUser.getPassword())
+                    .firstName(req.getParameter("firstName"))
+                    .lastName(req.getParameter("lastName"))
+                    .birthday(req.getParameter("birthday"))
+                    .gender(req.getParameter("gender")).build();
+            validation = profile.validate();
+        }
         try {
             UserDao userDao = DaoFactory.getFactory().getUserDao();
             if (validation.isEmpty()) {
@@ -63,7 +66,7 @@ public class ProfileServlet extends HttpServlet {
 
             }
         } catch (DaoException e) {
-            log.error("["+loggedUser.getUsername()+"](id:["+loggedUser.getId()+"]) try upgrade profile",e);
+            log.error("[" + loggedUser.getUsername() + "](id:[" + loggedUser.getId() + "]) try upgrade profile", e);
             req.getRequestDispatcher("/WEB-INF/pages/errorpage.jsp").forward(req, resp);
         }
     }

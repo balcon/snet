@@ -8,11 +8,9 @@ import java.time.LocalDateTime;
 
 @Value
 @Builder
-public class Message {
+public class StatusMessage {
     long id;
-    User sender;
-    User receiver;
+    User author;
     String body;
     LocalDateTime sendingTime;
-    boolean unread;
 }

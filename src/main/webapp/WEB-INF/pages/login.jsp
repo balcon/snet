@@ -6,31 +6,33 @@
 <fmt:setLocale value="${sessionScope.locale}"/>
 <fmt:setBundle basename="i18n.view" var="view"/>
 <fmt:setBundle basename="i18n.errors" var="errors"/>
+
 <tags:mainMenu>
     <div class="page-header col-md-offset-4">
         <h3><fmt:message bundle="${view}" key="titles.login"/></h3>
     </div>
-    <form class="form-horizontal <c:if test='${validation.containsKey("loginForm")}'> has-error </c:if>" action="login"
-          method="post">
-        <c:if test='${validation.containsKey("loginForm")}'>
+    <jsp:useBean id="formValidation" scope="request" class="com.epam.study.snet.model.FormValidation"/>
+    <form class="form-horizontal<c:if test='${formValidation.errors.containsKey("loginForm")}'> has-error </c:if>"
+          action="login" method="post">
+        <c:if test='${formValidation.errors.containsKey("loginForm")}'>
             <div class="alert alert-danger" role="alert">
-                <fmt:message bundle="${errors}" key='${validation.get("loginForm")}'/>
+                <fmt:message bundle="${errors}" key='${formValidation.errors.get("loginForm")}'/>
             </div>
         </c:if>
-        <tags:typicalInput type="text"
+        <tags:typicalInput inputType="text"
                            name="username"
                            labelProp="user.username"
-                           setupValue="user1"
-                           validation='${validation.containsKey("username")}'
-                           validationErrorProp='${validation.get("username")}' inline="true"/>
-                            <%--setupValue="${param.username}"--%>
+                           initValue="user1"
+                           errors="${formValidation.errors}"
+                           inline="true"/>
+            <%--setupValue="${param.username}"--%>
 
-        <tags:typicalInput type="password"
+        <tags:typicalInput inputType="password"
                            name="password"
                            labelProp="user.password"
-                           setupValue="123456"
-                           validation='${validation.containsKey("password")}'
-                           validationErrorProp='${validation.get("password")}' inline="true"/>
+                           initValue="123456"
+                           errors="${formValidation.errors}"
+                           inline="true"/>
 
         <div class="col-md-offset-4">
             <button type="submit" class="btn btn-primary">

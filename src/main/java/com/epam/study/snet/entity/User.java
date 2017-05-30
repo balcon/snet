@@ -13,7 +13,7 @@ import java.time.LocalDate;
 @Value
 @Builder
 public class User {
-    Long id;
+    long id;
     String username;
     String password;
     String firstName;

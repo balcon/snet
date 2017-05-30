@@ -20,6 +20,6 @@ public class UserTest extends MySqlDaoTests {
         User user1 = User.builder().firstName("user1").country(us).build();
         User user2 = User.builder().firstName("user2").country(jp).build();
 
-        assertEquals(user1.checkRelation(user2),Relation.BAD);
+        assertEquals(Relation.BAD,user1.checkRelation(user2));
     }
 }

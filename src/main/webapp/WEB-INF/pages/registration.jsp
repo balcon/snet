@@ -11,40 +11,41 @@
         <h3><fmt:message bundle="${view}" key="titles.registration"/></h3>
     </div>
     <form class="form-horizontal" action="registration" method="post">
-        <tags:typicalInput type="text"
+
+        <tags:typicalInput inputType="text"
                            name="username"
                            labelProp="user.username"
-                           setupValue="${param.username}"
-                           validation='${validation.containsKey("username")}'
-                           validationErrorProp='${validation.get("username")}' inline="true"/>
+                           initValue="${param.username}"
+                           errors="${validation}"
+                           inline="true"/>
 
-        <tags:typicalInput type="password"
+        <tags:typicalInput inputType="password"
                            name="password"
                            labelProp="user.password"
-                           setupValue="${param.password}"
-                           validation='${validation.containsKey("password")}'
-                           validationErrorProp='${validation.get("password")}' inline="true"/>
+                           initValue="${param.password}"
+                           errors="${validation}"
+                           inline="true"/>
 
-        <tags:typicalInput type="password"
+        <tags:typicalInput inputType="password"
                            name="confirmPassword"
                            labelProp="user.confirmPassword"
-                           setupValue="${param.confirmPassword}"
-                           validation='${validation.containsKey("confirmPassword")}'
-                           validationErrorProp='${validation.get("confirmPassword")}' inline="true"/>
+                           initValue="${param.confirmPassword}"
+                           errors="${validation}"
+                           inline="true"/>
 
-        <tags:typicalInput type="text"
+        <tags:typicalInput inputType="text"
                            name="firstName"
                            labelProp="user.firstName"
-                           setupValue="${param.firstName}"
-                           validation='${validation.containsKey("firstName")}'
-                           validationErrorProp='${validation.get("firstName")}' inline="true"/>
+                           initValue="${param.firstName}"
+                           errors="${validation}"
+                           inline="true"/>
 
-        <tags:typicalInput type="text"
+        <tags:typicalInput inputType="text"
                            name="lastName"
                            labelProp="user.lastName"
-                           setupValue="${param.lastName}"
-                           validation='${validation.containsKey("lastName")}'
-                           validationErrorProp='${validation.get("lastName")}' inline="true"/>
+                           initValue="${param.lastName}"
+                           errors="${validation}"
+                           inline="true"/>
 
             <%-- COUNTRY INPUT--%>
         <div class="form-group <c:if test='${validation.containsKey("country")}'> has-error has-feedback </c:if>">
@@ -71,12 +72,12 @@
         </div>
             <%-- end of COUNTRY input --%>
 
-        <tags:typicalInput type="date"
+        <tags:typicalInput inputType="date"
                            name="birthday"
                            labelProp="user.birthday"
-                           setupValue="${param.birthday}"
-                           validation='${validation.containsKey("birthday")}'
-                           validationErrorProp='${validation.get("birthday")}' inline="true"/>
+                           initValue="${param.birthday}"
+                           errors="${validation}"
+                           inline="true"/>
 
             <%-- GENDER INPUT --%>
         <div class="form-group <c:if test='${validation.containsKey("gender")}'> has-error has-feedback </c:if>">

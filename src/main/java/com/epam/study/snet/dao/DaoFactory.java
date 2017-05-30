@@ -8,6 +8,6 @@ public interface DaoFactory {
     }
     UserDao getUserDao();
     MessageDao getMessageDao(UserDao userDao);
-    ImageDao<byte[]> getImageDao();
+    ImageDao getImageDao();
     RelationshipDao getRelationshipDao();
 }

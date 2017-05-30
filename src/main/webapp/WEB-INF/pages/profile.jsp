@@ -42,27 +42,22 @@
     <div class="col-md-6">
             ${param.changed}
         <form class="form-horizontal" action="<c:url value="/main/profile"/>" method="post">
-            <tags:typicalInput type="text"
+            <tags:typicalInput inputType="text"
                                name="firstName"
                                labelProp="user.firstName"
-                               setupValue="${loggedUser.firstName}"
-                               validation='${validation.containsKey("firstName")}'
-                               validationErrorProp='${validation.get("firstName")}'
-                               inline="false"/>
-            <tags:typicalInput type="text"
+                               initValue="${loggedUser.firstName}"
+                               errors="${validation}"/>
+            <tags:typicalInput inputType="text"
                                name="lastName"
                                labelProp="user.lastName"
-                               setupValue="${loggedUser.lastName}"
-                               validation='${validation.containsKey("lastName")}'
-                               validationErrorProp='${validation.get("lastName")}'
-                               inline="false"/>
+                               initValue="${loggedUser.lastName}"
+                               errors="${validation}"/>
 
-            <tags:typicalInput type="date"
+            <tags:typicalInput inputType="date"
                                name="birthday"
                                labelProp="user.birthday"
-                               setupValue="${loggedUser.birthday}"
-                               validation='${validation.containsKey("birthday")}'
-                               validationErrorProp='${validation.get("birthday")}' inline="false"/>
+                               initValue="${loggedUser.birthday}"
+                               errors="${validation}"/>
 
                 <%-- GENDER INPUT --%>
             <div class="form-group">
@@ -86,21 +81,17 @@
         </form>
 
         <form class="form-horizontal" action="<c:url value="/main/profile"/>" method="post">
-            <tags:typicalInput type="password"
+            <tags:typicalInput inputType="password"
                                name="password"
                                labelProp="user.password"
-                               setupValue="${param.password}"
-                               validation='${validation.containsKey("password")}'
-                               validationErrorProp='${validation.get("password")}'
-                               inline="false"/>
+                               initValue="${param.password}"
+                               errors="${validation}"/>
 
-            <tags:typicalInput type="password"
+            <tags:typicalInput inputType="password"
                                name="confirmPassword"
                                labelProp="user.confirmPassword"
-                               setupValue="${param.confirmPassword}"
-                               validation='${validation.containsKey("confirmPassword")}'
-                               validationErrorProp='${validation.get("confirmPassword")}'
-                               inline="false"/>
+                               initValue="${param.confirmPassword}"
+                               errors="${validation}"/>
 
             <input type="hidden" name="changed" value="pass">
             <button type="submit" class="btn btn-primary col-md-offset-3">

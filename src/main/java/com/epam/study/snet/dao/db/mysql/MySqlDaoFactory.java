@@ -26,7 +26,6 @@ public class MySqlDaoFactory implements DaoFactory {
         dataSource = dSource;
     }
 
-    //TODO do something with ImageDaos generic
     @Override
     public ImageDao getImageDao() {
         return new MySqlImageDao(dataSource);
