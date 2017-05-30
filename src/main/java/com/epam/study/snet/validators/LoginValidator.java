@@ -8,6 +8,7 @@ import com.epam.study.snet.model.FormValidation;
 import com.epam.study.snet.model.HashPass;
 import lombok.Builder;
 import lombok.Value;
+import org.apache.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,11 +24,13 @@ import java.util.Map;
 @Value
 @Builder
 public class LoginValidator {
+    private static Logger log = Logger.getLogger(LoginValidator.class.getCanonicalName());
     String username;
     String password;
 
     /**
      * Method validate input fields and check username and password.
+     *
      * @return Object of {@link FormValidation} class.
      * @throws DaoException
      */
@@ -35,10 +38,15 @@ public class LoginValidator {
         Map<String, FormErrors> errors = new HashMap<>();
         if (username == null || username.isEmpty()) errors.put("username", FormErrors.field_empty);
         if (password == null || password.isEmpty()) errors.put("password", FormErrors.field_empty);
-        User user = DaoFactory.getFactory().getUserDao().getByUsername(username);
-        String passHash = new HashPass().getHash(password);
-        if (errors.isEmpty() && (user == null || !user.getPassword().equals(passHash)))
-            errors.put("loginForm", FormErrors.bad_login_password);
+        if (errors.isEmpty()) {
+            User user = DaoFactory.getFactory().getUserDao().getByUsername(username);
+            String passHash = new HashPass().getHash(password);
+            if (user == null) errors.put("loginForm", FormErrors.bad_login_password);
+            else if (!user.getPassword().equals(passHash)) {
+                log.info("Invalid password entry for user [" + user.getUsername() + "]");
+                errors.put("loginForm", FormErrors.bad_login_password);
+            }
+        }
         return new FormValidation(errors);
     }
 }
