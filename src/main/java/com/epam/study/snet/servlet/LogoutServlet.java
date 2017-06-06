@@ -18,7 +18,7 @@ public class LogoutServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
         User user=(User)session.getAttribute("loggedUser");
-        log.info("["+user.getUsername()+"](id:["+user.getId()+"]) is logged out");
+        log.info("["+user.getUsername()+"](id:["+user.getId()+"]) logged out");
         session.setAttribute("loggedUser",null);
         String contextPath = req.getContextPath();
         resp.sendRedirect(contextPath+"/login");

@@ -1,18 +1,23 @@
 package com.epam.study.snet.validators;
 
-import com.epam.study.snet.entity.Country;
-import com.epam.study.snet.entity.User;
+import com.epam.study.snet.dao.DaoException;
+import com.epam.study.snet.dao.DaoFactory;
+import com.epam.study.snet.dao.UserDao;
 import com.epam.study.snet.enums.FormErrors;
-import com.epam.study.snet.enums.Gender;
+import com.epam.study.snet.model.FormValidation;
 import com.epam.study.snet.model.HashPass;
 import lombok.Builder;
 import lombok.Value;
 import lombok.experimental.NonFinal;
 
-import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * The {@code ProfileValidator} class is a 'layer' between users input
+ * and applications business logic. This class validates input data
+ * of user profile
+ */
 @Value
 @Builder
 public class ProfileValidator {
@@ -26,16 +31,21 @@ public class ProfileValidator {
     String gender;
     String country;
 
-    public Map<String, FormErrors> validate() {
+    /**
+     * Method validate input fields.
+     *
+     * @return Object of {@link FormValidation} class.
+     */
+    public FormValidation validate() {
         Map<String, FormErrors> errors = new HashMap<>();
 
         if (username == null || username.isEmpty()) errors.put("username", FormErrors.field_empty);
         else if (!username.matches("[a-zA-Z\\d\\-_]*")) errors.put("username", FormErrors.username_incorrect);
-
         if (password == null || password.isEmpty()) errors.put("password", FormErrors.field_empty);
         else if (password.length() < 6) errors.put("password", FormErrors.password_short6);
 
-        if (confirmPassword == null || confirmPassword.isEmpty()) errors.put("confirmPassword", FormErrors.field_empty);
+        if (confirmPassword == null || confirmPassword.isEmpty())
+            errors.put("confirmPassword", FormErrors.field_empty);
         else {
             if (confirmPassword.length() < 6) errors.put("confirmPassword", FormErrors.password_short6);
             if (!confirmPassword.equals(password)) {
@@ -48,12 +58,31 @@ public class ProfileValidator {
         if (lastName == null || lastName.isEmpty()) errors.put("lastName", FormErrors.field_empty);
         if (birthday == null || birthday.isEmpty()) errors.put("birthday", FormErrors.field_empty);
         if (gender == null || gender.isEmpty()) errors.put("gender", FormErrors.field_empty);
-        if (country==null || country.isEmpty()) errors.put("country", FormErrors.field_empty);
+        if (country == null || country.isEmpty()) errors.put("country", FormErrors.field_empty);
 
-        return errors;
+        return new FormValidation(errors);
     }
 
+    /**Checking existence of username
+     *
+     * @return Object of {@link FormValidation} class.
+     * @throws DaoException
+     */
+    public FormValidation checkUsername() throws DaoException {
+        Map<String, FormErrors> errors = new HashMap<>();
+        UserDao userDao = DaoFactory.getFactory().getUserDao();
+        if (userDao.getByUsername(username) != null) {
+            errors.put("username", FormErrors.username_exists);
+        }
+        return new FormValidation(errors);
+    }
+
+    /**
+     * Change string password to hash of this string
+     *
+     * @param hasher, object of {@link HashPass}
+     */
     public void hashPass(HashPass hasher) {
-        password=hasher.getHash(password);
+        password = hasher.getHash(password);
     }
 }

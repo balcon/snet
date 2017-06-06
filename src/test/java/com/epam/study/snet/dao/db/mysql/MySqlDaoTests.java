@@ -16,7 +16,7 @@ import java.util.Scanner;
 
 public abstract class MySqlDaoTests {
 
-   private static JdbcDataSource dataSource;
+   protected static JdbcDataSource dataSource;
    protected static DaoFactory daoFactory;
 
     @BeforeClass

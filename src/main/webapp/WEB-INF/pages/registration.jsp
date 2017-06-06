@@ -10,45 +10,47 @@
     <div class="page-header col-md-offset-4">
         <h3><fmt:message bundle="${view}" key="titles.registration"/></h3>
     </div>
+    <jsp:useBean id="formValidation" scope="request"
+                 class="com.epam.study.snet.model.FormValidation"/>
     <form class="form-horizontal" action="registration" method="post">
 
         <tags:typicalInput inputType="text"
                            name="username"
                            labelProp="user.username"
                            initValue="${param.username}"
-                           errors="${validation}"
+                           errors="${formValidation.errors}"
                            inline="true"/>
 
         <tags:typicalInput inputType="password"
                            name="password"
                            labelProp="user.password"
                            initValue="${param.password}"
-                           errors="${validation}"
+                           errors="${formValidation.errors}"
                            inline="true"/>
 
         <tags:typicalInput inputType="password"
                            name="confirmPassword"
                            labelProp="user.confirmPassword"
                            initValue="${param.confirmPassword}"
-                           errors="${validation}"
+                           errors="${formValidation.errors}"
                            inline="true"/>
 
         <tags:typicalInput inputType="text"
                            name="firstName"
                            labelProp="user.firstName"
                            initValue="${param.firstName}"
-                           errors="${validation}"
+                           errors="${formValidation.errors}"
                            inline="true"/>
 
         <tags:typicalInput inputType="text"
                            name="lastName"
                            labelProp="user.lastName"
                            initValue="${param.lastName}"
-                           errors="${validation}"
+                           errors="${formValidation.errors}"
                            inline="true"/>
 
-            <%-- COUNTRY INPUT--%>
-        <div class="form-group <c:if test='${validation.containsKey("country")}'> has-error has-feedback </c:if>">
+        <%--COUNTRY INPUT--%>
+        <div class="form-group <c:if test='${formValidation.errors.containsKey("country")}'> has-error has-feedback </c:if>">
             <fmt:message var="countryTitle" bundle="${view}" key="user.country"/>
             <label class="col-md-3 control-label" for="country">${countryTitle}
             </label>
@@ -62,10 +64,10 @@
                                 ${oneCountry.value}</option>
                     </c:forEach>
                 </select>
-                <c:if test='${validation.containsKey("gender")}'>
+                <c:if test='${formValidation.errors.containsKey("gender")}'>
                     <span class="glyphicon glyphicon-exclamation-sign form-control-feedback"></span>
                     <span class="help-block">
-                        <small><fmt:message bundle="${errors}" key='${validation.get("gender")}'/></small>
+                        <small><fmt:message bundle="${errors}" key='${formValidation.errors.get("gender")}'/></small>
                     </span>
                 </c:if>
             </div>
@@ -76,11 +78,11 @@
                            name="birthday"
                            labelProp="user.birthday"
                            initValue="${param.birthday}"
-                           errors="${validation}"
+                           errors="${formValidation.errors}"
                            inline="true"/>
 
             <%-- GENDER INPUT --%>
-        <div class="form-group <c:if test='${validation.containsKey("gender")}'> has-error has-feedback </c:if>">
+        <div class="form-group <c:if test='${formValidation.errors.containsKey("gender")}'> has-error has-feedback </c:if>">
             <fmt:message var="gender" bundle="${view}" key="user.gender"/>
             <label class="col-md-3 control-label" for="gender">${gender}
             </label>
@@ -94,10 +96,10 @@
                             <c:if test='${param.gender=="FEMALE"}'>selected</c:if>><fmt:message bundle="${view}"
                                                                                                 key="user.gender.female"/></option>
                 </select>
-                <c:if test='${validation.containsKey("gender")}'>
+                <c:if test='${formValidation.errors.containsKey("gender")}'>
                     <span class="glyphicon glyphicon-exclamation-sign form-control-feedback"></span>
                     <span class="help-block">
-                        <small><fmt:message bundle="${errors}" key='${validation.get("gender")}'/></small>
+                        <small><fmt:message bundle="${errors}" key='${formValidation.errors.get("gender")}'/></small>
                     </span>
                 </c:if>
             </div>

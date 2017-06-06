@@ -7,13 +7,16 @@ import com.epam.study.snet.entity.User;
 import com.epam.study.snet.validators.MessageValidator;
 import com.epam.study.snet.validators.ProfileValidator;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class MySqlMessageDaoTest extends MySqlDaoTests {
     private static UserDao userDao = daoFactory.getUserDao();
@@ -54,16 +57,16 @@ public class MySqlMessageDaoTest extends MySqlDaoTests {
         assertEquals(user3, message.getSender());
         assertEquals(user2, message.getReceiver());
         assertEquals("Test Hi!", message.getBody());
-        assertEquals(LocalDate.now(),message.getSendingTime().toLocalDate());
+        assertEquals(LocalDate.now(), message.getSendingTime().toLocalDate());
     }
 
     @Test
     public void getById() throws Exception {
-        Message message1=messageDao.create(testMessage);
-        Message message2=messageDao.getById(message1.getId());
+        Message message1 = messageDao.create(testMessage);
+        Message message2 = messageDao.getById(message1.getId());
 
-        assertTrue(message1.getId()==message2.getId());
-        assertTrue(message1.isUnread()==message2.isUnread());
+        assertTrue(message1.getId() == message2.getId());
+        assertTrue(message1.isUnread() == message2.isUnread());
     }
 
     @Test
@@ -80,14 +83,6 @@ public class MySqlMessageDaoTest extends MySqlDaoTests {
         int numberAfter = messageDao.getNumberUnread(user2);
 
         assertTrue(numberAfter < numberBefore);
-    }
-
-    @Test
-    @Ignore
-    public void getListWithLastMessages() throws Exception {
-        List<Message> messages = messageDao.getListOfLatest(user1);
-
-        assertEquals(messages.size(), 2);
     }
 
     @Test

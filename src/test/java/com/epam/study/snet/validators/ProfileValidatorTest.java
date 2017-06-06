@@ -1,23 +1,26 @@
 package com.epam.study.snet.validators;
 
+import com.epam.study.snet.dao.db.mysql.MySqlDaoTests;
 import com.epam.study.snet.enums.FormErrors;
+import com.epam.study.snet.model.FormValidation;
 import com.epam.study.snet.model.HashPass;
 import com.epam.study.snet.validators.ProfileValidator;
 import org.junit.Test;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class ProfileValidatorTest {
+public class ProfileValidatorTest extends MySqlDaoTests{
 
     @Test
     public void correctInputs() throws Exception {
         ProfileValidator profile = ProfileValidator.builder()
-                .username("juser")
+                .username("juser12345")
                 .password("user.password")
                 .confirmPassword("user.password")
                 .firstName("John")
@@ -26,9 +29,9 @@ public class ProfileValidatorTest {
                 .country("RU")
                 .birthday(LocalDate.now().toString())
                 .gender("MALE").build();
-        Map<String, FormErrors> validate = profile.validate();
+        FormValidation validate = profile.validate();
 
-        assertTrue(validate.isEmpty());
+        assertTrue(validate.isValid());
     }
 
     @Test
@@ -39,12 +42,12 @@ public class ProfileValidatorTest {
                 .confirmPassword("user.password")
                 .firstName("John")
                 .lastName("Smith").build();
-        Map<String, FormErrors> validate = profile.validate();
+        FormValidation validate = profile.validate();
 
-        assertTrue(validate.containsKey("username"));
-        assertTrue(validate.containsKey("gender"));
-        assertTrue(validate.containsKey("country"));
-        assertFalse(validate.containsKey("firstName"));
+        assertTrue(validate.getErrors().containsKey("username"));
+        assertTrue(validate.getErrors().containsKey("gender"));
+        assertTrue(validate.getErrors().containsKey("country"));
+        assertFalse(validate.getErrors().containsKey("firstName"));
     }
 
     @Test
@@ -56,9 +59,9 @@ public class ProfileValidatorTest {
         ProfileValidator prof3 = ProfileValidator.builder()
                 .username("user_xp-89").build();
 
-        assertTrue(prof1.validate().get("username") == FormErrors.username_incorrect);
-        assertTrue(prof2.validate().get("username") == FormErrors.username_incorrect);
-        assertFalse(prof3.validate().get("username") == FormErrors.username_incorrect);
+        assertTrue(prof1.validate().getErrors().get("username") == FormErrors.username_incorrect);
+        assertTrue(prof2.validate().getErrors().get("username") == FormErrors.username_incorrect);
+        assertFalse(prof3.validate().getErrors().get("username") == FormErrors.username_incorrect);
     }
 
     @Test
@@ -70,10 +73,10 @@ public class ProfileValidatorTest {
                 .firstName("John")
                 .lastName("Smith")
                 .gender("male").build();
-        Map<String, FormErrors> validate = profile.validate();
+        FormValidation validate = profile.validate();
 
-        assertTrue(validate.get("password") == FormErrors.password_not_equals_confirm);
-        assertTrue(validate.get("confirmPassword") == FormErrors.password_not_equals_confirm);
+        assertTrue(validate.getErrors().get("password") == FormErrors.password_not_equals_confirm);
+        assertTrue(validate.getErrors().get("confirmPassword") == FormErrors.password_not_equals_confirm);
     }
 
     @Test
@@ -81,9 +84,9 @@ public class ProfileValidatorTest {
         ProfileValidator profile = ProfileValidator.builder()
                 .username(null)
                 .gender(null).build();
-        Map<String, FormErrors> validate = profile.validate();
+        FormValidation validate = profile.validate();
 
-        assertTrue(validate.get("username") == FormErrors.field_empty);
+        assertTrue(validate.getErrors().get("username") == FormErrors.field_empty);
     }
 
     @Test
@@ -96,5 +99,21 @@ public class ProfileValidatorTest {
         profile.hashPass(hasher);
 
         assertEquals(hasher.getHash("password"), profile.getPassword());
+    }
+
+    @Test
+    public void usernameExists() throws Exception {
+        ProfileValidator profile = ProfileValidator.builder()
+                .username("juser")
+                .password("password")
+                .confirmPassword("password")
+                .firstName("John")
+                .lastName("Smith")
+                .gender("male")
+                .birthday(LocalDate.now().toString()).build();
+        daoFactory.getUserDao().create(profile);
+        FormValidation formValidation = profile.checkUsername();
+
+        assertTrue(formValidation.getErrors().get("username")==FormErrors.username_exists);
     }
 }

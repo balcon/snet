@@ -17,9 +17,6 @@ import java.util.Map;
  * The {@code LoginValidator} class is a 'layer' between users input
  * and applications business logic. This class validates input data
  * and checks username and password {@see validate}.
- *
- * @author Konstantin Balykov
- * @since 0.9b
  */
 @Value
 @Builder

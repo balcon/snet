@@ -2,12 +2,11 @@ package com.epam.study.snet.servlet;
 
 import com.epam.study.snet.dao.DaoException;
 import com.epam.study.snet.dao.DaoFactory;
-import com.epam.study.snet.dao.UserDao;
-import com.epam.study.snet.enums.FormErrors;
+import com.epam.study.snet.entity.User;
 import com.epam.study.snet.model.Countries;
+import com.epam.study.snet.model.FormValidation;
 import com.epam.study.snet.model.HashPass;
 import com.epam.study.snet.validators.ProfileValidator;
-import com.epam.study.snet.entity.User;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
@@ -16,15 +15,15 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Map;
 
 @WebServlet("/registration")
 
 public class RegistrationServlet extends HttpServlet {
-    static private Logger log=Logger.getLogger(RegistrationServlet.class.getCanonicalName());
+    static private Logger log = Logger.getLogger(RegistrationServlet.class.getCanonicalName());
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.setAttribute("countries",Countries.getCountries());
+        req.setAttribute("countries", Countries.getCountries());
         req.getRequestDispatcher("/WEB-INF/pages/registration.jsp").forward(req, resp);
     }
 
@@ -40,31 +39,22 @@ public class RegistrationServlet extends HttpServlet {
                 .country(req.getParameter("country"))
                 .gender(req.getParameter("gender")).build();
 
-
-        Map<String, FormErrors> validation = profile.validate();
-
         try {
-            UserDao userDao = DaoFactory.getFactory().getUserDao();
-            if (validation.isEmpty()) {
-                if (userDao.getByUsername(profile.getUsername()) == null) {
-                    profile.hashPass(new HashPass());
-                    User user=userDao.create(profile);
-                    log.info("Registered new user ["+user.getUsername()+"](ID:["+user.getId()+"]");
-                    resp.sendRedirect(req.getContextPath() + "/login");
-                } else {
-                    validation.put("username", FormErrors.username_exists);
-                    req.setAttribute("validation", validation);
-                    req.setAttribute("countries", Countries.getCountries());
-                    req.getRequestDispatcher("/WEB-INF/pages/registration.jsp").forward(req, resp);
-                }
+            FormValidation formValidation = profile.validate();
+            if (formValidation.isValid()) formValidation = profile.checkUsername();
+            if (formValidation.isValid()) {
+                profile.hashPass(new HashPass());
+                User user = DaoFactory.getFactory().getUserDao().create(profile);
+                log.info("Registered new user [" + user.getUsername() + "](ID:[" + user.getId() + "]");
+                resp.sendRedirect(req.getContextPath() + "/login");
             } else {
-                req.setAttribute("validation", validation);
+                req.setAttribute("formValidation", formValidation);
+                //todo countries list
                 req.setAttribute("countries", Countries.getCountries());
                 req.getRequestDispatcher("/WEB-INF/pages/registration.jsp").forward(req, resp);
-
             }
         } catch (DaoException e) {
-            log.error("Trying to register a new user",e);
+            log.error("Error when registering new user", e);
             req.getRequestDispatcher("/WEB-INF/pages/errorpage.jsp").forward(req, resp);
         }
     }

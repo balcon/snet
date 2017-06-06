@@ -1,14 +1,12 @@
 package com.epam.study.snet.model;
 
-import java.util.Locale;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 public class Countries {
     private static Map<String, String> countries;
 
     static {
-        countries = new TreeMap<>();
+        countries = new HashMap<>();
         String[] isoCountries = Locale.getISOCountries();
         for (String isoCountry : isoCountries) {
             String displayCountry = new Locale("", isoCountry).getDisplayCountry(Locale.ENGLISH);

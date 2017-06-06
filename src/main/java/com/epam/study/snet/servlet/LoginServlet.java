@@ -34,16 +34,15 @@ public class LoginServlet extends HttpServlet {
             if (formValidation.isValid()) {
                 User user = DaoFactory.getFactory().getUserDao().getByUsername(validator.getUsername());
                 req.getSession().setAttribute("loggedUser", user);
-                log.info("[" + user.getUsername() + "](id:[" + user.getId() + "]) is logged in");
+                log.info("[" + user.getUsername() + "](id:[" + user.getId() + "]) logged in");
                 String contextPath = req.getContextPath();
                 resp.sendRedirect(contextPath + "/main");
             } else {
-                req.setAttribute("validation", formValidation);
                 req.setAttribute("formValidation", formValidation);
                 req.getRequestDispatcher("/WEB-INF/pages/login.jsp").forward(req, resp);
             }
         } catch (DaoException e) {
-            e.printStackTrace();
+            log.error("Error when logging in process",e);
             req.getRequestDispatcher("/WEB-INF/pages/errorpage.jsp").forward(req, resp);
         }
     }

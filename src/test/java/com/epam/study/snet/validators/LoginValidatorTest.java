@@ -1,32 +1,68 @@
 package com.epam.study.snet.validators;
 
-import com.epam.study.snet.dao.UserDao;
 import com.epam.study.snet.dao.db.mysql.MySqlDaoTests;
 import com.epam.study.snet.enums.FormErrors;
-import org.junit.Ignore;
+import com.epam.study.snet.model.FormValidation;
+import com.epam.study.snet.model.HashPass;
 import org.junit.Test;
 
-import java.util.Map;
+import java.time.LocalDate;
 
 import static org.junit.Assert.assertTrue;
 
-public class LoginValidatorTest{
-//    @Test
-//    public void correctInputs() throws Exception {
-//        LoginValidator login = LoginValidator.builder()
-//                .username("User")
-//                .password("Password").build();
-//        Map<String, FormErrors> validation = login.validate();
-//
-//        assertTrue(validation.isEmpty());
-//    }
-//    @Test
-//    public void incorrectInputs() throws Exception {
-//        LoginValidator login= LoginValidator.builder()
-//                .username("").build();
-//        Map<String, FormErrors> validation= login.validate();
-//
-//        assertTrue(validation.containsKey("username"));
-//        assertTrue(validation.containsKey("password"));
-//    }
+public class LoginValidatorTest extends MySqlDaoTests {
+
+    @Test
+    public void badPassword() throws Exception {
+        ProfileValidator profile = ProfileValidator.builder()
+                .username("juser2")
+                .password("password")
+                .confirmPassword("password")
+                .firstName("John")
+                .lastName("Smith")
+                .gender("male")
+                .birthday(LocalDate.now().toString()).build();
+        profile.hashPass(new HashPass());
+        daoFactory.getUserDao().create(profile);
+
+        LoginValidator login = LoginValidator.builder()
+                .username("juser2")
+                .password("incorrectPassword").build();
+
+        FormValidation formValidation = login.validate();
+
+        assertTrue(formValidation.getErrors().get("loginForm")== FormErrors.bad_login_password);
+    }
+
+    @Test
+    public void correctInputs() throws Exception {
+        ProfileValidator profile = ProfileValidator.builder()
+                .username("juser")
+                .password("password")
+                .confirmPassword("password")
+                .firstName("John")
+                .lastName("Smith")
+                .gender("male")
+                .birthday(LocalDate.now().toString()).build();
+        profile.hashPass(new HashPass());
+        daoFactory.getUserDao().create(profile);
+
+        LoginValidator login = LoginValidator.builder()
+                .username("juser")
+                .password("password").build();
+
+        FormValidation formValidation = login.validate();
+
+        assertTrue(formValidation.isValid());
+    }
+
+    @Test
+    public void incorrectInputs() throws Exception {
+        LoginValidator login = LoginValidator.builder()
+                .username("").build();
+        FormValidation formValidation = login.validate();
+
+        assertTrue(formValidation.getErrors().containsKey("username"));
+        assertTrue(formValidation.getErrors().containsKey("password"));
+    }
 }
