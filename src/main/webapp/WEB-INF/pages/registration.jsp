@@ -54,11 +54,11 @@
             <fmt:message var="countryTitle" bundle="${view}" key="user.country"/>
             <label class="col-md-3 control-label" for="country">${countryTitle}
             </label>
-            <jsp:useBean id="countries" scope="request" type="java.util.Map"/>
+            <jsp:useBean id="countries" scope="request" type="com.epam.study.snet.model.Countries"/>
             <div class="col-md-6">
                 <select class="form-control" id="country" name="country">
                     <option value="" hidden>${countryTitle}</option>
-                    <c:forEach var="oneCountry" items="${countries}">
+                    <c:forEach var="oneCountry" items="${countries.list}">
                         <option value="${oneCountry.key}"
                                 <c:if test='${param.country==oneCountry.key}'>selected</c:if>>
                                 ${oneCountry.value}</option>

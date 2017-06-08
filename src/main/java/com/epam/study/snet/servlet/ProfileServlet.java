@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Locale;
 
 @WebServlet("/main/profile")
 public class ProfileServlet extends HttpServlet {
@@ -23,7 +24,8 @@ public class ProfileServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.setAttribute("countries", Countries.getCountries());
+        String lang = ((String) req.getSession().getAttribute("locale")).substring(0, 2);
+        req.setAttribute("countries", new Countries(new Locale(lang)));
         req.getRequestDispatcher("/WEB-INF/pages/profile.jsp").forward(req, resp);
     }
 
@@ -68,11 +70,13 @@ public class ProfileServlet extends HttpServlet {
                         .firstName(req.getParameter("firstName"))
                         .lastName(req.getParameter("lastName"))
                         .birthday(req.getParameter("birthday"))
-                        .country(loggedUser.getCountry().getCode())
+                        .country(req.getParameter("country"))
                         .gender(req.getParameter("gender")).build();
                 formValidation = profile.validate();
         }//end of switch
         try {
+            String lang=((String)req.getSession().getAttribute("locale")).substring(0,2);
+            req.setAttribute("countries", new Countries(new Locale(lang)));
             UserDao userDao = DaoFactory.getFactory().getUserDao();
             if (formValidation.isValid()) {
                 userDao.updateById(loggedUser.getId(), profile);

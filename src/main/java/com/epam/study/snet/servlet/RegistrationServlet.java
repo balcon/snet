@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Locale;
 
 @WebServlet("/registration")
 
@@ -23,7 +24,8 @@ public class RegistrationServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.setAttribute("countries", Countries.getCountries());
+        String lang=((String)req.getSession().getAttribute("locale")).substring(0,2);
+        req.setAttribute("countries", new Countries(new Locale(lang)));
         req.getRequestDispatcher("/WEB-INF/pages/registration.jsp").forward(req, resp);
     }
 
@@ -50,7 +52,8 @@ public class RegistrationServlet extends HttpServlet {
             } else {
                 req.setAttribute("formValidation", formValidation);
                 //todo countries list
-                req.setAttribute("countries", Countries.getCountries());
+                String lang=((String)req.getSession().getAttribute("locale")).substring(0,2);
+                req.setAttribute("countries", new Countries(new Locale(lang)));
                 req.getRequestDispatcher("/WEB-INF/pages/registration.jsp").forward(req, resp);
             }
         } catch (DaoException e) {

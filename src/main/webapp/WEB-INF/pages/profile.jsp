@@ -65,9 +65,9 @@
                 <label class="control-label" for="country">
                         ${countryTitle}
                 </label>
-                <jsp:useBean id="countries" scope="request" type="java.util.Map"/>
+                <jsp:useBean id="countries" scope="request" type="com.epam.study.snet.model.Countries"/>
                 <select class="form-control" id="country" name="country">
-                    <c:forEach var="oneCountry" items="${countries}">
+                    <c:forEach var="oneCountry" items="${countries.list}">
                         <option value="${oneCountry.key}"
                                 <c:if test='${loggedUser.country.code==oneCountry.key}'>selected</c:if>>
                                 ${oneCountry.value}

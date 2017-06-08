@@ -21,7 +21,7 @@ public class PeopleServlet extends HttpServlet {
         User loggedUser = (User) req.getSession().getAttribute("loggedUser");
         try {
             People people=new People(loggedUser,req.getParameter("page"));
-            req.setAttribute("countries", Countries.getCountries());
+            req.setAttribute("countries", new Countries());
             req.setAttribute("people", people);
             req.getRequestDispatcher("/WEB-INF/pages/people.jsp").forward(req, resp);
         } catch (DaoException e) {
