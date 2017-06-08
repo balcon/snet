@@ -16,7 +16,7 @@
         </div>
     </c:if>
 
-    <jsp:useBean id="countries" scope="request" type="java.util.Map"/>
+    <jsp:useBean id="countries" scope="request" type="com.epam.study.snet.model.Countries"/>
     <c:forEach var="user" items="${people.users}">
         <c:set var="relation" value="${user.checkRelation(sessionScope.loggedUser)}"/>
         <c:set var="relationStyle"/>
@@ -39,7 +39,7 @@
                     <c:set var="fullName"
                            value="${user.firstName} ${user.lastName}"/>
                     <h4 class="media-heading"><c:out value="${fullName}"/>,
-                        <small>${countries.get(user.country.code)}
+                        <small>${countries.getName(user.country)}
                             <span class="flag-icon flag-icon-${user.country.code.toLowerCase()}"></span>
                         </small>
                     </h4>

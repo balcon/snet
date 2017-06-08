@@ -1,27 +1,31 @@
 package com.epam.study.snet.model;
 
+import com.epam.study.snet.entity.Country;
+
 import java.util.*;
 
 public class Countries {
-    private Locale locale;
+    private  Map<String, String> countries;
 
     public Countries() {
         this(Locale.ENGLISH);
     }
 
     public Countries(Locale locale) {
-        this.locale = locale;
-    }
-
-
-    public Map<String, String> getList() {
-        Map<String, String> countries = new HashMap<>();
+        countries = new HashMap<>();
         String[] isoCountries = Locale.getISOCountries();
         for (String isoCountry : isoCountries) {
             String displayCountry = new Locale("", isoCountry).getDisplayCountry(locale);
             countries.put(isoCountry, displayCountry);
         }
+    }
+
+    public Map<String, String> getList() {
         return sort(countries);
+    }
+
+    public String getName(Country country){
+        return countries.get(country.getCode());
     }
 
     private Map<String, String> sort(Map<String, String> map) {
