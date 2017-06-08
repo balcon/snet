@@ -59,6 +59,24 @@
                                initValue="${loggedUser.lastName}"
                                errors="${formValidation.errors}"/>
 
+                <%--COUNTRY INPUT--%>
+            <div class="form-group">
+                <fmt:message var="countryTitle" bundle="${view}" key="user.country"/>
+                <label class="control-label" for="country">
+                        ${countryTitle}
+                </label>
+                <jsp:useBean id="countries" scope="request" type="java.util.Map"/>
+                <select class="form-control" id="country" name="country">
+                    <c:forEach var="oneCountry" items="${countries}">
+                        <option value="${oneCountry.key}"
+                                <c:if test='${loggedUser.country.code==oneCountry.key}'>selected</c:if>>
+                                ${oneCountry.value}
+                        </option>
+                    </c:forEach>
+                </select>
+            </div>
+                <%-- end of COUNTRY input --%>
+
             <tags:typicalInput inputType="date"
                                name="birthday"
                                labelProp="user.birthday"
@@ -71,7 +89,6 @@
                 <label class="control-label" for="gender">${gender}
                 </label>
                 <select class="form-control" id="gender" name="gender">
-                    <option value="" hidden>${gender}</option>
                     <option value="MALE"
                             <c:if test='${loggedUser.gender=="MALE"}'>selected</c:if>>
                         <fmt:message bundle="${view}" key="user.gender.male"/></option>
@@ -81,6 +98,8 @@
                 </select>
             </div>
                 <%-- end of GENDER input --%>
+
+
             <input type="hidden" name="action" value="changeProfile">
             <button type="submit" class="btn btn-primary col-md-offset-3">
                 <fmt:message bundle="${view}" key="changes.save"/></button>

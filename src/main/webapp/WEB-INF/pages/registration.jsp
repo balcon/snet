@@ -64,7 +64,7 @@
                                 ${oneCountry.value}</option>
                     </c:forEach>
                 </select>
-                <c:if test='${formValidation.errors.containsKey("gender")}'>
+                <c:if test='${formValidation.errors.containsKey("country")}'>
                     <span class="glyphicon glyphicon-exclamation-sign form-control-feedback"></span>
                     <span class="help-block">
                         <small><fmt:message bundle="${errors}" key='${formValidation.errors.get("gender")}'/></small>

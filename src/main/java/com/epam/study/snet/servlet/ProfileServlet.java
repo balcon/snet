@@ -4,6 +4,7 @@ import com.epam.study.snet.dao.DaoException;
 import com.epam.study.snet.dao.DaoFactory;
 import com.epam.study.snet.dao.UserDao;
 import com.epam.study.snet.entity.User;
+import com.epam.study.snet.model.Countries;
 import com.epam.study.snet.model.FormValidation;
 import com.epam.study.snet.model.HashPass;
 import com.epam.study.snet.validators.ProfileValidator;
@@ -22,6 +23,7 @@ public class ProfileServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setAttribute("countries", Countries.getCountries());
         req.getRequestDispatcher("/WEB-INF/pages/profile.jsp").forward(req, resp);
     }
 
