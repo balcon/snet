@@ -24,8 +24,8 @@ public class ProfileServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String lang = ((String) req.getSession().getAttribute("locale")).substring(0, 2);
-        req.setAttribute("countries", new Countries(new Locale(lang)));
+        Locale locale=(Locale)req.getSession().getAttribute("locale");
+        req.setAttribute("countries", new Countries(locale));
         req.getRequestDispatcher("/WEB-INF/pages/profile.jsp").forward(req, resp);
     }
 
@@ -75,8 +75,8 @@ public class ProfileServlet extends HttpServlet {
                 formValidation = profile.validate();
         }//end of switch
         try {
-            String lang=((String)req.getSession().getAttribute("locale")).substring(0,2);
-            req.setAttribute("countries", new Countries(new Locale(lang)));
+            Locale locale=(Locale)req.getSession().getAttribute("locale");
+            req.setAttribute("countries", new Countries(locale));
             UserDao userDao = DaoFactory.getFactory().getUserDao();
             if (formValidation.isValid()) {
                 userDao.updateById(loggedUser.getId(), profile);

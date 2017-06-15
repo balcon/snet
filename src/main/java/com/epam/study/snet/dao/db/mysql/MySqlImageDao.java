@@ -38,13 +38,12 @@ public class MySqlImageDao implements ImageDao {
     }
 
     @Override
-    public byte[] read(Image image) throws DaoException {
-        long imageId = image.getId();
+    public byte[] getById(long id) throws DaoException {
         byte[] imageBytes = null;
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(
                     "SELECT image FROM snet.images WHERE imageId=?");
-            statement.setLong(1, imageId);
+            statement.setLong(1, id);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
                 imageBytes = resultSet.getBytes("image");
@@ -56,11 +55,11 @@ public class MySqlImageDao implements ImageDao {
     }
 
     @Override
-    public void removeById(long imageId) throws DaoException {
+    public void removeById(long id) throws DaoException {
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(
                     "DELETE FROM snet.images WHERE imageId=?");
-            statement.setLong(1, imageId);
+            statement.setLong(1, id);
             statement.execute();
         } catch (SQLException e) {
             throw new DaoException("Can't remove image", e);

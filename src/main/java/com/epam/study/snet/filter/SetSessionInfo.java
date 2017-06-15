@@ -40,7 +40,7 @@ public class SetSessionInfo implements Filter {
         }
         if (req.getSession().getAttribute("locale") == null) {
             String defaultLocale = req.getLocale().getLanguage() + "_" + req.getLocale().getCountry();
-            req.getSession().setAttribute("locale", defaultLocale);
+            req.getSession().setAttribute("locale", req.getLocale());
         }
         chain.doFilter(request, response);
     }

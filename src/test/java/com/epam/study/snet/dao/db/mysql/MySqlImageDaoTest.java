@@ -36,7 +36,7 @@ private ImageDao imageDao=daoFactory.getImageDao();
         InputStream inputStream = new ByteArrayInputStream(bArray1);
         Image image = imageDao.create(inputStream);
 
-        byte[] bArray2 = imageDao.read(image);
+        byte[] bArray2 = imageDao.getById(image.getId());
 
         assertTrue(Arrays.equals(bArray1,bArray2));
     }
@@ -51,7 +51,7 @@ private ImageDao imageDao=daoFactory.getImageDao();
 
         imageDao.removeById(image.getId());
 
-        byte[] bArray = imageDao.read(image);
+        byte[] bArray = imageDao.getById(image.getId());
 
         assertEquals(null,bArray);
     }

@@ -9,15 +9,6 @@
         <welcome-file>main</welcome-file>
     </welcome-file-list>
 
-    <servlet>
-        <servlet-name>mainPage</servlet-name>
-        <jsp-file>/WEB-INF/pages/main.jsp</jsp-file>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>mainPage</servlet-name>
-        <url-pattern>/main</url-pattern>
-    </servlet-mapping>
-
     <resource-ref>
         <description>DB Connection</description>
         <res-ref-name>jdbc/appname</res-ref-name>

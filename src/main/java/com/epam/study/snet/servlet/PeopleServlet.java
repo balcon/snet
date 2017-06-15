@@ -23,8 +23,8 @@ public class PeopleServlet extends HttpServlet {
         User loggedUser = (User) req.getSession().getAttribute("loggedUser");
         try {
             People people = new People(loggedUser, req.getParameter("page"));
-            String lang = ((String) req.getSession().getAttribute("locale")).substring(0, 2);
-            req.setAttribute("countries", new Countries(new Locale(lang)));
+            Locale locale=(Locale)req.getSession().getAttribute("locale");
+            req.setAttribute("countries", new Countries(locale));
             req.setAttribute("people", people);
             req.getRequestDispatcher("/WEB-INF/pages/people.jsp").forward(req, resp);
         } catch (DaoException e) {

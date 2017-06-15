@@ -7,10 +7,6 @@ import java.util.*;
 public class Countries {
     private  Map<String, String> countries;
 
-    public Countries() {
-        this(Locale.ENGLISH);
-    }
-
     public Countries(Locale locale) {
         countries = new HashMap<>();
         String[] isoCountries = Locale.getISOCountries();

@@ -7,12 +7,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Locale;
 
 @WebServlet("/locale")
 public class LocaleServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getSession().setAttribute("locale", req.getParameter("locale"));
+        Locale locale=new Locale(req.getParameter("language"),req.getParameter("country"));
+        req.getSession().setAttribute("locale", locale);
         String currentURL = req.getParameter("currentPage");
         String queryString = req.getParameter("queryString");
         if(queryString!=null) currentURL+="?"+queryString;

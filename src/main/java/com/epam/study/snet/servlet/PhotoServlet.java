@@ -17,10 +17,10 @@ import javax.servlet.http.Part;
 import java.io.IOException;
 
 @WebServlet("/main/image")
-@MultipartConfig(fileSizeThreshold = 1024 * 1024 * 2, // 2MB //TODO read about this
+@MultipartConfig(fileSizeThreshold = 1024 * 1024 * 2, // 2MB //TODO getById about this
         maxFileSize = 1024 * 1024 * 10,      // 10MB
         maxRequestSize = 1024 * 1024 * 50)   // 50MB
-public class ImageServlet extends HttpServlet {
+public class PhotoServlet extends HttpServlet {
 
 
     //TODO make rewrite image. Not add new
@@ -31,8 +31,7 @@ public class ImageServlet extends HttpServlet {
         ImageDao imageDao = DaoFactory.getFactory().getImageDao();
         byte[] imageBytes;
         long imageId = Long.valueOf(req.getParameter("imageId"));
-        Image image = Image.builder().id(imageId).build();
-        imageBytes = imageDao.read(image);
+        imageBytes = imageDao.getById(imageId);
         resp.setContentType("imageBytes/jpg");
         resp.getOutputStream().write(imageBytes);
 

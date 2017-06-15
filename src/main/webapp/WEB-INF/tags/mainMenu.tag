@@ -87,7 +87,8 @@
         <ul class="nav navbar-nav navbar-right ">
             <li>
                 <form action="${locale}" method="post" class="navbar-form  navbar-right ">
-                    <input type="hidden" name="locale" value="en_US">
+                    <input type="hidden" name="language" value="en">
+                    <input type="hidden" name="country" value="us">
                     <input type="hidden" name="currentPage" value="${currentPage}">
                     <input type="hidden" name="queryString" value="${queryString}">
                     <button class="btn locale-btn
@@ -97,7 +98,8 @@
             </li>
             <li>
                 <form action="${locale}" method="post" class="navbar-form  navbar-right ">
-                    <input type="hidden" name="locale" value="ru_RU">
+                    <input type="hidden" name="language" value="ru">
+                    <input type="hidden" name="country" value="ru">
                     <input type="hidden" name="currentPage" value="${currentPage}">
                     <input type="hidden" name="queryString" value="${queryString}">
                     <button class="btn locale-btn

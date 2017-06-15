@@ -32,7 +32,7 @@ public class ChatServlet extends HttpServlet {
             req.setAttribute("chat", chat);
             req.getRequestDispatcher("/WEB-INF/pages/chat.jsp").forward(req, resp);
         } catch (DaoException e) {
-            log.error("[" + loggedUser.getUsername() + "](id:[" + loggedUser.getId() + "]) try to read chat", e);
+            log.error("[" + loggedUser.getUsername() + "](id:[" + loggedUser.getId() + "]) try to getById chat", e);
             req.getRequestDispatcher("/WEB-INF/pages/errorpage.jsp").forward(req, resp);
         }
     }

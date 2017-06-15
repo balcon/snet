@@ -43,6 +43,9 @@
                             <span class="flag-icon flag-icon-${user.country.code.toLowerCase()}"></span>
                         </small>
                     </h4>
+                    <div class="panel panel-default">
+                        <div class="panel-body"><b>15:35:00 26.12.2017:</b> azaza</div>
+                    </div>
                 </div>
                 <div class="media-right">
                     <c:url var="urlToChat" value="/main/chat"/>
