@@ -5,13 +5,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" href="<c:url value="/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css"/>">
+    <link rel="stylesheet" href="<c:url value="/webjars/bootstrap/3.3.7/css/bootstrap.min.css"/>">
     <link rel="stylesheet" href="<c:url value="/webjars/bootstrap-fileinput/4.3.8/css/fileinput.min.css"/>">
-    <link rel="stylesheet" href="<c:url value="/webjars/bootstrap/3.3.7-1/css/bootstrap-theme.min.css"/>">
+    <link rel="stylesheet" href="<c:url value="/webjars/bootstrap/3.3.7/css/bootstrap-theme.min.css"/>">
     <link rel="stylesheet" href="<c:url value="/webjars/flag-icon-css/2.4.0/css/flag-icon.min.css"/>"/>
-    <script type="text/javascript" src="<c:url value="/webjars/bootstrap/3.3.7-1/js/bootstrap.js"/>"></script>
-    <script type="text/javascript" src="<c:url value="/webjars/jquery/1.11.1/jquery.min.js"/> "></script>
-    <meta charset="utf-8">
+
+    <script src="<c:url value="/webjars/jquery/3.2.1/jquery.min.js"/>"></script>
+    <script src="<c:url value="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"/>"></script>
+
+   <meta charset="utf-8">
     <style>
         body {
             margin-top: 10px;

@@ -193,4 +193,20 @@ public class MySqlUserDaoTest extends MySqlDaoTests {
         assertEquals(new Country("UK"), user2.getCountry());
         assertEquals(Gender.FEMALE, user2.getGender());
     }
+
+    @Test
+    public void getCountries() throws Exception {
+        ProfileValidator profile = ProfileValidator.builder()
+                .username("u6")
+                .password("pass")
+                .firstName("Timmy")
+                .lastName("Robertson")
+                .birthday(LocalDate.now().toString())
+                .country("RU")
+                .gender("MALE").build();
+        userDao.create(profile);
+        List<Country> countries = userDao.getCountries();
+
+        assertTrue(countries.contains(new Country("RU")));
+    }
 }

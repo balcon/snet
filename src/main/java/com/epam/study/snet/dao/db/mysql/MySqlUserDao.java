@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MySqlUserDao implements UserDao {
-    private static Logger log=Logger.getLogger(MySqlUserDao.class.getCanonicalName());
+    private static Logger log = Logger.getLogger(MySqlUserDao.class.getCanonicalName());
     private final DataSource dataSource;
 
     MySqlUserDao(DataSource dataSource) {
@@ -75,6 +75,26 @@ public class MySqlUserDao implements UserDao {
     public List<User> getList(User excludedUser) throws DaoException {
         String queryString = "SELECT * FROM snet.users WHERE userId!=? AND deleted=FALSE ORDER BY lastName,firstName";
         return executeGetList(queryString, excludedUser.getId());
+    }
+
+    @Override
+    public List<User> getList(User excludedUser, Country country) throws DaoException {
+        List<User> users = new ArrayList<>();
+        try (Connection connection = dataSource.getConnection()) {
+            PreparedStatement statement = connection.prepareStatement(
+                    "SELECT * FROM snet.users WHERE userId!=? AND deleted=FALSE" +
+                            " AND country=? ORDER BY lastName,firstName");
+            statement.setLong(1, excludedUser.getId());
+            statement.setString(2, country.getCode());
+            ResultSet resultSet = statement.executeQuery();
+            log.debug("MySQL SELECT [snet.users]");
+            while (resultSet.next()) {
+                users.add(getUserFromResultSet(resultSet));
+            }
+        } catch (SQLException e) {
+            throw new DaoException("Can't get userlist", e);
+        }
+        return users;
     }
 
     @Override
@@ -187,6 +207,23 @@ public class MySqlUserDao implements UserDao {
         } catch (SQLException e) {
             throw new DaoException("Can't remove user", e);
         }
+    }
+
+    @Override
+    public List<Country> getCountries() throws DaoException {
+        List<Country> countries = new ArrayList<>();
+        try (Connection connection = dataSource.getConnection()) {
+            PreparedStatement statement = connection.prepareStatement(
+                    "SELECT country FROM snet.users WHERE deleted=FALSE GROUP BY country");
+            ResultSet resultSet = statement.executeQuery();
+            log.debug("MySQL SELECT [snet.users]");
+            while (resultSet.next()) {
+                countries.add(new Country(resultSet.getString("country")));
+            }
+        } catch (SQLException e) {
+            throw new DaoException("Can't get userlist", e);
+        }
+        return countries;
     }
 
     private List<User> executeGetList(String queryString, long... param) throws DaoException {

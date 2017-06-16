@@ -17,16 +17,34 @@
     </c:if>
 
     <jsp:useBean id="countries" scope="request" type="com.epam.study.snet.model.Countries"/>
+    <div class="dropdown">
+        <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+            <fmt:message bundle="${view}" key="people.country_filter"/>
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+            <c:forEach var="oneCountry" items="${people.countries}">
+                <li>
+                    <a href="?country=${oneCountry.code}">
+                            ${countries.getName(oneCountry)}
+                        <span class="flag-icon flag-icon-${oneCountry.code.toLowerCase()} pull-right">
+
+                    </a>
+                </li>
+            </c:forEach>
+        </ul>
+    </div>
+
     <c:forEach var="user" items="${people.users}">
         <c:set var="relation" value="${user.checkRelation(sessionScope.loggedUser)}"/>
         <c:set var="relationStyle"/>
         <c:if test='${relation=="BAD"}'>
             <c:set var="relationStyle" value="relation-bad"/>
         </c:if>
-         <c:if test='${relation=="GOOD"}'>
+        <c:if test='${relation=="GOOD"}'>
             <c:set var="relationStyle" value="relation-good"/>
         </c:if>
-         <c:if test='${relation=="SAME"}'>
+        <c:if test='${relation=="SAME"}'>
             <c:set var="relationStyle" value="relation-same"/>
         </c:if>
 

@@ -22,7 +22,9 @@ public class PeopleServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         User loggedUser = (User) req.getSession().getAttribute("loggedUser");
         try {
-            People people = new People(loggedUser, req.getParameter("page"));
+            People people = new People(loggedUser
+                    ,req.getParameter("page")
+                    ,req.getParameter("country"));
             Locale locale=(Locale)req.getSession().getAttribute("locale");
             req.setAttribute("countries", new Countries(locale));
             req.setAttribute("people", people);

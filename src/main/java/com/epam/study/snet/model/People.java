@@ -3,8 +3,8 @@ package com.epam.study.snet.model;
 import com.epam.study.snet.dao.DaoException;
 import com.epam.study.snet.dao.DaoFactory;
 import com.epam.study.snet.dao.UserDao;
+import com.epam.study.snet.entity.Country;
 import com.epam.study.snet.entity.User;
-import com.epam.study.snet.enums.Relation;
 import lombok.Value;
 
 import java.util.List;
@@ -13,22 +13,26 @@ import java.util.List;
 public class People {
     final int LIMIT = 10;
     List<User> users;
+    List<Country> countries;
 
     long numberPages;
     long activePage;
-    public People(User loggedUser, String page) throws DaoException {
+
+    public People(User loggedUser, String page, String country) throws DaoException {
         UserDao userDao = DaoFactory.getFactory().getUserDao();
         long numberUsers = userDao.getNumber() - 1;
         numberPages = (numberUsers - 1) / LIMIT + 1;
         if (page != null) {
             activePage = Integer.valueOf(page);
             if (activePage > 0)
-               users=userDao.getList(loggedUser,(activePage-1)*LIMIT,LIMIT);
-            else
-                users=userDao.getList(loggedUser);
+                users = userDao.getList(loggedUser, (activePage - 1) * LIMIT, LIMIT);
+            else if (country != null) users = userDao.getList(loggedUser, new Country(country));
+            else users = userDao.getList(loggedUser);
         } else {
             activePage = 1;
-            users=userDao.getList(loggedUser,(activePage-1)*LIMIT,LIMIT);
+            users = userDao.getList(loggedUser, (activePage - 1) * LIMIT, LIMIT);
         }
+
+        countries = userDao.getCountries();
     }
 }

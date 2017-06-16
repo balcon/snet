@@ -1,5 +1,6 @@
 package com.epam.study.snet.dao;
 
+import com.epam.study.snet.entity.Country;
 import com.epam.study.snet.entity.User;
 import com.epam.study.snet.validators.ProfileValidator;
 
@@ -11,6 +12,8 @@ public interface UserDao {
     List<User> getList() throws DaoException;
 
     List<User> getList(User excludedUser) throws DaoException;
+
+    List<User> getList(User excludedUser, Country country) throws DaoException;
 
     List<User> getList(User excludedUser, long skip, int limit) throws DaoException;
 
@@ -25,4 +28,6 @@ public interface UserDao {
     void updateById(long id, ProfileValidator profile) throws DaoException;
 
     void removeById(long id) throws DaoException;
+
+    List<Country> getCountries() throws DaoException;
 }
