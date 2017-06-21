@@ -10,24 +10,34 @@
 <jsp:useBean id="people" scope="request" type="com.epam.study.snet.model.People"/>
 
 <tags:mainMenu active="people">
+    <div class="col-xs-offset-4">
+        <h3>
+            <fmt:message bundle="${view}" key="titles.users"/>
+        </h3>
+    </div>
     <c:if test="${empty people.users}">
         <div class="alert alert-info">
             <fmt:message bundle="${view}" key="people.no_people"/>
         </div>
     </c:if>
-
     <jsp:useBean id="countries" scope="request" type="com.epam.study.snet.model.Countries"/>
-    <div class="dropdown">
-        <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+    <div class="dropdown text-right">
+        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
             <fmt:message bundle="${view}" key="people.country_filter"/>
             <span class="caret"></span>
         </button>
-        <ul class="dropdown-menu">
+        <ul class="dropdown-menu dropdown-menu-right">
+            <li>
+                <a href='<c:url value="/main/people"/>'>
+                    <fmt:message bundle="${view}" key="pagination.show_all"/>
+                </a>
+            </li>
+            <li class="divider"></li>
             <c:forEach var="oneCountry" items="${people.countries}">
                 <li>
                     <a href="?country=${oneCountry.code}">
                             ${countries.getName(oneCountry)}
-                        <span class="flag-icon flag-icon-${oneCountry.code.toLowerCase()} pull-right">
+                        <span class="flag-icon flag-icon-${oneCountry.code.toLowerCase()} pull-right"></span>
 
                     </a>
                 </li>
@@ -75,12 +85,17 @@
     <c:url var="urlToPeople" value="/main/people"/>
     <c:set var="numberPages" value="${people.numberPages}"/>
     <c:set var="activePage" value="${people.activePage}"/>
+    <c:set var="country" value="${param.country}"/>
+    <c:if test="${!empty country}">
+        <c:set var="country" value="&country=${param.country}"/>
+    </c:if>
+
     <c:if test="${numberPages>1&&activePage!=0}">
         <div class="text-center">
             <ul class="pagination">
                 <c:forEach var="page" begin="1" end="${numberPages}">
                     <li <c:if test="${page==activePage}">class="active"</c:if>>
-                        <a href="${urlToPeople}?page=${page}">${page}</a></li>
+                        <a href="${urlToPeople}?page=${page}${country}">${page}</a></li>
                 </c:forEach>
                 <li><a href="${urlToPeople}?page=0">
                     <fmt:message bundle="${view}" key="pagination.show_all"/>

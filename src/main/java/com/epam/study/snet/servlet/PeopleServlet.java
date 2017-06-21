@@ -21,11 +21,11 @@ public class PeopleServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         User loggedUser = (User) req.getSession().getAttribute("loggedUser");
+        Locale locale=(Locale)req.getSession().getAttribute("locale");
         try {
             People people = new People(loggedUser
                     ,req.getParameter("page")
                     ,req.getParameter("country"));
-            Locale locale=(Locale)req.getSession().getAttribute("locale");
             req.setAttribute("countries", new Countries(locale));
             req.setAttribute("people", people);
             req.getRequestDispatcher("/WEB-INF/pages/people.jsp").forward(req, resp);

@@ -205,8 +205,23 @@ public class MySqlUserDaoTest extends MySqlDaoTests {
                 .country("RU")
                 .gender("MALE").build();
         userDao.create(profile);
-        List<Country> countries = userDao.getCountries();
+        User user = userDao.create(testProfile);
+        List<Country> countries = userDao.getCountries(user);
 
         assertTrue(countries.contains(new Country("RU")));
+    }
+
+    @Test
+    public void getFilteredUserList() throws Exception {
+        dropH2Schema();
+        createH2Schema();
+        ProfileValidator profile = ProfileValidator.builder()
+                .username("u01")
+                .password("pass")
+                .firstName("test")
+                .lastName("test")
+                .country("US")
+                .birthday(LocalDate.now().toString())
+                .gender("MALE").build();
     }
 }

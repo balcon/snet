@@ -98,6 +98,28 @@ public class MySqlUserDao implements UserDao {
     }
 
     @Override
+    public List<User> getList(User excludedUser, Country country, long skip, int limit) throws DaoException {
+        List<User> users = new ArrayList<>();
+        try (Connection connection = dataSource.getConnection()) {
+            PreparedStatement statement = connection.prepareStatement(
+                    "SELECT * FROM snet.users WHERE userId!=? AND deleted=FALSE" +
+                            " AND country=? ORDER BY lastName,firstName LIMIT ?,?");
+            statement.setLong(1, excludedUser.getId());
+            statement.setString(2, country.getCode());
+            statement.setLong(3, skip);
+            statement.setLong(4, limit);
+            ResultSet resultSet = statement.executeQuery();
+            log.debug("MySQL SELECT [snet.users]");
+            while (resultSet.next()) {
+                users.add(getUserFromResultSet(resultSet));
+            }
+        } catch (SQLException e) {
+            throw new DaoException("Can't get userlist", e);
+        }
+        return users;
+    }
+
+    @Override
     public List<User> getList(User excludedUser, long skip, int limit) throws DaoException {
         String queryString = "SELECT * FROM snet.users WHERE userId!=? AND deleted=FALSE" +
                 " ORDER BY lastName,firstName LIMIT ?,?";
@@ -142,14 +164,34 @@ public class MySqlUserDao implements UserDao {
 
     @Override
     public long getNumber() throws DaoException {
-        int numberUsers = 0;
+        long numberUsers = 0;
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(
                     "SELECT COUNT(*) FROM snet.users WHERE deleted=FALSE");
             ResultSet resultSet = statement.executeQuery();
             log.debug("MySQL SELECT [snet.users]");
             if (resultSet.next()) {
-                numberUsers = resultSet.getInt(1);
+                numberUsers = resultSet.getLong(1);
+            }
+        } catch (SQLException e) {
+            throw new DaoException("Can't get numberm users", e);
+        }
+        return numberUsers;
+    }
+
+    @Override
+    public long getNumber(User excludedUser, Country country) throws DaoException {
+        long numberUsers = 0;
+        try (Connection connection = dataSource.getConnection()) {
+            PreparedStatement statement = connection.prepareStatement(
+                    "SELECT COUNT(*) FROM snet.users WHERE deleted=FALSE" +
+                            " AND userId!=? AND country=?");
+            statement.setLong(1,excludedUser.getId());
+            statement.setString(2,country.getCode());
+            ResultSet resultSet = statement.executeQuery();
+            log.debug("MySQL SELECT [snet.users]");
+            if (resultSet.next()) {
+                numberUsers = resultSet.getLong(1);
             }
         } catch (SQLException e) {
             throw new DaoException("Can't get numberm users", e);
@@ -210,11 +252,13 @@ public class MySqlUserDao implements UserDao {
     }
 
     @Override
-    public List<Country> getCountries() throws DaoException {
+    public List<Country> getCountries(User excludedUser) throws DaoException {
         List<Country> countries = new ArrayList<>();
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(
-                    "SELECT country FROM snet.users WHERE deleted=FALSE GROUP BY country");
+                    "SELECT country FROM snet.users " +
+                            "WHERE deleted=FALSE AND userId!=? GROUP BY country");
+            statement.setLong(1,excludedUser.getId());
             ResultSet resultSet = statement.executeQuery();
             log.debug("MySQL SELECT [snet.users]");
             while (resultSet.next()) {

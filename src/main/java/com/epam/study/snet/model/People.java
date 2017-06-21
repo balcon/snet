@@ -6,33 +6,48 @@ import com.epam.study.snet.dao.UserDao;
 import com.epam.study.snet.entity.Country;
 import com.epam.study.snet.entity.User;
 import lombok.Value;
+import lombok.experimental.NonFinal;
 
 import java.util.List;
 
 @Value
 public class People {
     final int LIMIT = 10;
+    @NonFinal
     List<User> users;
     List<Country> countries;
 
     long numberPages;
     long activePage;
 
-    public People(User loggedUser, String page, String country) throws DaoException {
+    public People(User loggedUser, String page, String countryCode) throws DaoException {
         UserDao userDao = DaoFactory.getFactory().getUserDao();
-        long numberUsers = userDao.getNumber() - 1;
-        numberPages = (numberUsers - 1) / LIMIT + 1;
-        if (page != null) {
-            activePage = Integer.valueOf(page);
-            if (activePage > 0)
-                users = userDao.getList(loggedUser, (activePage - 1) * LIMIT, LIMIT);
-            else if (country != null) users = userDao.getList(loggedUser, new Country(country));
-            else users = userDao.getList(loggedUser);
+        if (countryCode != null) {
+            Country country=new Country(countryCode);
+            long numberUsers=userDao.getNumber(loggedUser,country);
+            numberPages=(numberUsers-1)/LIMIT+1;
+            if (page != null) {
+                activePage = Integer.valueOf(page);
+                if (activePage > 0)
+                    users = userDao.getList(loggedUser, country, (activePage - 1) * LIMIT, LIMIT);
+                else users = userDao.getList(loggedUser,country);
+            } else {
+                activePage = 1;
+                users = userDao.getList(loggedUser, country, (activePage - 1) * LIMIT, LIMIT);
+            }
         } else {
-            activePage = 1;
-            users = userDao.getList(loggedUser, (activePage - 1) * LIMIT, LIMIT);
+            long numberUsers = userDao.getNumber() - 1;
+            numberPages = (numberUsers - 1) / LIMIT + 1;
+            if (page != null) {
+                activePage = Integer.valueOf(page);
+                if (activePage > 0)
+                    users = userDao.getList(loggedUser, (activePage - 1) * LIMIT, LIMIT);
+                else users = userDao.getList(loggedUser);
+            } else {
+                activePage = 1;
+                users = userDao.getList(loggedUser, (activePage - 1) * LIMIT, LIMIT);
+            }
         }
-
-        countries = userDao.getCountries();
+        countries = userDao.getCountries(loggedUser);
     }
 }

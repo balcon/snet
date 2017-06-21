@@ -15,6 +15,8 @@ public interface UserDao {
 
     List<User> getList(User excludedUser, Country country) throws DaoException;
 
+    List<User> getList(User excludedUser, Country country, long skip, int limit) throws DaoException;
+
     List<User> getList(User excludedUser, long skip, int limit) throws DaoException;
 
     User getById(long id) throws DaoException;
@@ -23,11 +25,13 @@ public interface UserDao {
 
     long getNumber() throws DaoException;
 
+    long getNumber(User excludedUser, Country country) throws DaoException;
+
     void update(User user) throws DaoException;
 
     void updateById(long id, ProfileValidator profile) throws DaoException;
 
     void removeById(long id) throws DaoException;
 
-    List<Country> getCountries() throws DaoException;
+    List<Country> getCountries(User excludedUser) throws DaoException;
 }
