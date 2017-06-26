@@ -70,7 +70,7 @@ public class MySqlMessageDao implements MessageDao {
                 messages.add(getMessageFromResultSet(resultSet));
             }
         } catch (SQLException e) {
-            throw new DaoException("Can't get messages list", e);
+            throw new DaoException("Can't getByUser messages list", e);
         }
         return messages;
 
@@ -138,7 +138,7 @@ public class MySqlMessageDao implements MessageDao {
                 message = getMessageFromResultSet(resultSet);
             }
         } catch (SQLException e) {
-            throw new DaoException("Can't get messages list", e);
+            throw new DaoException("Can't getByUser messages list", e);
         }
         return message;
     }
@@ -155,7 +155,7 @@ public class MySqlMessageDao implements MessageDao {
                 messages.add(getMessageFromResultSet(resultSet));
             }
         } catch (SQLException e) {
-            throw new DaoException("Can't get messages list", e);
+            throw new DaoException("Can't getByUser messages list", e);
         }
         return messages;
     }
@@ -185,7 +185,7 @@ public class MySqlMessageDao implements MessageDao {
                 numberUnreadMessages = resultSet.getInt(1);
             }
         } catch (SQLException e) {
-            throw new DaoException("Can't get number of messages", e);
+            throw new DaoException("Can't getByUser number of messages", e);
         }
         return numberUnreadMessages;
     }

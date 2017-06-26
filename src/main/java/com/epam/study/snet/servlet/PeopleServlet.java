@@ -31,7 +31,7 @@ public class PeopleServlet extends HttpServlet {
             req.getRequestDispatcher("/WEB-INF/pages/people.jsp").forward(req, resp);
         } catch (DaoException e) {
             log.error("[" + loggedUser.getId() + "][" + loggedUser.getUsername() +
-                    "] try to get users list", e);
+                    "] try to getByUser users list", e);
             req.getRequestDispatcher("/WEB-INF/pages/errorpage.jsp").forward(req, resp);
         }
     }

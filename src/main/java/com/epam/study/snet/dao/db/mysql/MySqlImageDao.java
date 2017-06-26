@@ -49,7 +49,7 @@ public class MySqlImageDao implements ImageDao {
                 imageBytes = resultSet.getBytes("image");
             }
         } catch (SQLException e) {
-            throw new DaoException("Can't get image", e);
+            throw new DaoException("Can't getByUser image", e);
         }
         return imageBytes;
     }

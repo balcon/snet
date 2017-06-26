@@ -22,6 +22,13 @@ CREATE TABLE snet.messages (
   unread BOOL DEFAULT TRUE
 );
 
+CREATE TABLE snet.status_messages (
+  messageId BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  authorId BIGINT NOT NULL,
+  sendingTime DATETIME NOT NULL,
+  messageBody TEXT
+);
+
 CREATE TABLE snet.images(
   imageId BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   image BLOB

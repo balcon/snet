@@ -15,11 +15,6 @@
             <fmt:message bundle="${view}" key="titles.users"/>
         </h3>
     </div>
-    <c:if test="${empty people.users}">
-        <div class="alert alert-info">
-            <fmt:message bundle="${view}" key="people.no_people"/>
-        </div>
-    </c:if>
     <jsp:useBean id="countries" scope="request" type="com.epam.study.snet.model.Countries"/>
     <div class="dropdown text-right">
         <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
@@ -44,7 +39,11 @@
             </c:forEach>
         </ul>
     </div>
-
+    <c:if test="${empty people.users}">
+        <div class="alert alert-info">
+            <fmt:message bundle="${view}" key="people.no_people"/>
+        </div>
+    </c:if>
     <c:forEach var="user" items="${people.users}">
         <c:set var="relation" value="${user.checkRelation(sessionScope.loggedUser)}"/>
         <c:set var="relationStyle"/>
@@ -63,21 +62,20 @@
                 <div class="media-left">
                     <img src="<c:url value="${user.photo.sourcePath}"/>" class="media-object list-photo">
                 </div>
+
                 <div class="media-body">
                     <c:set var="fullName"
                            value="${user.firstName} ${user.lastName}"/>
-                    <h4 class="media-heading"><c:out value="${fullName}"/>,
-                        <small>${countries.getName(user.country)}
-                            <span class="flag-icon flag-icon-${user.country.code.toLowerCase()}"></span>
-                        </small>
-                    </h4>
+                    <a href="<c:url value="/main/chat?companionId=${user.id}"/>" style="text-decoration: none;">
+                        <h4 class="media-heading"><c:out value="${fullName}"/>,
+                            <small>${countries.getName(user.country)}
+                                <span class="flag-icon flag-icon-${user.country.code.toLowerCase()}"></span>
+                            </small>
+                        </h4>
+                    </a>
                     <div class="panel panel-default">
                         <div class="panel-body"><b>15:35:00 26.12.2017:</b> azaza</div>
                     </div>
-                </div>
-                <div class="media-right">
-                    <c:url var="urlToChat" value="/main/chat"/>
-                    <a href="${urlToChat}?companionId=${user.id}" style="text-decoration: none;">Chat</a>
                 </div>
             </div>
         </div>

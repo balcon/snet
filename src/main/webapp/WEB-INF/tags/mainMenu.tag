@@ -13,7 +13,7 @@
     <script src="<c:url value="/webjars/jquery/3.2.1/jquery.min.js"/>"></script>
     <script src="<c:url value="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"/>"></script>
 
-   <meta charset="utf-8">
+    <meta charset="utf-8">
     <style>
         body {
             margin-top: 10px;
@@ -41,9 +41,10 @@
             border-color: #00DD00;
         }
 
-        div.media.relation-same{
+        div.media.relation-same {
             border-color: #00AAFF;
         }
+
         img.chat-photo {
             height: 72px;
             width: 54px;

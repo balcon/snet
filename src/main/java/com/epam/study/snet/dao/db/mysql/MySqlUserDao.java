@@ -92,7 +92,7 @@ public class MySqlUserDao implements UserDao {
                 users.add(getUserFromResultSet(resultSet));
             }
         } catch (SQLException e) {
-            throw new DaoException("Can't get userlist", e);
+            throw new DaoException("Can't getByUser userlist", e);
         }
         return users;
     }
@@ -114,7 +114,7 @@ public class MySqlUserDao implements UserDao {
                 users.add(getUserFromResultSet(resultSet));
             }
         } catch (SQLException e) {
-            throw new DaoException("Can't get userlist", e);
+            throw new DaoException("Can't getByUser userlist", e);
         }
         return users;
     }
@@ -139,7 +139,7 @@ public class MySqlUserDao implements UserDao {
                 user = getUserFromResultSet(resultSet);
             }
         } catch (SQLException e) {
-            throw new DaoException("Can't get user", e);
+            throw new DaoException("Can't getByUser user", e);
         }
         return user;
     }
@@ -157,7 +157,7 @@ public class MySqlUserDao implements UserDao {
                 user = getUserFromResultSet(resultSet);
             }
         } catch (SQLException e) {
-            throw new DaoException("Can't get user", e);
+            throw new DaoException("Can't getByUser user", e);
         }
         return user;
     }
@@ -174,7 +174,7 @@ public class MySqlUserDao implements UserDao {
                 numberUsers = resultSet.getLong(1);
             }
         } catch (SQLException e) {
-            throw new DaoException("Can't get numberm users", e);
+            throw new DaoException("Can't getByUser numberm users", e);
         }
         return numberUsers;
     }
@@ -194,7 +194,7 @@ public class MySqlUserDao implements UserDao {
                 numberUsers = resultSet.getLong(1);
             }
         } catch (SQLException e) {
-            throw new DaoException("Can't get numberm users", e);
+            throw new DaoException("Can't getByUser numberm users", e);
         }
         return numberUsers;
     }
@@ -265,7 +265,7 @@ public class MySqlUserDao implements UserDao {
                 countries.add(new Country(resultSet.getString("country")));
             }
         } catch (SQLException e) {
-            throw new DaoException("Can't get userlist", e);
+            throw new DaoException("Can't getByUser userlist", e);
         }
         return countries;
     }
@@ -283,7 +283,7 @@ public class MySqlUserDao implements UserDao {
                 users.add(getUserFromResultSet(resultSet));
             }
         } catch (SQLException e) {
-            throw new DaoException("Can't get userlist", e);
+            throw new DaoException("Can't getByUser userlist", e);
         }
         return users;
     }

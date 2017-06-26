@@ -59,7 +59,7 @@ class MySqlRelationshipDao implements RelationshipDao {
                         new Country(country1));
             }
         } catch (SQLException e) {
-            throw new DaoException("Can't get list of relations", e);
+            throw new DaoException("Can't getByUser list of relations", e);
         }
         return countries;
     }
@@ -83,7 +83,7 @@ class MySqlRelationshipDao implements RelationshipDao {
                         : Relation.GOOD;
             }
         } catch (SQLException e) {
-            throw new DaoException("Can't get relation", e);
+            throw new DaoException("Can't getByUser relation", e);
         }
         return relation;
     }

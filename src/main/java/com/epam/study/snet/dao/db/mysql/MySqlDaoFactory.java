@@ -17,7 +17,7 @@ public class MySqlDaoFactory implements DaoFactory {
                 InitialContext initContext = new InitialContext();
                 dataSource = (DataSource) initContext.lookup("java:comp/env/jdbc/appname");
             } catch (NamingException e) {
-                throw new DaoException("Can't get context", e);
+                throw new DaoException("Can't getByUser context", e);
             }
         }
     }
@@ -34,6 +34,11 @@ public class MySqlDaoFactory implements DaoFactory {
     @Override
     public RelationshipDao getRelationshipDao() {
         return new MySqlRelationshipDao(dataSource);
+    }
+
+    @Override
+    public StatusMessageDao getStatusMessageDao(UserDao userDao) {
+        return new MySqlStatusMessageDao(dataSource, userDao);
     }
 
     @Override

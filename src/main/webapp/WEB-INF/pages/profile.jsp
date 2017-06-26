@@ -13,8 +13,7 @@
 <tags:mainMenu active="profile">
     <div class="col-xs-offset-4">
         <h3>
-            <span class="flag-icon flag-icon-${loggedUser.country.code.toLowerCase()}"></span>
-            <fmt:message bundle="${view}" key="titles.profile"/>
+             <fmt:message bundle="${view}" key="titles.profile"/>
             <u>${loggedUser.username}</u>
         </h3>
     </div>
@@ -32,7 +31,7 @@
     </c:if>
     <div class="col-md-3">
         <img src="<c:url value="${loggedUser.photo.sourcePath}"/>" class="rounded img-thumbnail">
-        <form class="text-center" action="<c:url value="/main/image"/>" method="post" enctype="multipart/form-data">
+        <form action="<c:url value="/main/image"/>" method="post" enctype="multipart/form-data">
             <button class="btn btn-primary btn-file btn-sm">
                 <div id="imageBtnLabel">
                     <span class="glyphicon glyphicon-folder-open"></span>

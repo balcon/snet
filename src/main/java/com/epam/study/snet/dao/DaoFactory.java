@@ -1,6 +1,7 @@
 package com.epam.study.snet.dao;
 
 import com.epam.study.snet.dao.db.mysql.MySqlDaoFactory;
+import com.epam.study.snet.entity.StatusMessage;
 
 public interface DaoFactory {
     static DaoFactory getFactory() throws DaoException {
@@ -10,4 +11,5 @@ public interface DaoFactory {
     MessageDao getMessageDao(UserDao userDao);
     ImageDao getImageDao();
     RelationshipDao getRelationshipDao();
+    StatusMessageDao getStatusMessageDao(UserDao userDao);
 }

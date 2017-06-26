@@ -9,6 +9,7 @@ import lombok.Value;
 import lombok.experimental.NonFinal;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
 @Value
 @Builder
@@ -26,5 +27,9 @@ public class User {
 
     public Relation checkRelation(User otherUser) {
         return country.checkRelation(otherUser.getCountry());
+    }
+
+    public long getAge(){
+        return ChronoUnit.YEARS.between(birthday, LocalDate.now());
     }
 }
