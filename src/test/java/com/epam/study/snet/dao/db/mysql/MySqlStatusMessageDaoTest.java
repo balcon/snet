@@ -4,6 +4,7 @@ import com.epam.study.snet.dao.StatusMessageDao;
 import com.epam.study.snet.entity.StatusMessage;
 import com.epam.study.snet.entity.User;
 import com.epam.study.snet.validators.ProfileValidator;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -25,6 +26,7 @@ public class MySqlStatusMessageDaoTest extends MySqlDaoTests{
     }
 
     @Test
+    @Ignore
     public void getLastStatusMessage() throws Exception {
         User user=daoFactory.getUserDao().create(userProfie);
         StatusMessageDao statusMessageDao = daoFactory.getStatusMessageDao(daoFactory.getUserDao());

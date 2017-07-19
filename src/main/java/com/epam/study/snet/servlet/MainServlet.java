@@ -2,6 +2,7 @@ package com.epam.study.snet.servlet;
 
 import com.epam.study.snet.dao.DaoException;
 import com.epam.study.snet.dao.DaoFactory;
+import com.epam.study.snet.dao.UserDao;
 import com.epam.study.snet.entity.User;
 import com.epam.study.snet.model.Countries;
 import com.epam.study.snet.model.People;
@@ -14,15 +15,25 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 @WebServlet("/main")
 public class MainServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Locale locale = (Locale) req.getSession().getAttribute("locale");
-        User loggedUser = (User) req.getSession().getAttribute("loggedUser");
+        User user;
+
         try {
-            List<User> friends = DaoFactory.getFactory().getUserDao().getList(loggedUser,loggedUser.getCountry());
+            UserDao userDao = DaoFactory.getFactory().getUserDao();
+            if (req.getParameter("id") == null) {
+                user = (User) req.getSession().getAttribute("loggedUser");
+            } else {
+                long id = Long.valueOf(req.getParameter("id"));
+                user = userDao.getById(id);
+            }
+            List<User> friends = userDao.getList(user, user.getCountry());
+            req.setAttribute("user", user);
             req.setAttribute("countries", new Countries(locale));
             req.setAttribute("friends", friends);
         } catch (DaoException e) {
@@ -34,6 +45,6 @@ public class MainServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        
+
     }
 }

@@ -39,6 +39,7 @@
             </c:forEach>
         </ul>
     </div>
+
     <c:if test="${empty people.users}">
         <div class="alert alert-info">
             <fmt:message bundle="${view}" key="people.no_people"/>
@@ -66,7 +67,7 @@
                 <div class="media-body">
                     <c:set var="fullName"
                            value="${user.firstName} ${user.lastName}"/>
-                    <a href="<c:url value="/main/chat?companionId=${user.id}"/>" style="text-decoration: none;">
+                    <a href="<c:url value="/main?id=${user.id}"/>" style="text-decoration: none;">
                         <h4 class="media-heading"><c:out value="${fullName}"/>,
                             <small>${countries.getName(user.country)}
                                 <span class="flag-icon flag-icon-${user.country.code.toLowerCase()}"></span>
@@ -76,6 +77,10 @@
                     <div class="panel panel-default">
                         <div class="panel-body"><b>15:35:00 26.12.2017:</b> azaza</div>
                     </div>
+                </div>
+                <div class="media-right">
+                    <a href="<c:url value="/main/chat?companionId=${user.id}"/>" class="btn btn-link btn-lg">
+                        <span class="glyphicon glyphicon-envelope"></span></a>
                 </div>
             </div>
         </div>
