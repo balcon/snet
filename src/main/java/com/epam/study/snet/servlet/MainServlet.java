@@ -1,5 +1,6 @@
 package com.epam.study.snet.servlet;
 
+import com.epam.study.snet.beans.Main;
 import com.epam.study.snet.dao.DaoException;
 import com.epam.study.snet.dao.DaoFactory;
 import com.epam.study.snet.dao.UserDao;
@@ -23,7 +24,6 @@ public class MainServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Locale locale = (Locale) req.getSession().getAttribute("locale");
         User user;
-
         try {
             UserDao userDao = DaoFactory.getFactory().getUserDao();
             if (req.getParameter("id") == null) {
@@ -32,10 +32,11 @@ public class MainServlet extends HttpServlet {
                 long id = Long.valueOf(req.getParameter("id"));
                 user = userDao.getById(id);
             }
-            List<User> friends = userDao.getList(user, user.getCountry());
-            req.setAttribute("user", user);
-            req.setAttribute("countries", new Countries(locale));
-            req.setAttribute("friends", friends);
+            Main main=new Main();
+            main.setUser(user);
+            main.setCountries(new Countries(locale));
+            main.setCompatriots(userDao.getList(user, user.getCountry()));
+            req.setAttribute("main", main);
         } catch (DaoException e) {
             e.printStackTrace();
         }
