@@ -2,6 +2,7 @@ package com.epam.study.snet.servlet;
 
 import com.epam.study.snet.dao.DaoException;
 import com.epam.study.snet.dao.DaoFactory;
+import com.epam.study.snet.dao.StatusMessageDao;
 import com.epam.study.snet.entity.User;
 import com.epam.study.snet.model.FormValidation;
 import com.epam.study.snet.validators.LoginValidator;
@@ -32,7 +33,8 @@ public class LoginServlet extends HttpServlet {
         try {
             FormValidation formValidation = validator.validate();
             if (formValidation.isValid()) {
-                User user = DaoFactory.getFactory().getUserDao().getByUsername(validator.getUsername());
+                StatusMessageDao statusMessageDao=DaoFactory.getFactory().getStatusMessageDao();
+                User user = DaoFactory.getFactory().getUserDao(statusMessageDao).getByUsername(validator.getUsername());
                 req.getSession().setAttribute("loggedUser", user);
                 log.info("[" + user.getUsername() + "](id:[" + user.getId() + "]) logged in");
                 String contextPath = req.getContextPath();

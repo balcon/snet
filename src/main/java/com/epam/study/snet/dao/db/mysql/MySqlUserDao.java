@@ -1,8 +1,10 @@
 package com.epam.study.snet.dao.db.mysql;
 
 import com.epam.study.snet.dao.DaoException;
+import com.epam.study.snet.dao.StatusMessageDao;
 import com.epam.study.snet.dao.UserDao;
 import com.epam.study.snet.entity.Country;
+import com.epam.study.snet.entity.StatusMessage;
 import com.epam.study.snet.entity.User;
 import com.epam.study.snet.enums.Gender;
 import com.epam.study.snet.model.Image;
@@ -10,6 +12,7 @@ import com.epam.study.snet.validators.ProfileValidator;
 import org.apache.log4j.Logger;
 
 import javax.sql.DataSource;
+import java.net.StandardSocketOptions;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -18,9 +21,11 @@ import java.util.List;
 public class MySqlUserDao implements UserDao {
     private static Logger log = Logger.getLogger(MySqlUserDao.class.getCanonicalName());
     private final DataSource dataSource;
+    private final StatusMessageDao statusMessageDao;
 
-    MySqlUserDao(DataSource dataSource) {
+    MySqlUserDao(DataSource dataSource,StatusMessageDao statusMessageDao) {
         this.dataSource = dataSource;
+        this.statusMessageDao=statusMessageDao;
     }
 
     public User create(ProfileValidator profile) throws DaoException {
@@ -288,15 +293,17 @@ public class MySqlUserDao implements UserDao {
         return users;
     }
 
-    private User getUserFromResultSet(ResultSet resultSet) throws SQLException {
+    private User getUserFromResultSet(ResultSet resultSet) throws DaoException, SQLException {
+        long userId=resultSet.getLong("userId");
         Date birthday = resultSet.getDate("birthday");
         String gender = resultSet.getString("gender");
         String country = resultSet.getString("country");
         Long imageId = resultSet.getLong("imageId");
         Image photo = Image.builder().id(imageId).build();
+        StatusMessage statusMessage=statusMessageDao.getByUserId(userId);
 
         return User.builder()
-                .id(resultSet.getLong("userId"))
+                .id(userId)
                 .username(resultSet.getString("username"))
                 .password(resultSet.getString("passHash"))
                 .firstName(resultSet.getString("firstName"))
@@ -305,6 +312,7 @@ public class MySqlUserDao implements UserDao {
                 .country(new Country(country))
                 .gender(gender.equals("MALE") ? Gender.MALE : Gender.FEMALE)
                 .photo(photo)
+                .statusMessage(statusMessage)
                 .deleted(resultSet.getBoolean("deleted")).build();
     }
 }

@@ -1,9 +1,6 @@
 package com.epam.study.snet.servlet;
 
-import com.epam.study.snet.dao.DaoException;
-import com.epam.study.snet.dao.DaoFactory;
-import com.epam.study.snet.dao.MessageDao;
-import com.epam.study.snet.dao.UserDao;
+import com.epam.study.snet.dao.*;
 import com.epam.study.snet.entity.Message;
 import com.epam.study.snet.entity.User;
 import com.epam.study.snet.enums.FormErrors;
@@ -41,7 +38,8 @@ public class ChatServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         User sender = (User) req.getSession().getAttribute("loggedUser");
         try {
-            UserDao userDao = DaoFactory.getFactory().getUserDao();
+            StatusMessageDao statusMessageDao=DaoFactory.getFactory().getStatusMessageDao();
+            UserDao userDao = DaoFactory.getFactory().getUserDao(statusMessageDao);
             MessageDao messageDao = DaoFactory.getFactory().getMessageDao(userDao);
             User receiver = userDao.getById(Long.valueOf(req.getParameter("companionId")));
 

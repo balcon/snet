@@ -2,6 +2,7 @@ package com.epam.study.snet.servlet;
 
 import com.epam.study.snet.dao.DaoFactory;
 import com.epam.study.snet.dao.ImageDao;
+import com.epam.study.snet.dao.StatusMessageDao;
 import com.epam.study.snet.dao.UserDao;
 import com.epam.study.snet.entity.User;
 import com.epam.study.snet.model.Image;
@@ -48,7 +49,8 @@ public class PhotoServlet extends HttpServlet {
         image = imageDao.create(imagePart.getInputStream());
         //TODO make better
         User user = User.builder().id(loggedUser.getId()).photo(image).build();
-        UserDao userDao = DaoFactory.getFactory().getUserDao();
+        StatusMessageDao statusMessageDao=DaoFactory.getFactory().getStatusMessageDao();
+        UserDao userDao = DaoFactory.getFactory().getUserDao(statusMessageDao);
         userDao.update(user);
         req.getSession().setAttribute("loggedUser", userDao.getById(loggedUser.getId()));
         String contextPath = req.getContextPath();

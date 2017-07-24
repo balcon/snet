@@ -2,6 +2,7 @@ package com.epam.study.snet.model;
 
 import com.epam.study.snet.dao.DaoException;
 import com.epam.study.snet.dao.DaoFactory;
+import com.epam.study.snet.dao.StatusMessageDao;
 import com.epam.study.snet.dao.UserDao;
 import com.epam.study.snet.entity.Country;
 import com.epam.study.snet.entity.User;
@@ -21,7 +22,8 @@ public class People {
     long activePage;
 
     public People(User loggedUser, String page, String countryCode) throws DaoException {
-        UserDao userDao = DaoFactory.getFactory().getUserDao();
+        StatusMessageDao statusMessageDao=DaoFactory.getFactory().getStatusMessageDao();
+        UserDao userDao = DaoFactory.getFactory().getUserDao(statusMessageDao);
         if (countryCode != null) {
             Country country=new Country(countryCode);
             long numberUsers=userDao.getNumber(loggedUser,country);

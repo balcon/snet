@@ -1,5 +1,6 @@
 package com.epam.study.snet.dao.db.mysql;
 
+import com.epam.study.snet.dao.StatusMessageDao;
 import com.epam.study.snet.dao.UserDao;
 import com.epam.study.snet.entity.Country;
 import com.epam.study.snet.entity.User;
@@ -13,7 +14,9 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 public class MySqlUserDaoTest extends MySqlDaoTests {
-    private UserDao userDao = daoFactory.getUserDao();
+    private StatusMessageDao statusMessageDao=daoFactory.getStatusMessageDao();
+
+    private UserDao userDao = daoFactory.getUserDao(statusMessageDao);
 
     private ProfileValidator testProfile = ProfileValidator.builder()
             .username("pit")

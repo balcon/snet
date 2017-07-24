@@ -2,6 +2,7 @@ package com.epam.study.snet.servlet;
 
 import com.epam.study.snet.dao.DaoException;
 import com.epam.study.snet.dao.DaoFactory;
+import com.epam.study.snet.dao.StatusMessageDao;
 import com.epam.study.snet.dao.UserDao;
 import com.epam.study.snet.entity.User;
 import com.epam.study.snet.model.Countries;
@@ -39,7 +40,8 @@ public class ProfileServlet extends HttpServlet {
         switch (action) {
             case "removeProfile":
                 try {
-                    DaoFactory.getFactory().getUserDao().removeById(loggedUser.getId());
+                    StatusMessageDao statusMessageDao=DaoFactory.getFactory().getStatusMessageDao();
+                    DaoFactory.getFactory().getUserDao(statusMessageDao).removeById(loggedUser.getId());
                     req.getSession().setAttribute("loggedUser", null);
                     log.info("Profile of [" + loggedUser.getUsername() + "](id:[" + loggedUser.getId() + "]) removed");
                     String contextPath = req.getContextPath();
@@ -77,7 +79,8 @@ public class ProfileServlet extends HttpServlet {
         try {
             Locale locale=(Locale)req.getSession().getAttribute("locale");
             req.setAttribute("countries", new Countries(locale));
-            UserDao userDao = DaoFactory.getFactory().getUserDao();
+            StatusMessageDao statusMessageDao=DaoFactory.getFactory().getStatusMessageDao();
+            UserDao userDao = DaoFactory.getFactory().getUserDao(statusMessageDao);
             if (formValidation.isValid()) {
                 userDao.updateById(loggedUser.getId(), profile);
                 log.info("Profile of [" + loggedUser.getUsername() + "](id:[" + loggedUser.getId() + "]) updated");

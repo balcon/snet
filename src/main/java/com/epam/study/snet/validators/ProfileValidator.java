@@ -2,6 +2,7 @@ package com.epam.study.snet.validators;
 
 import com.epam.study.snet.dao.DaoException;
 import com.epam.study.snet.dao.DaoFactory;
+import com.epam.study.snet.dao.StatusMessageDao;
 import com.epam.study.snet.dao.UserDao;
 import com.epam.study.snet.enums.FormErrors;
 import com.epam.study.snet.model.FormValidation;
@@ -70,7 +71,8 @@ public class ProfileValidator {
      */
     public FormValidation checkUsername() throws DaoException {
         Map<String, FormErrors> errors = new HashMap<>();
-        UserDao userDao = DaoFactory.getFactory().getUserDao();
+        StatusMessageDao statusMessageDao=DaoFactory.getFactory().getStatusMessageDao();
+        UserDao userDao = DaoFactory.getFactory().getUserDao(statusMessageDao);
         if (userDao.getByUsername(username) != null) {
             errors.put("username", FormErrors.username_exists);
         }

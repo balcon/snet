@@ -1,5 +1,6 @@
 package com.epam.study.snet.validators;
 
+import com.epam.study.snet.dao.StatusMessageDao;
 import com.epam.study.snet.dao.db.mysql.MySqlDaoTests;
 import com.epam.study.snet.enums.FormErrors;
 import com.epam.study.snet.model.FormValidation;
@@ -111,7 +112,8 @@ public class ProfileValidatorTest extends MySqlDaoTests{
                 .lastName("Smith")
                 .gender("male")
                 .birthday(LocalDate.now().toString()).build();
-        daoFactory.getUserDao().create(profile);
+        StatusMessageDao statusMessageDao=daoFactory.getStatusMessageDao();
+        daoFactory.getUserDao(statusMessageDao).create(profile);
         FormValidation formValidation = profile.checkUsername();
 
         assertTrue(formValidation.getErrors().get("username")==FormErrors.username_exists);

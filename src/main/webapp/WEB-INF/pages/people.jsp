@@ -75,7 +75,13 @@
                         </h4>
                     </a>
                     <div class="panel panel-default">
-                        <div class="panel-body"><b>15:35:00 26.12.2017:</b> azaza</div>
+                        <div class="panel-body">
+                            <c:set var="preparedDateTime" value="${fn:replace(user.statusMessage.sendingTime, 'T', ' ')}"/>
+                            <fmt:parseDate value="${preparedDateTime}" pattern="yyyy-MM-dd HH:mm:ss"
+                                           var="parsedDateTime" type="both"/>
+                            <small><b><i><fmt:formatDate value="${parsedDateTime}" type="both" timeStyle="short"/></i></b></small>
+                                ${user.statusMessage.body}
+                        </div>
                     </div>
                 </div>
                 <div class="media-right">

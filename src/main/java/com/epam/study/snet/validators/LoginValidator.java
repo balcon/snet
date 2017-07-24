@@ -2,6 +2,7 @@ package com.epam.study.snet.validators;
 
 import com.epam.study.snet.dao.DaoException;
 import com.epam.study.snet.dao.DaoFactory;
+import com.epam.study.snet.dao.StatusMessageDao;
 import com.epam.study.snet.entity.User;
 import com.epam.study.snet.enums.FormErrors;
 import com.epam.study.snet.model.FormValidation;
@@ -36,7 +37,8 @@ public class LoginValidator {
         if (username == null || username.isEmpty()) errors.put("username", FormErrors.field_empty);
         if (password == null || password.isEmpty()) errors.put("password", FormErrors.field_empty);
         if (errors.isEmpty()) {
-            User user = DaoFactory.getFactory().getUserDao().getByUsername(username);
+            StatusMessageDao statusMessageDao=DaoFactory.getFactory().getStatusMessageDao();
+            User user = DaoFactory.getFactory().getUserDao(statusMessageDao).getByUsername(username);
             String passHash = new HashPass().getHash(password);
             if (user == null) errors.put("loginForm", FormErrors.bad_login_password);
             else if (!user.getPassword().equals(passHash)) {

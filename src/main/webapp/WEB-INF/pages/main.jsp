@@ -17,8 +17,11 @@
             <h3>
                     ${main.user.firstName} ${main.user.lastName}
                 <span class="flag-icon flag-icon-${main.user.country.code.toLowerCase()}"></span>
-                <a href="<c:url value="/main/chat?companionId=${main.user.id}"/>" class="pull-right btn btn-link btn-lg">
-                    <span class="glyphicon glyphicon-envelope"></span></a>
+                <c:if test="${main.itself==false}">
+                    <a href="<c:url value="/main/chat?companionId=${main.user.id}"/>"
+                       class="pull-right btn btn-link btn-lg">
+                        <span class="glyphicon glyphicon-envelope"></span></a>
+                </c:if>
             </h3>
             <small><fmt:message bundle="${view}" key="user.country"/></small>
             <b>${main.countries.getName(main.user.country)}</b>
@@ -38,12 +41,27 @@
             </b>
             <br>
             <div class="panel panel-default">
-                <div class="panel-heading"><b>15:35:00 26.12.2017:</b> azaza</div>
+                <div class="panel-heading">
+                    <c:set var="preparedDateTime" value="${fn:replace(main.user.statusMessage.sendingTime, 'T', ' ')}"/>
+                    <fmt:parseDate value="${preparedDateTime}" pattern="yyyy-MM-dd HH:mm:ss"
+                                   var="parsedDateTime" type="both"/>
+                    <small><b><i><fmt:formatDate value="${parsedDateTime}" type="both" timeStyle="short"/></i></b></small>
+                    ${main.user.statusMessage.body}
+                </div>
+                <c:if test="${main.itself==true}">
+                    <div class="panel-footer">
+                        <form class="form-horizontal" action="<c:url value="/main"/>" method="post">
+                            <div class="form-group col-md-11">
+                                <input class="form-control" type="text" name="messageBody"
+                                       placeholder="<fmt:message bundle="${view}" key="status.invitiation"/>">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Send</button>
+                        </form>
+                    </div>
+                </c:if>
             </div>
-            <form action="<c:url value="/main"/>" method="post">
-                <input type="text" name="messageBody">
-                <input type="submit" value="S">
-            </form>
+
+
         </div>
 
     </div>

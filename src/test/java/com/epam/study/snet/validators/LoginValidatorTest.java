@@ -1,5 +1,6 @@
 package com.epam.study.snet.validators;
 
+import com.epam.study.snet.dao.StatusMessageDao;
 import com.epam.study.snet.dao.db.mysql.MySqlDaoTests;
 import com.epam.study.snet.enums.FormErrors;
 import com.epam.study.snet.model.FormValidation;
@@ -23,7 +24,8 @@ public class LoginValidatorTest extends MySqlDaoTests {
                 .gender("male")
                 .birthday(LocalDate.now().toString()).build();
         profile.hashPass(new HashPass());
-        daoFactory.getUserDao().create(profile);
+        StatusMessageDao statusMessageDao=daoFactory.getStatusMessageDao();
+        daoFactory.getUserDao(statusMessageDao).create(profile);
 
         LoginValidator login = LoginValidator.builder()
                 .username("juser2")
@@ -45,7 +47,8 @@ public class LoginValidatorTest extends MySqlDaoTests {
                 .gender("male")
                 .birthday(LocalDate.now().toString()).build();
         profile.hashPass(new HashPass());
-        daoFactory.getUserDao().create(profile);
+        StatusMessageDao statusMessageDao=daoFactory.getStatusMessageDao();
+        daoFactory.getUserDao(statusMessageDao).create(profile);
 
         LoginValidator login = LoginValidator.builder()
                 .username("juser")

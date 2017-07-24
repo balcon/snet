@@ -24,6 +24,7 @@ public class User {
     Image photo;
     Country country;
     boolean deleted;
+    StatusMessage statusMessage;
 
     public Relation checkRelation(User otherUser) {
         return country.checkRelation(otherUser.getCountry());

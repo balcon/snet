@@ -3,7 +3,6 @@ package com.epam.study.snet.dao.db.mysql;
 import com.epam.study.snet.dao.DaoException;
 import com.epam.study.snet.dao.StatusMessageDao;
 import com.epam.study.snet.dao.UserDao;
-import com.epam.study.snet.entity.Message;
 import com.epam.study.snet.entity.StatusMessage;
 import com.epam.study.snet.entity.User;
 
@@ -14,11 +13,9 @@ import java.time.LocalDateTime;
 public class MySqlStatusMessageDao implements StatusMessageDao {
 
     private DataSource dataSource;
-    private UserDao userDao;
 
-    public MySqlStatusMessageDao(DataSource dataSource, UserDao userDao) {
+    MySqlStatusMessageDao(DataSource dataSource) {
         this.dataSource = dataSource;
-        this.userDao = userDao;
     }
 
     @Override
@@ -27,7 +24,7 @@ public class MySqlStatusMessageDao implements StatusMessageDao {
         try (Connection connection = dataSource.getConnection()) {
             LocalDateTime currentTime = LocalDateTime.now();
             PreparedStatement statement = connection.prepareStatement(
-                    "INSERT INTO snet.status_messages (authorId, messageBody,sendingTime) VALUES (?,?,?)");
+                    "INSERT INTO snet.status_messages (authorId, messageBody, sendingTime) VALUES (?,?,?)");
             statement.setLong(1, user.getId());
             statement.setString(2, body);
             statement.setString(3, currentTime.toString());
@@ -39,7 +36,6 @@ public class MySqlStatusMessageDao implements StatusMessageDao {
                 messageId = generatedKeys.getLong(1);
             message = StatusMessage.builder()
                     .id(messageId)
-                    .author(user)
                     .body(body)
                     .sendingTime(currentTime).build();
         } catch (SQLException e) {
@@ -49,25 +45,22 @@ public class MySqlStatusMessageDao implements StatusMessageDao {
     }
 
     @Override
-    public StatusMessage getByUser(User user) throws DaoException {
-        StatusMessage message=null;
+    public StatusMessage getByUserId(long userId) throws DaoException {
+        StatusMessage message = null;
         try (Connection connection = dataSource.getConnection()) {
-            LocalDateTime currentTime = LocalDateTime.now();
             PreparedStatement statement = connection.prepareStatement(
-                    "SELECT * FROM snet.status_messages WHERE authorId=? ORDER BY sendingTime DESC");
-            statement.setLong(1, user.getId());
+                    "SELECT * FROM snet.status_messages WHERE sendingTime=" +
+                            "(SELECT MAX(sendingTime) FROM snet.status_messages WHERE authorId=?) AND authorId=?");
+            statement.setLong(1, userId);
+            statement.setLong(2, userId);
             ResultSet resultSet = statement.executeQuery();
 
             if (resultSet.next()) {
-                long authorId = resultSet.getLong("authorId");
-                User author = userDao.getById(authorId);
-
                 Date sendingDate = resultSet.getDate("sendingTime");
                 Time sendingTime = resultSet.getTime("sendingTime");
 
                 message = StatusMessage.builder()
                         .id(resultSet.getLong("messageId"))
-                        .author(author)
                         .body(resultSet.getString("messageBody"))
                         .sendingTime(LocalDateTime.of(sendingDate.toLocalDate(), sendingTime.toLocalTime()))
                         .build();

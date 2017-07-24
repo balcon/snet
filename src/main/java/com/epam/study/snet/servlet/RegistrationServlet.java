@@ -2,6 +2,7 @@ package com.epam.study.snet.servlet;
 
 import com.epam.study.snet.dao.DaoException;
 import com.epam.study.snet.dao.DaoFactory;
+import com.epam.study.snet.dao.StatusMessageDao;
 import com.epam.study.snet.entity.User;
 import com.epam.study.snet.model.Countries;
 import com.epam.study.snet.model.FormValidation;
@@ -46,7 +47,8 @@ public class RegistrationServlet extends HttpServlet {
             if (formValidation.isValid()) formValidation = profile.checkUsername();
             if (formValidation.isValid()) {
                 profile.hashPass(new HashPass());
-                User user = DaoFactory.getFactory().getUserDao().create(profile);
+                StatusMessageDao statusMessageDao=DaoFactory.getFactory().getStatusMessageDao();
+                User user = DaoFactory.getFactory().getUserDao(statusMessageDao).create(profile);
                 log.info("Registered new user [" + user.getUsername() + "](ID:[" + user.getId() + "]");
                 resp.sendRedirect(req.getContextPath() + "/login");
             } else {

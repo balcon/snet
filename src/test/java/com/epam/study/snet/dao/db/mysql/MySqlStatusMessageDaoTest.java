@@ -19,25 +19,22 @@ public class MySqlStatusMessageDaoTest extends MySqlDaoTests{
             .birthday("2017-01-01").build();
     @Test
     public void createStatusMessage() throws Exception {
-        User user = daoFactory.getUserDao().create(userProfie);
-        StatusMessage statusMessage=daoFactory.getStatusMessageDao(daoFactory.getUserDao()).create(user,"Text");
+        StatusMessageDao statusMessageDao=daoFactory.getStatusMessageDao();
+        User user = daoFactory.getUserDao(statusMessageDao).create(userProfie);
+        StatusMessage statusMessage=daoFactory.getStatusMessageDao().create(user,"Text");
 
         assertTrue(statusMessage!=null);
     }
 
     @Test
-    @Ignore
     public void getLastStatusMessage() throws Exception {
-        User user=daoFactory.getUserDao().create(userProfie);
-        StatusMessageDao statusMessageDao = daoFactory.getStatusMessageDao(daoFactory.getUserDao());
+        StatusMessageDao statusMessageDao=daoFactory.getStatusMessageDao();
+        User user=daoFactory.getUserDao(statusMessageDao).create(userProfie);
         StatusMessage statusMessage1= statusMessageDao.create(user,"Text1");
-        StatusMessage statusMessage2= statusMessageDao.create(user,"Text2");
 
-        StatusMessage statusMessage= statusMessageDao.getByUser(user);
+        StatusMessage statusMessage= statusMessageDao.getByUserId(user.getId());
 
-        System.out.println(statusMessage2);
-        System.out.println(statusMessage);
-        assertEquals(statusMessage2.getBody(),statusMessage.getBody());
+        assertEquals(statusMessage1.getBody(),statusMessage.getBody());
     }
 
 }

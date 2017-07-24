@@ -13,14 +13,16 @@ public class MySqlDaoFactoryTest {
 
     @Test
     public void getUserDao() throws Exception {
-        UserDao userDao = daoFactory.getUserDao();
+        StatusMessageDao statusMessageDao=daoFactory.getStatusMessageDao();
+        UserDao userDao = daoFactory.getUserDao(statusMessageDao);
 
         assertTrue(userDao instanceof MySqlUserDao);
     }
 
     @Test
     public void getMessageDao() throws Exception {
-        UserDao userDao = daoFactory.getUserDao();
+        StatusMessageDao statusMessageDao=daoFactory.getStatusMessageDao();
+        UserDao userDao = daoFactory.getUserDao(statusMessageDao);
         MessageDao messageDao = daoFactory.getMessageDao(userDao);
 
         assertTrue(messageDao instanceof MySqlMessageDao);

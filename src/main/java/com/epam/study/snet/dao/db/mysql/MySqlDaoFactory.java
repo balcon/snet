@@ -37,13 +37,13 @@ public class MySqlDaoFactory implements DaoFactory {
     }
 
     @Override
-    public StatusMessageDao getStatusMessageDao(UserDao userDao) {
-        return new MySqlStatusMessageDao(dataSource, userDao);
+    public StatusMessageDao getStatusMessageDao() {
+        return new MySqlStatusMessageDao(dataSource);
     }
 
     @Override
-    public UserDao getUserDao() {
-        return new MySqlUserDao(dataSource);
+    public UserDao getUserDao(StatusMessageDao statusMessageDao) {
+        return new MySqlUserDao(dataSource, statusMessageDao);
     }
 
     @Override

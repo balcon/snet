@@ -1,6 +1,7 @@
 package com.epam.study.snet.dao.db.mysql;
 
 import com.epam.study.snet.dao.MessageDao;
+import com.epam.study.snet.dao.StatusMessageDao;
 import com.epam.study.snet.dao.UserDao;
 import com.epam.study.snet.entity.Message;
 import com.epam.study.snet.entity.User;
@@ -19,7 +20,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class MySqlMessageDaoTest extends MySqlDaoTests {
-    private static UserDao userDao = daoFactory.getUserDao();
+    private static StatusMessageDao statusMessageDao=daoFactory.getStatusMessageDao();
+    private static UserDao userDao = daoFactory.getUserDao(statusMessageDao);
     private static MessageDao messageDao = daoFactory.getMessageDao(userDao);
 
     private static User user1;

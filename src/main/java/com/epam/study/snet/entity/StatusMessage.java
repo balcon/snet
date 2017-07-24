@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 @Builder
 public class StatusMessage {
     long id;
-    User author;
     String body;
     LocalDateTime sendingTime;
 }

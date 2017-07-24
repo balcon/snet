@@ -7,9 +7,10 @@ public interface DaoFactory {
     static DaoFactory getFactory() throws DaoException {
         return new MySqlDaoFactory();
     }
-    UserDao getUserDao();
+
+    UserDao getUserDao(StatusMessageDao statusMessageDao);
     MessageDao getMessageDao(UserDao userDao);
     ImageDao getImageDao();
     RelationshipDao getRelationshipDao();
-    StatusMessageDao getStatusMessageDao(UserDao userDao);
+    StatusMessageDao getStatusMessageDao();
 }

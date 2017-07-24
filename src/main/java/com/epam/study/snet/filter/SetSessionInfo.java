@@ -1,9 +1,6 @@
 package com.epam.study.snet.filter;
 
-import com.epam.study.snet.dao.DaoException;
-import com.epam.study.snet.dao.DaoFactory;
-import com.epam.study.snet.dao.MessageDao;
-import com.epam.study.snet.dao.UserDao;
+import com.epam.study.snet.dao.*;
 import com.epam.study.snet.entity.User;
 import com.epam.study.snet.model.SessionInfo;
 
@@ -27,7 +24,8 @@ public class SetSessionInfo implements Filter {
         if (req.getSession().getAttribute("loggedUser") != null) {
             User user = (User) req.getSession().getAttribute("loggedUser");
             try {
-                UserDao userDao = DaoFactory.getFactory().getUserDao();
+                StatusMessageDao statusMessageDao=DaoFactory.getFactory().getStatusMessageDao();
+                UserDao userDao = DaoFactory.getFactory().getUserDao(statusMessageDao);
                 MessageDao messageDao = DaoFactory.getFactory().getMessageDao(userDao);
                 long registeredUsers = userDao.getNumber();
                 int unreadMessages = messageDao.getNumberUnread(user);
