@@ -55,7 +55,9 @@
                                 <input class="form-control" type="text" name="messageBody"
                                        placeholder="<fmt:message bundle="${view}" key="status.invitiation"/>">
                             </div>
-                            <button type="submit" class="btn btn-primary">Send</button>
+                            <button type="submit" class="btn btn-primary">
+                                <span class="glyphicon glyphicon-pencil"></span>
+                            </button>
                         </form>
                     </div>
                 </c:if>
