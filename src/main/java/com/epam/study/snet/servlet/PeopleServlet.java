@@ -1,9 +1,11 @@
 package com.epam.study.snet.servlet;
 
 import com.epam.study.snet.dao.DaoException;
+import com.epam.study.snet.dao.DaoFactory;
 import com.epam.study.snet.entity.User;
 import com.epam.study.snet.model.Countries;
 import com.epam.study.snet.model.People;
+import com.epam.study.snet.model.RelationManager;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
@@ -23,11 +25,13 @@ public class PeopleServlet extends HttpServlet {
         User loggedUser = (User) req.getSession().getAttribute("loggedUser");
         Locale locale=(Locale)req.getSession().getAttribute("locale");
         try {
+            RelationManager relationManager = DaoFactory.getFactory().getRelationshipDao().getRelationManager();
             People people = new People(loggedUser
                     ,req.getParameter("page")
                     ,req.getParameter("country"));
             req.setAttribute("countries", new Countries(locale));
             req.setAttribute("people", people);
+            req.setAttribute("relationManager",relationManager);
             req.getRequestDispatcher("/WEB-INF/pages/people.jsp").forward(req, resp);
         } catch (DaoException e) {
             log.error("[" + loggedUser.getId() + "][" + loggedUser.getUsername() +

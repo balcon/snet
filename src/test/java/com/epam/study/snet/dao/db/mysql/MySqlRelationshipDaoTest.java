@@ -1,13 +1,16 @@
 package com.epam.study.snet.dao.db.mysql;
 
+import com.epam.study.snet.dao.DaoException;
 import com.epam.study.snet.dao.RelationshipDao;
 import com.epam.study.snet.entity.Country;
 import com.epam.study.snet.enums.Relation;
+import com.epam.study.snet.model.RelationManager;
 import org.junit.Test;
 
-import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class MySqlRelationshipDaoTest extends MySqlDaoTests {
     private RelationshipDao relationshipDao = daoFactory.getRelationshipDao();
@@ -20,6 +23,9 @@ public class MySqlRelationshipDaoTest extends MySqlDaoTests {
     private Country c1=new Country("C1");
     private Country c2=new Country("C2");
     private Country c3=new Country("C3");
+
+    public MySqlRelationshipDaoTest() throws DaoException {
+    }
 
     @Test
     public void setAndGetRelation() throws Exception {
@@ -40,13 +46,6 @@ public class MySqlRelationshipDaoTest extends MySqlDaoTests {
     }
 
     @Test
-    public void getNeutralRelation() throws Exception {
-        Relation relation = relationshipDao.getRelation(ru, nz);
-
-        assertEquals(Relation.NEUTRAL, relation);
-    }
-
-    @Test
     public void resetToNeutral() throws Exception {
         relationshipDao.setRelation(ru, kz, Relation.GOOD);
         relationshipDao.setRelation(kz, ru, Relation.NEUTRAL);
@@ -57,24 +56,20 @@ public class MySqlRelationshipDaoTest extends MySqlDaoTests {
     }
 
     @Test
-    public void getListBad() throws Exception {
-        relationshipDao.setRelation(c1,c2,Relation.BAD);
-        relationshipDao.setRelation(c3,c1,Relation.BAD);
-        relationshipDao.setRelation(c2,c3,Relation.GOOD);
+    public void getRelations() throws Exception {
+        relationshipDao.setRelation(ru, gb, Relation.BAD);
+        relationshipDao.setRelation(kz, ru, Relation.GOOD);
 
-        List<Country> listBad = relationshipDao.getListRelations(c1,Relation.BAD);
+        Map<Country,Relation> relations=relationshipDao.getRelations(ru);
 
-        assertEquals(2,listBad.size());
+        assertEquals(Relation.BAD,relations.get(gb));
+        assertEquals(Relation.GOOD,relations.get(kz));
     }
 
     @Test
-    public void getListGood() throws Exception {
-        relationshipDao.setRelation(c1,c2,Relation.GOOD);
-        relationshipDao.setRelation(c3,c1,Relation.BAD);
-        relationshipDao.setRelation(c2,c3,Relation.GOOD);
+    public void getRelationshipManagerTest() throws Exception {
+        RelationManager relationManager = relationshipDao.getRelationManager();
 
-        List<Country> listGood=relationshipDao.getListRelations(c1,Relation.GOOD);
-
-        assertEquals(1,listGood.size());
+        assertTrue(relationManager !=null);
     }
 }

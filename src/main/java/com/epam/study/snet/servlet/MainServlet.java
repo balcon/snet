@@ -7,6 +7,7 @@ import com.epam.study.snet.dao.StatusMessageDao;
 import com.epam.study.snet.dao.UserDao;
 import com.epam.study.snet.entity.User;
 import com.epam.study.snet.model.Countries;
+import com.epam.study.snet.model.RelationManager;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -24,8 +25,10 @@ public class MainServlet extends HttpServlet {
         User user;
         try {
             Main main = new Main();
-            StatusMessageDao statusMessageDao = DaoFactory.getFactory().getStatusMessageDao();
-            UserDao userDao = DaoFactory.getFactory().getUserDao(statusMessageDao);
+            DaoFactory daoFactory = DaoFactory.getFactory();
+            StatusMessageDao statusMessageDao = daoFactory.getStatusMessageDao();
+            RelationManager relationManager = daoFactory.getRelationshipDao().getRelationManager();
+            UserDao userDao = daoFactory.getUserDao(statusMessageDao);
 
             if (req.getParameter("id") == null) {
                 user = (User) req.getSession().getAttribute("loggedUser");
@@ -38,6 +41,7 @@ public class MainServlet extends HttpServlet {
             main.setUser(user);
             main.setCountries(new Countries(locale));
             main.setCompatriots(userDao.getList(user, user.getCountry()));
+            main.setRelationManager(relationManager);
             req.setAttribute("main", main);
         } catch (DaoException e) {
             e.printStackTrace();

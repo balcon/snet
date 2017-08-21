@@ -73,7 +73,7 @@
                 <li class="list-group-item list-group-item-danger">
                     <fmt:message bundle="${view}" key="country.bad_relations"/>
                 </li>
-                <c:forEach var="country" items="${main.user.country.badRelations}">
+                <c:forEach var="country" items="${main.relationManager.getBadRelations(main.user.country)}">
                     <a href="<c:url value="/main/people?country=${country.code}"/>" class="list-group-item">
                         <span class="flag-icon flag-icon-${country.code.toLowerCase()}"></span>
                             ${main.countries.getName(country)}
@@ -86,7 +86,7 @@
                 <li class="list-group-item list-group-item-success">
                     <fmt:message bundle="${view}" key="country.good_relations"/>
                 </li>
-                <c:forEach var="country" items="${main.user.country.goodRelations}">
+                <c:forEach var="country" items="${main.relationManager.getGoodRelations(main.user.country)}">
                     <a href="<c:url value="/main/people?country=${country.code}"/>" class="list-group-item">
                         <span class="flag-icon flag-icon-${country.code.toLowerCase()}"></span>
                             ${main.countries.getName(country)}

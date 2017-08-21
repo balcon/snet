@@ -11,15 +11,15 @@ public class UserTest extends MySqlDaoTests {
 
     private RelationshipDao relationshipDao = daoFactory.getRelationshipDao();
 
-    @Test
-    public void checkRelation() throws Exception {
-
-        Country jp = new Country("JP");
-        Country us = new Country("US");
-        relationshipDao.setRelation(jp, us, Relation.BAD);
-        User user1 = User.builder().firstName("user1").country(us).build();
-        User user2 = User.builder().firstName("user2").country(jp).build();
-
-        assertEquals(Relation.BAD,user1.checkRelation(user2));
-    }
+//    @Test
+//    public void checkRelation() throws Exception {
+//
+//        Country jp = new Country("JP");
+//        Country us = new Country("US");
+//        relationshipDao.setRelation(jp, us, Relation.BAD);
+//        User user1 = User.builder().firstName("user1").country(us).build();
+//        User user2 = User.builder().firstName("user2").country(jp).build();
+//
+//        assertEquals(Relation.BAD,user1.checkRelation(user2));
+//    }
 }

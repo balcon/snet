@@ -53,7 +53,6 @@ public class RegistrationServlet extends HttpServlet {
                 resp.sendRedirect(req.getContextPath() + "/login");
             } else {
                 req.setAttribute("formValidation", formValidation);
-                //todo countries list
                 Locale locale =(Locale) req.getSession().getAttribute("locale");
                 req.setAttribute("countries", new Countries(locale));
                 req.getRequestDispatcher("/WEB-INF/pages/registration.jsp").forward(req, resp);

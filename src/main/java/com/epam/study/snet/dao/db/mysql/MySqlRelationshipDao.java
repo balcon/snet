@@ -4,6 +4,7 @@ import com.epam.study.snet.dao.DaoException;
 import com.epam.study.snet.dao.RelationshipDao;
 import com.epam.study.snet.entity.Country;
 import com.epam.study.snet.enums.Relation;
+import com.epam.study.snet.model.RelationManager;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -11,7 +12,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 class MySqlRelationshipDao implements RelationshipDao {
     private DataSource dataSource;
@@ -23,15 +26,15 @@ class MySqlRelationshipDao implements RelationshipDao {
     @Override
     public Relation getRelation(Country country1, Country country2) throws DaoException {
         Relation relation = selectRelation(country1.getCode(), country2.getCode());
-        if(country1.equals(country2)) return Relation.SAME;
-        if(relation==null) return Relation.NEUTRAL;
+        if (country1.equals(country2)) return Relation.SAME;
+        if (relation == null) return Relation.NEUTRAL;
         return relation;
     }
 
     @Override
     public void setRelation(Country country1, Country country2, Relation relation) throws DaoException {
-        String code1=country1.getCode();
-        String code2=country2.getCode();
+        String code1 = country1.getCode();
+        String code2 = country2.getCode();
 
         if (relation == Relation.NEUTRAL) deleteRelation(code1, code2);
         else if (selectRelation(code1, code2) == null)
@@ -41,27 +44,55 @@ class MySqlRelationshipDao implements RelationshipDao {
     }
 
     @Override
-    public List<Country> getListRelations(Country country, Relation relation) throws DaoException {
-        List<Country> countries=new ArrayList<>();
+    public Map<Country, Relation> getRelations(Country country) throws DaoException {
+        Map<Country, Relation> relations = new HashMap<>();
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(
-                    "SELECT country1,country2 FROM snet.relationship " +
-                            "WHERE relation=? AND (country1=? OR country2=?)");
-            statement.setString(1, relation.toString());
+                    "SELECT * FROM snet.relationship " +
+                            "WHERE country1=? OR country2=?");
+            statement.setString(1, country.getCode());
             statement.setString(2, country.getCode());
-            statement.setString(3, country.getCode());
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                String country1=resultSet.getString("country1");
-                String country2=resultSet.getString("country2");
-                countries.add(country1.equals(country.getCode())?
-                        new Country(country2):
-                        new Country(country1));
+                String relationString = resultSet.getString("relation");
+                String country1 = resultSet.getString("country1");
+                String country2 = resultSet.getString("country2");
+                //FUCK!! FUCK!!!!!!!!! FUCK!!!
+                Country otherCountry=country1.equals(country.getCode())
+                        ? new Country(country2)
+                        : new Country(country1);
+                Relation relation = relationString.equals(Relation.BAD.toString())
+                        ? Relation.BAD
+                        : Relation.GOOD;
+                relations.put(otherCountry,relation);
             }
         } catch (SQLException e) {
-            throw new DaoException("Can't getByUser list of relations", e);
+            throw new DaoException("Can't get relations", e);
         }
-        return countries;
+        return relations;
+    }
+
+    @Override
+    public RelationManager getRelationManager() throws DaoException {
+        List<RelationManager.Relationship> relations=new ArrayList<>();
+        try (Connection connection = dataSource.getConnection()) {
+            PreparedStatement statement = connection.prepareStatement(
+                    "SELECT * FROM snet.relationship");
+            ResultSet resultSet = statement.executeQuery();
+            while(resultSet.next()) {
+                Country country1=new Country(resultSet.getString("country1"));
+                Country country2=new Country(resultSet.getString("country2"));
+                Relation relation = (resultSet.getString("relation").equals(Relation.BAD.toString()))
+                        ? Relation.BAD
+                        : Relation.GOOD;
+                RelationManager.Relationship relationship =
+                        new RelationManager.Relationship(country1, country2, relation);
+                relations.add(relationship);
+            }
+        } catch (SQLException e) {
+            throw new DaoException("Can't get RelationManager", e);
+        }
+        return new RelationManager(relations);
     }
 
     private Relation selectRelation(String country1, String country2) throws DaoException {
