@@ -7,7 +7,7 @@
 <fmt:setBundle basename="i18n.view" var="view"/>
 <fmt:setBundle basename="i18n.errors" var="errors"/>
 <jsp:useBean id="formValidation" scope="request"
-             class="com.epam.study.snet.model.FormValidation"/>
+             class="com.epam.study.snet.controller.validators.FormValidation"/>
 
 <tags:mainMenu>
     <div class="page-header col-md-offset-4">
@@ -23,15 +23,14 @@
         <tags:typicalInput inputType="text"
                            name="username"
                            labelProp="user.username"
-                           initValue="user1"
+                           initValue="${param.username}"
                            errors="${formValidation.errors}"
                            inline="true"/>
-            <%--setupValue="${param.username}"--%>
 
         <tags:typicalInput inputType="password"
                            name="password"
                            labelProp="user.password"
-                           initValue="123456"
+                           initValue="${param.password}"
                            errors="${formValidation.errors}"
                            inline="true"/>
 

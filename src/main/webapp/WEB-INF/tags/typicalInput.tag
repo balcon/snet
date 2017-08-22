@@ -6,7 +6,7 @@
 <%@ attribute name="labelProp" required="true" %>
 <%@ attribute name="initValue" required="true" %>
 <%@ attribute name="errors" required="false"
-              type="java.util.Map<java.lang.String,com.epam.study.snet.enums.FormErrors>" %>
+              type="java.util.Map<java.lang.String,com.epam.study.snet.view.Enums.FormErrors>" %>
 <%@ attribute name="inline" required="false" type="java.lang.Boolean" %>
 
 <fmt:setLocale value="${sessionScope.locale}"/>

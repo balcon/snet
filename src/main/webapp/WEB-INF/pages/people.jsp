@@ -7,7 +7,7 @@
 <fmt:setLocale value="${sessionScope.locale}"/>
 <fmt:setBundle basename="i18n.view" var="view"/>
 
-<jsp:useBean id="people" scope="request" type="com.epam.study.snet.model.People"/>
+<jsp:useBean id="people" scope="request" type="com.epam.study.snet.view.People"/>
 
 <tags:mainMenu active="people">
     <div class="col-xs-offset-4">
@@ -15,7 +15,8 @@
             <fmt:message bundle="${view}" key="titles.users"/>
         </h3>
     </div>
-    <jsp:useBean id="countries" scope="request" type="com.epam.study.snet.model.Countries"/>
+    <jsp:useBean id="countries" scope="request" type="com.epam.study.snet.controller.services.Countries"/>
+    <jsp:useBean id="relationManager" scope="request" type="com.epam.study.snet.controller.services.RelationManager"/>
     <div class="dropdown text-right">
         <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
             <fmt:message bundle="${view}" key="people.country_filter"/>
@@ -46,7 +47,7 @@
         </div>
     </c:if>
     <c:forEach var="user" items="${people.users}">
-        <c:set var="relation" value="${user.checkRelation(sessionScope.loggedUser)}"/>
+        <c:set var="relation" value="${relationManager.checkRelation(sessionScope.loggedUser.country,user.country)}"/>
         <c:set var="relationStyle"/>
         <c:if test='${relation=="BAD"}'>
             <c:set var="relationStyle" value="relation-bad"/>

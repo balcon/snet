@@ -68,7 +68,7 @@
 
 <fmt:setLocale value="${sessionScope.locale}"/>
 <fmt:setBundle basename="i18n.view" var="view"/>
-<jsp:useBean id="sessionInfo" scope="session" class="com.epam.study.snet.model.SessionInfo"/>
+<jsp:useBean id="sessionInfo" scope="session" class="com.epam.study.snet.view.SessionInfo"/>
 <nav class="navbar navbar-inverse" style="margin-bottom: 0px">
     <div class="container">
         <div class="navbar-header">

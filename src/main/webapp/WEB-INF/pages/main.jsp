@@ -8,7 +8,7 @@
 <fmt:setBundle basename="i18n.view" var="view"/>
 
 <tags:mainMenu active="main">
-    <jsp:useBean id="main" scope="request" type="com.epam.study.snet.beans.Main"/>
+    <jsp:useBean id="main" scope="request" type="com.epam.study.snet.view.Main"/>
     <div class="row">
         <div class="col-md-3">
             <img src="<c:url value="${main.user.photo.sourcePath}"/>" class="rounded img-thumbnail">

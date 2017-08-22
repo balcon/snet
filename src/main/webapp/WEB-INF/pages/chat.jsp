@@ -7,13 +7,18 @@
 <fmt:setLocale value="${sessionScope.locale}"/>
 <fmt:setBundle basename="i18n.view" var="view"/>
 
-<jsp:useBean id="chat" scope="request" type="com.epam.study.snet.model.Chat"/>
-<jsp:useBean id="loggedUser" scope="session" type="com.epam.study.snet.entity.User"/>
+<jsp:useBean id="chat" scope="request" type="com.epam.study.snet.view.Chat"/>
+<jsp:useBean id="loggedUser" scope="session" type="com.epam.study.snet.model.entity.User"/>
 
 <tags:mainMenu active="messages">
 
     <div class="col-xs-offset-3">
-        <h3>${chat.companion.firstName} ${chat.companion.lastName}</h3>
+        <h3>
+                ${chat.companion.firstName} ${chat.companion.lastName}
+            <c:if test="${chat.companion.deleted==true}">
+                 (<fmt:message bundle="${view}" key="chat.deleted"/>)
+            </c:if>
+        </h3>
     </div>
     <c:set var="companionId" value="${chat.companion.id}"/>
     <c:url var="urlToChat" value="/main/chat"/>

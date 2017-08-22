@@ -7,8 +7,8 @@
 <fmt:setBundle basename="i18n.view" var="view"/>
 <fmt:setBundle basename="i18n.errors" var="errors"/>
 
-<jsp:useBean id="loggedUser" scope="session" type="com.epam.study.snet.entity.User"/>
-<jsp:useBean id="formValidation" scope="request" class="com.epam.study.snet.model.FormValidation"/>
+<jsp:useBean id="loggedUser" scope="session" type="com.epam.study.snet.model.entity.User"/>
+<jsp:useBean id="formValidation" scope="request" class="com.epam.study.snet.controller.validators.FormValidation"/>
 
 <tags:mainMenu active="profile">
     <div class="col-xs-offset-4">
@@ -64,7 +64,7 @@
                 <label class="control-label" for="country">
                         ${countryTitle}
                 </label>
-                <jsp:useBean id="countries" scope="request" type="com.epam.study.snet.model.Countries"/>
+                <jsp:useBean id="countries" scope="request" type="com.epam.study.snet.controller.services.Countries"/>
                 <select class="form-control" id="country" name="country">
                     <c:forEach var="oneCountry" items="${countries.list}">
                         <option value="${oneCountry.key}"

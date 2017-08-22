@@ -7,7 +7,7 @@
 <fmt:setLocale value="${sessionScope.locale}"/>
 <fmt:setBundle basename="i18n.view" var="view"/>
 
-<jsp:useBean id="messages" scope="request" type="com.epam.study.snet.model.Messages"/>
+<jsp:useBean id="messages" scope="request" type="com.epam.study.snet.view.Messages"/>
 
 <tags:mainMenu active="messages">
     <div class="col-xs-offset-3">

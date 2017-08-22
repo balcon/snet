@@ -11,7 +11,7 @@
         <h3><fmt:message bundle="${view}" key="titles.registration"/></h3>
     </div>
     <jsp:useBean id="formValidation" scope="request"
-                 class="com.epam.study.snet.model.FormValidation"/>
+                 class="com.epam.study.snet.controller.validators.FormValidation"/>
     <form class="form-horizontal" action="registration" method="post">
 
         <tags:typicalInput inputType="text"
@@ -54,7 +54,7 @@
             <fmt:message var="countryTitle" bundle="${view}" key="user.country"/>
             <label class="col-md-3 control-label" for="country">${countryTitle}
             </label>
-            <jsp:useBean id="countries" scope="request" type="com.epam.study.snet.model.Countries"/>
+            <jsp:useBean id="countries" scope="request" type="com.epam.study.snet.controller.services.Countries"/>
             <div class="col-md-6">
                 <select class="form-control" id="country" name="country">
                     <option value="" hidden>${countryTitle}</option>
