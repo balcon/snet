@@ -7,7 +7,6 @@ import lombok.Value;
 
 import java.util.List;
 
-//todo validate chat with itself
 @Value
 public class Chat {
     final int LIMIT = 10;
